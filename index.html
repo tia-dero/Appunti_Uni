@@ -857,6 +857,27 @@
     .welcome-recent-icon .ico { width:14px; height:14px; }
     .backup-icon .ico { width:22px; height:22px; }
     .countdown-orbit { box-sizing:border-box; padding:0 2px; text-align:center; line-height:1.2; letter-spacing:0; word-spacing:-1px; overflow:hidden; }
+
+    /* Schermata di avvio e microfono comandi */
+    #bootDialog { width:100vw; max-width:none; height:100vh; max-height:none; margin:0; padding:0; border:0; background:#03090d; color:#bff6ff; }
+    #bootDialog::backdrop { background:#03090d; }
+    .boot-shell { height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:22px; padding:24px; font-family:ui-monospace,Consolas,"DejaVu Sans Mono",monospace; }
+    .boot-ring { width:132px; height:132px; border-radius:50%; border:2px solid #1fd1ff55; border-top-color:#1fd1ff; border-right-color:#1fd1ff; animation:bootspin 1.6s linear infinite; display:grid; place-items:center; box-shadow:0 0 40px #1fd1ff22 inset,0 0 30px #1fd1ff22; }
+    .boot-ring b { animation:bootspin 1.6s linear infinite reverse; font:700 30px Inter,sans-serif; color:#e8fbff; letter-spacing:.04em; }
+    @keyframes bootspin { to { transform:rotate(360deg); } }
+    .boot-title { font-size:13px; letter-spacing:.32em; color:#66e5f0; }
+    .boot-lines { width:min(560px,100%); min-height:150px; font-size:13px; line-height:1.9; color:#9fdde8; }
+    .boot-lines div { opacity:0; transform:translateX(-6px); animation:bootline .35s forwards; }
+    .boot-lines div b { color:#7dff9b; font-weight:600; margin-right:8px; }
+    @keyframes bootline { to { opacity:1; transform:none; } }
+    .boot-bar { width:min(560px,100%); height:3px; background:#1fd1ff22; border-radius:3px; overflow:hidden; }
+    .boot-bar i { display:block; height:100%; width:0; background:#1fd1ff; box-shadow:0 0 10px #1fd1ff; transition:width .3s linear; }
+    .boot-skip { border:1px solid #1fd1ff55; background:transparent; color:#9fdde8; padding:7px 16px; border-radius:7px; cursor:pointer; font:inherit; font-size:12px; letter-spacing:.12em; }
+    .boot-skip:hover { background:#1fd1ff22; }
+    .mic-btn { flex:none; border:1px solid #47d8e766; background:#0d2a33; color:#66e5f0; border-radius:8px; padding:6px 11px; font-size:12px; cursor:pointer; }
+    .mic-btn.listening { background:#1fd1ff; color:#04202a; animation:micpulse 1s infinite; }
+    @keyframes micpulse { 50% { box-shadow:0 0 0 6px #1fd1ff33; } }
+    @media (prefers-reduced-motion:reduce) { .boot-ring,.boot-ring b { animation:none; } }
   </style>
 </head>
 <body class="jarvis-ui">
@@ -902,13 +923,15 @@
     </form>
   </dialog>
   <dialog id="folderDialog"><form id="folderForm" method="dialog"><div class="dialog-head"><h2 id="folderDialogTitle">Nuova cartella</h2><button class="icon-btn" type="button" data-close="folderDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body"><label for="folderName">Nome della cartella<input id="folderName" maxlength="90" required placeholder="Es. Lezioni e slide del modulo"></label></div><div class="dialog-foot"><span></span><div class="foot-right"><button class="btn" type="button" data-close="folderDialog">Annulla</button><button class="btn btn-primary" type="submit">Salva cartella</button></div></div></form></dialog>
+  <dialog id="bootDialog" aria-label="Avvio del sistema"><div class="boot-shell"><div class="boot-ring"><b>SM</b></div><div class="boot-title">AVVIO SISTEMA</div><div class="boot-lines" id="bootLines"></div><div class="boot-bar"><i id="bootBar"></i></div><button class="boot-skip" id="bootSkip" type="button">SALTA</button></div></dialog>
   <dialog id="welcomeDialog" aria-labelledby="welcomeTitle"><canvas id="welcomeFx" aria-hidden="true"></canvas><div class="welcome-shell"><header class="welcome-top"><div class="welcome-brand"><span class="welcome-brand-mark">SM</span><span>APPUNTI &#xB7; INSUBRIA<small>IL TUO SPAZIO PERSONALE</small></span></div><span class="welcome-status"><i></i>SISTEMA ATTIVO &#xB7; <span id="welcomeSystemMsg">ARCHIVIO LOCALE</span><time id="welcomeClock">--:--</time></span><button class="welcome-skip" type="button" data-close="welcomeDialog">Vai all&#x2019;archivio</button></header><main class="welcome-main"><section class="welcome-copy"><div class="welcome-radar" aria-hidden="true"><span class="welcome-radar-core">SM</span></div><p class="welcome-eyebrow">Il tuo piano di oggi</p><h1 id="welcomeTitle">Ciao, <span>Mattia.</span></h1><p id="welcomeDate" class="welcome-date"></p><p id="welcomeIntro" class="welcome-intro"></p></section><section class="welcome-panel" aria-label="Materie di oggi"><div class="welcome-panel-head"><h2 id="welcomePanelTitle">Le tue lezioni</h2><span id="welcomeBadge">OGGI</span></div><div id="welcomeLessons" class="welcome-lessons"></div><div id="welcomeCountdown"></div><details class="welcome-recent"><summary>Ultimi appunti <span>ACCESSO RAPIDO</span></summary><div id="welcomeRecent" class="welcome-recent-list"></div></details></section></main><footer class="welcome-footer"><span class="welcome-footer-note">Archivio locale &#xB7; i tuoi appunti restano sul dispositivo</span><div class="welcome-footer-actions"><button class="welcome-voice" type="button" id="speakBriefingBtn">Ascolta briefing</button><button class="welcome-command" type="button" id="voiceSettingsBtn">Voce</button><button class="welcome-command welcome-mute" type="button" id="voiceMuteBtn" aria-pressed="false" aria-label="Disattiva voce automatica">&#x1F50A; Voce attiva</button><button class="welcome-command" type="button" id="welcomeCommandBtn">Ctrl+K&nbsp; Comandi</button><button class="welcome-enter" type="button" id="enterArchiveBtn">Entra nei miei appunti</button></div></footer></div></dialog>
   <dialog id="voiceSettingsDialog" class="voice-settings-dialog" aria-labelledby="voiceSettingsTitle"><div class="dialog-head"><div><h2 id="voiceSettingsTitle">Configurazione vocale</h2><p class="voice-settings-subtitle">Regola la voce del briefing</p></div><button class="icon-btn" type="button" data-close="voiceSettingsDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body voice-settings-body"><label for="speechVoiceSelect">Voce disponibile<select id="speechVoiceSelect"><option value="">Italiano predefinito del dispositivo</option></select><small class="voice-settings-hint">Le voci dipendono dal browser e dal dispositivo. Per un risultato pi&#xF9; naturale, prova una voce italiana &#x201C;Natural&#x201D; o &#x201C;Enhanced&#x201D;, se disponibile.</small></label><button class="btn voice-preset" id="jarvisVoicePresetBtn" type="button">Applica preset JARVIS &#xB7; Decisa</button><label class="voice-range-label" for="speechPitch"><span>Tono <output id="speechPitchValue">0,88</output></span><input id="speechPitch" type="range" min="0.65" max="1.25" step="0.05" value="0.88"></label><label class="voice-range-label" for="speechRate"><span>Velocit&#xE0; <output id="speechRateValue">0,92&#xD7;</output></span><input id="speechRate" type="range" min="0.75" max="1.15" step="0.05" value="0.92"></label><p class="voice-settings-hint">Il preset abbassa leggermente il tono e rallenta il ritmo. La naturalezza dipende soprattutto dalla voce italiana installata nel dispositivo; il browser non pu&#xF2; riprodurre esattamente la voce del film.</p></div><div class="dialog-foot voice-settings-foot"><button class="btn" id="previewVoiceBtn" type="button">Prova la voce</button><div class="foot-right"><button class="btn" type="button" data-close="voiceSettingsDialog">Chiudi</button><button class="btn btn-primary" id="saveVoiceSettingsBtn" type="button">Salva</button></div></div></dialog>
   <dialog id="docxPreviewDialog" aria-labelledby="docxPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="docxPreviewTitle">Anteprima documento</h2><p>Anteprima locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadDocxBtn" type="button">Scarica</button><button class="icon-btn" type="button" data-close="docxPreviewDialog" aria-label="Chiudi anteprima">&#xD7;</button></div></div><div class="docx-preview-scroll"><div id="docxPreviewError" class="docx-preview-error hidden" role="status"></div><article id="docxContent" class="docx-content"></article></div></dialog>
   <dialog id="videoPreviewDialog" aria-labelledby="videoPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="videoPreviewTitle">Video lezione</h2><p>Riproduzione locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadVideoBtn" type="button">Scarica</button><button class="icon-btn" type="button" data-close="videoPreviewDialog" aria-label="Chiudi video">&#xD7;</button></div></div><div class="video-stage"><div id="videoPreviewError" class="docx-preview-error hidden" role="status"></div><video id="videoPlayer" controls playsinline preload="metadata"></video></div></dialog>
-  <dialog id="commandDialog" class="command-dialog" aria-label="Comandi rapidi"><div class="command-head"><span><i></i>INTERFACCIA COMANDI</span><kbd>ESC</kbd></div><label class="command-input-wrap" for="commandInput"><input id="commandInput" type="search" autocomplete="off" placeholder="Cerca materia, appunto o azione&#x2026; (es. apri anatomia, ultimi file)"></label><div id="commandResults" class="command-results"></div><div class="command-foot"><span>Frecce su e giù per scegliere &#xB7; Invio per aprire</span><span><kbd>CTRL</kbd> + <kbd>K</kbd></span></div></dialog>
+  <dialog id="commandDialog" class="command-dialog" aria-label="Comandi rapidi"><div class="command-head"><span><i></i>INTERFACCIA COMANDI</span><kbd>ESC</kbd></div><label class="command-input-wrap" for="commandInput"><input id="commandInput" type="search" autocomplete="off" placeholder="Cerca materia, appunto o azione&#x2026; (es. apri anatomia, ultimi file)"><button class="mic-btn" id="micBtn" type="button" aria-label="Comando vocale">Parla</button></label><div id="commandResults" class="command-results"></div><div class="command-foot"><span>Frecce su e giù per scegliere &#xB7; Invio per aprire</span><span><kbd>CTRL</kbd> + <kbd>K</kbd></span></div></dialog>
 
   <dialog id="scheduleDialog" class="wide-dialog" aria-labelledby="scheduleTitle"><div class="dialog-head"><h2 id="scheduleTitle">Orario delle lezioni</h2><button class="icon-btn" type="button" data-close="scheduleDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body sched-body">
+    <section class="sched-block" id="remindBlock"><h3>Promemoria e calendario</h3><p class="sched-help">I promemoria arrivano finch&#xE9; l&#x2019;app &#xE8; aperta (anche ridotta a icona). Se la chiudi non possono partire: per quel caso esporta l&#x2019;orario e importalo nel calendario del telefono.</p><div class="sched-grid"><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="remindOn" style="width:auto"> Avvisami prima delle lezioni</label><label>Anticipo<select id="remindLead"><option value="10">10 minuti</option><option value="30">30 minuti</option><option value="60">1 ora</option></select></label></div><div class="foot-right" style="justify-content:flex-start;gap:8px;margin-top:8px"><button class="btn" id="remindTestBtn" type="button">Prova promemoria</button><button class="btn" id="icsExportBtn" type="button">Esporta orario ed esami (.ics)</button></div></section>
     <section class="sched-block"><h3>Importa un calendario</h3><p class="sched-help">Scegli un file <b>.ics</b> esportato da Google Calendar, Outlook, Apple Calendar o dal portale dell&#x2019;universit&#xE0;. Le lezioni ripetute ogni settimana vengono espanse automaticamente.</p><div class="sched-row"><select id="schedMode" aria-label="Come importare"><option value="replace">Sostituisci l&#x2019;orario attuale</option><option value="merge">Aggiungi alle lezioni esistenti</option></select><button class="btn btn-primary" id="schedImportBtn" type="button">Scegli file .ics</button></div><input class="file-input" id="icsFile" type="file" accept=".ics,text/calendar"><p class="sched-msg" id="schedImportMsg" aria-live="polite"></p></section>
     <form class="sched-block" id="lessonForm"><h3 id="lessonFormTitle">Aggiungi una lezione</h3><div class="sched-grid"><label>Materia<input id="lessonSubject" list="lessonSubjectList" maxlength="90" required placeholder="Es. Anatomia"><datalist id="lessonSubjectList"></datalist></label><label>Data<input id="lessonDate" type="date" required></label><label>Inizio<input id="lessonStart" type="time" required></label><label>Fine<input id="lessonEnd" type="time" required></label><label>Luogo (facoltativo)<input id="lessonPlace" maxlength="60" placeholder="Es. Aula 3"></label><label id="lessonRepeatWrap">Ripeti ogni settimana per<input id="lessonRepeat" type="number" min="0" max="30" value="0" inputmode="numeric"></label></div><div class="sched-row"><button class="btn btn-primary" id="lessonSubmitBtn" type="submit">Aggiungi lezione</button><button class="btn hidden" id="lessonCancelEdit" type="button">Annulla modifica</button></div></form>
     <section class="sched-block"><h3>Prossime lezioni <span class="sched-count" id="schedCount"></span></h3><div class="sched-list" id="schedList"></div></section>
@@ -2183,6 +2206,96 @@
     }catch(error){showToast(error?.message&&error.message!=='Formato non valido'?error.message:'File non valido o impossibile da importare.');}
   });
 
+  /* Promemoria (app aperta) ed esportazione calendario .ics */
+  const REMIND_KEY='appunti-reminders-v1';
+  const readRemind=()=>{try{return {on:false,lead:30,done:{},...JSON.parse(localStorage.getItem(REMIND_KEY)||'{}')};}catch{return {on:false,lead:30,done:{}};}};
+  const writeRemind=state=>{try{localStorage.setItem(REMIND_KEY,JSON.stringify(state));}catch{}};
+  async function notifyUser(title,body,tag){
+    showToast(title+' - '+body,7000);
+    try{if('Notification' in window&&Notification.permission==='granted'){const reg=await navigator.serviceWorker?.getRegistration();const opts={body,tag,icon:'icon-192.png'};if(reg)reg.showNotification(title,opts);else new Notification(title,opts);}}catch{}
+  }
+  function checkReminders(){
+    const state=readRemind();if(!state.on)return;const now=Date.now(),lead=Number(state.lead)*60000;let changed=false;
+    const cutoff=now-86400000*2;for(const key of Object.keys(state.done))if(state.done[key]<cutoff){delete state.done[key];changed=true;}
+    for(const lesson of allLessons()){
+      const [h,m]=String(lesson.start).split(':').map(Number),start=calendarDate(lesson.date);start.setHours(h||0,m||0,0,0);const t=start.getTime();
+      if(t<=now||t-lead>now)continue;const id='l|'+lesson.date+'|'+lesson.start+'|'+lesson.subject;if(state.done[id])continue;
+      state.done[id]=now;changed=true;const mins=Math.max(1,Math.round((t-now)/60000));
+      notifyUser(lesson.subject+' tra '+mins+' min','Inizio alle '+lesson.start+(lesson.place?' - '+lesson.place:''),id);
+    }
+    for(const exam of upcomingExams()){
+      const days=daysUntil(exam.date);if(days>1)continue;const id='e|'+exam.id+'|'+dayKey();if(state.done[id])continue;
+      state.done[id]=now;changed=true;notifyUser(days===0?'Oggi hai un esame':'Domani hai un esame',exam.title+(exam.time?' alle '+exam.time:''),id);
+    }
+    if(changed)writeRemind(state);
+  }
+  function loadRemindUi(){const state=readRemind();$('remindOn').checked=!!state.on;$('remindLead').value=String(state.lead);}
+  $('remindOn').addEventListener('change',async()=>{
+    const state=readRemind();state.on=$('remindOn').checked;writeRemind(state);
+    if(state.on){if('Notification' in window&&Notification.permission==='default'){try{await Notification.requestPermission();}catch{}}
+      showToast('Promemoria attivi'+('Notification' in window&&Notification.permission!=='granted'?' (solo avvisi nell\u2019app: notifiche di sistema non consentite).':'.'));checkReminders();}
+    else showToast('Promemoria disattivati.');
+  });
+  $('remindLead').addEventListener('change',()=>{const state=readRemind();state.lead=Number($('remindLead').value);writeRemind(state);});
+  $('remindTestBtn').addEventListener('click',async()=>{if('Notification' in window&&Notification.permission==='default'){try{await Notification.requestPermission();}catch{}}notifyUser('Prova promemoria','Se vedi questo messaggio funziona.','test');});
+  const icsEscape=text=>String(text||'').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');
+  const icsStamp=(date,time)=>date.replace(/-/g,'')+'T'+String(time||'00:00').replace(':','').padEnd(4,'0').slice(0,4)+'00';
+  function buildIcs(){
+    const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Appunti universita//IT','CALSCALE:GREGORIAN','X-WR-CALNAME:Appunti universita'],stamp=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'');
+    const add=(uid,summary,date,start,end,place)=>{lines.push('BEGIN:VEVENT','UID:'+uid+'@appunti-universita','DTSTAMP:'+stamp,'DTSTART:'+icsStamp(date,start),'DTEND:'+icsStamp(date,end||start),'SUMMARY:'+icsEscape(summary));if(place)lines.push('LOCATION:'+icsEscape(place));lines.push('END:VEVENT');};
+    let count=0;
+    for(const lesson of allLessons()){add('lez-'+lesson.date+'-'+lesson.start.replace(':','')+'-'+calendarKey(lesson.subject).replace(/\W+/g,''),lesson.subject,lesson.date,lesson.start,lesson.end,lesson.place);count++;}
+    for(const exam of (data.exams||[])){if(!exam.date)continue;const t=exam.time||'09:00';const [h,m]=t.split(':').map(Number),endH=String(Math.min(23,(h||0)+2)).padStart(2,'0');add('esame-'+exam.id,'ESAME: '+exam.title,exam.date,t,endH+':'+String(m||0).padStart(2,'0'),exam.place);count++;}
+    lines.push('END:VCALENDAR');return {text:lines.join('\r\n')+'\r\n',count};
+  }
+  $('icsExportBtn').addEventListener('click',()=>{
+    const {text,count}=buildIcs();if(!count){showToast('Non ci sono lezioni o esami da esportare.');return;}
+    const url=URL.createObjectURL(new Blob([text],{type:'text/calendar'})),a=document.createElement('a');a.href=url;a.download='orario-appunti.ics';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);
+    showToast('Esportati '+count+' eventi.');
+  });
+  loadRemindUi();setTimeout(checkReminders,2500);setInterval(checkReminders,30000);
+
+  /* Comandi vocali dentro l'app (serve internet: il riconoscimento e' fatto da Chrome) */
+  const SpeechRec=window.SpeechRecognition||window.webkitSpeechRecognition;
+  let recognizer=null;
+  function stopListening(){try{recognizer?.stop();}catch{}$('micBtn').classList.remove('listening');$('micBtn').textContent='Parla';}
+  function startListening(){
+    if(!SpeechRec){showToast('Il riconoscimento vocale non \u00E8 disponibile in questo browser.');return;}
+    if($('micBtn').classList.contains('listening')){stopListening();return;}
+    recognizer=new SpeechRec();recognizer.lang='it-IT';recognizer.interimResults=true;recognizer.maxAlternatives=1;
+    $('micBtn').classList.add('listening');$('micBtn').textContent='Ascolto...';
+    let finalText='';
+    recognizer.onresult=event=>{let text='';for(const result of event.results){text+=result[0].transcript;if(result.isFinal)finalText=text;}$('commandInput').value=text;renderCommandResults();};
+    recognizer.onerror=event=>{stopListening();showToast(event.error==='not-allowed'?'Microfono non consentito: abilitalo dal lucchetto nella barra degli indirizzi.':event.error==='network'?'Serve la connessione a internet per i comandi vocali.':event.error==='no-speech'?'Non ho sentito nulla.':'Errore del riconoscimento vocale.');};
+    recognizer.onend=()=>{$('micBtn').classList.remove('listening');$('micBtn').textContent='Parla';const spoken=(finalText||$('commandInput').value).trim();if(spoken){$('commandInput').value=spoken;renderCommandResults();setTimeout(()=>$('commandResults').querySelector('.command-item')?.click(),450);}};
+    try{recognizer.start();}catch{stopListening();}
+  }
+  $('micBtn').addEventListener('click',startListening);
+  $('commandDialog').addEventListener('close',stopListening);
+
+  /* Schermata di avvio con dati reali: una volta al giorno, saltabile */
+  const BOOT_KEY='appunti-boot-day';
+  function bootNeeded(){try{return localStorage.getItem(BOOT_KEY)!==dayKey();}catch{return true;}}
+  function runBoot(done){
+    const dlg=$('bootDialog'),lines=$('bootLines'),bar=$('bootBar');let finished=false,timers=[];
+    const today=dayKey(),lessons=(scheduleMap()[today]||[]).length,exam=upcomingExams()[0];
+    const steps=[
+      ['Nucleo operativo','ATTIVO'],
+      ['Archivio locale',data.notes.length+(data.notes.length===1?' appunto':' appunti')],
+      ['Materie collegate',String(data.subjects.length)],
+      ['Lezioni di oggi',lessons?String(lessons):'nessuna'],
+      ['Prossimo esame',exam?(daysUntil(exam.date)===0?'oggi':'tra '+daysUntil(exam.date)+' giorni'):'nessuno in programma'],
+      ['Modalit\u00E0',navigator.onLine?'ONLINE':'OFFLINE'],
+      ['Sistema','PRONTO']
+    ];
+    const finish=()=>{if(finished)return;finished=true;timers.forEach(clearTimeout);try{localStorage.setItem(BOOT_KEY,today);}catch{}if(dlg.open)dlg.close();done();};
+    $('bootSkip').onclick=finish;dlg.addEventListener('cancel',event=>{event.preventDefault();finish();},{once:true});
+    dlg.showModal();$('bootSkip').focus();
+    const fast=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,gap=fast?60:380;
+    steps.forEach((step,index)=>timers.push(setTimeout(()=>{const row=document.createElement('div');row.innerHTML='<b>OK</b>'+escapeHtml(step[0])+': '+escapeHtml(step[1]);lines.append(row);bar.style.width=Math.round((index+1)/steps.length*100)+'%';},gap*(index+1))));
+    timers.push(setTimeout(finish,gap*(steps.length+2)));
+  }
+
   /* PWA: installazione e funzionamento offline */
   let installPrompt=null;
   window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();installPrompt=event;$('installBtn').classList.remove('hidden');});
@@ -2195,7 +2308,7 @@
     }).catch(()=>{});
   }
 
-  setSystemMessage(); render(); renderWelcome(); updateAppClock(); setInterval(updateAppClock,30000); $('welcomeDialog').showModal(); startWelcomeFx(); setTimeout(speakWelcomeGreeting, 700);
+  setSystemMessage(); render(); renderWelcome(); updateAppClock(); setInterval(updateAppClock,30000); $('welcomeDialog').showModal(); startWelcomeFx(); if(bootNeeded())runBoot(()=>setTimeout(speakWelcomeGreeting,300)); else setTimeout(speakWelcomeGreeting, 700);
   initStorage(); loadTextIndex().then(()=>setTimeout(runIndexer,1200)).catch(()=>{});
 })();
 </script>
