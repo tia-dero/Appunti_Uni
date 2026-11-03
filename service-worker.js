@@ -1,5 +1,5 @@
 /* Service worker: cache dell'app per l'uso offline. Cambia VERSION a ogni aggiornamento. */
-const VERSION = 'appunti-v4';
+const VERSION = 'appunti-v6';
 const CORE = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png',
   'pdf.min.js', 'pdf.worker.min.js'];
 

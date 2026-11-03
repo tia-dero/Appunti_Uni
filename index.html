@@ -878,6 +878,31 @@
     .mic-btn.listening { background:#1fd1ff; color:#04202a; animation:micpulse 1s infinite; }
     @keyframes micpulse { 50% { box-shadow:0 0 0 6px #1fd1ff33; } }
     @media (prefers-reduced-motion:reduce) { .boot-ring,.boot-ring b { animation:none; } }
+
+    /* Schermata iniziale: sempre intera nello schermo del PC, senza scorrere la pagina */
+    @media (min-width:761px) {
+      #welcomeDialog { overflow:hidden; padding:clamp(14px,3vh,40px) clamp(18px,4vw,48px); }
+      .welcome-shell { height:100%; min-height:0; }
+      .welcome-main { min-height:0; padding:clamp(10px,3vh,60px) 0; gap:clamp(24px,5vw,80px); }
+      .welcome-copy h1 { font-size:clamp(40px,min(7vw,12vh),82px); }
+      .welcome-panel { display:flex; flex-direction:column; max-height:100%; min-height:0; }
+      .welcome-lessons { overflow-y:auto; min-height:0; padding-right:2px; }
+      .welcome-top { padding-bottom:clamp(8px,1.8vh,18px); }
+      .welcome-footer { padding-top:clamp(8px,1.8vh,17px); }
+    }
+    @media (min-width:761px) and (max-height:820px) {
+      .welcome-panel { padding:14px; }
+      .welcome-panel-head { margin-bottom:9px; }
+      .welcome-lessons { gap:6px; }
+      .welcome-lesson { padding:8px 10px; }
+      .welcome-eyebrow { margin-bottom:10px; }
+      .welcome-date { margin-top:10px; }
+      .welcome-intro { margin-top:8px; line-height:1.55; }
+    }
+    @media (min-width:761px) and (max-height:640px) {
+      .welcome-intro { display:none; }
+      .welcome-radar { display:none; }
+    }
   </style>
 </head>
 <body class="jarvis-ui">
@@ -924,7 +949,7 @@
   </dialog>
   <dialog id="folderDialog"><form id="folderForm" method="dialog"><div class="dialog-head"><h2 id="folderDialogTitle">Nuova cartella</h2><button class="icon-btn" type="button" data-close="folderDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body"><label for="folderName">Nome della cartella<input id="folderName" maxlength="90" required placeholder="Es. Lezioni e slide del modulo"></label></div><div class="dialog-foot"><span></span><div class="foot-right"><button class="btn" type="button" data-close="folderDialog">Annulla</button><button class="btn btn-primary" type="submit">Salva cartella</button></div></div></form></dialog>
   <dialog id="bootDialog" aria-label="Avvio del sistema"><div class="boot-shell"><div class="boot-ring"><b>SM</b></div><div class="boot-title">AVVIO SISTEMA</div><div class="boot-lines" id="bootLines"></div><div class="boot-bar"><i id="bootBar"></i></div><button class="boot-skip" id="bootSkip" type="button">SALTA</button></div></dialog>
-  <dialog id="welcomeDialog" aria-labelledby="welcomeTitle"><canvas id="welcomeFx" aria-hidden="true"></canvas><div class="welcome-shell"><header class="welcome-top"><div class="welcome-brand"><span class="welcome-brand-mark">SM</span><span>APPUNTI &#xB7; INSUBRIA<small>IL TUO SPAZIO PERSONALE</small></span></div><span class="welcome-status"><i></i>SISTEMA ATTIVO &#xB7; <span id="welcomeSystemMsg">ARCHIVIO LOCALE</span><time id="welcomeClock">--:--</time></span><button class="welcome-skip" type="button" data-close="welcomeDialog">Vai all&#x2019;archivio</button></header><main class="welcome-main"><section class="welcome-copy"><div class="welcome-radar" aria-hidden="true"><span class="welcome-radar-core">SM</span></div><p class="welcome-eyebrow">Il tuo piano di oggi</p><h1 id="welcomeTitle">Ciao, <span>Mattia.</span></h1><p id="welcomeDate" class="welcome-date"></p><p id="welcomeIntro" class="welcome-intro"></p></section><section class="welcome-panel" aria-label="Materie di oggi"><div class="welcome-panel-head"><h2 id="welcomePanelTitle">Le tue lezioni</h2><span id="welcomeBadge">OGGI</span></div><div id="welcomeLessons" class="welcome-lessons"></div><div id="welcomeCountdown"></div><details class="welcome-recent"><summary>Ultimi appunti <span>ACCESSO RAPIDO</span></summary><div id="welcomeRecent" class="welcome-recent-list"></div></details></section></main><footer class="welcome-footer"><span class="welcome-footer-note">Archivio locale &#xB7; i tuoi appunti restano sul dispositivo</span><div class="welcome-footer-actions"><button class="welcome-voice" type="button" id="speakBriefingBtn">Ascolta briefing</button><button class="welcome-command" type="button" id="voiceSettingsBtn">Voce</button><button class="welcome-command welcome-mute" type="button" id="voiceMuteBtn" aria-pressed="false" aria-label="Disattiva voce automatica">&#x1F50A; Voce attiva</button><button class="welcome-command" type="button" id="welcomeCommandBtn">Ctrl+K&nbsp; Comandi</button><button class="welcome-enter" type="button" id="enterArchiveBtn">Entra nei miei appunti</button></div></footer></div></dialog>
+  <dialog id="welcomeDialog" aria-labelledby="welcomeTitle"><canvas id="welcomeFx" aria-hidden="true"></canvas><div class="welcome-shell"><header class="welcome-top"><div class="welcome-brand"><span class="welcome-brand-mark">SM</span><span>APPUNTI &#xB7; INSUBRIA<small>IL TUO SPAZIO PERSONALE</small></span></div><span class="welcome-status"><i></i>SISTEMA ATTIVO &#xB7; <span id="welcomeSystemMsg">ARCHIVIO LOCALE</span><time id="welcomeClock">--:--</time></span><button class="welcome-skip" type="button" data-close="welcomeDialog">Vai all&#x2019;archivio</button></header><main class="welcome-main"><section class="welcome-copy"><div class="welcome-radar" aria-hidden="true"><span class="welcome-radar-core">SM</span></div><p class="welcome-eyebrow">Il tuo piano di oggi</p><h1 id="welcomeTitle">Ciao, <span></span></h1><p id="welcomeDate" class="welcome-date"></p><p id="welcomeIntro" class="welcome-intro"></p></section><section class="welcome-panel" aria-label="Materie di oggi"><div class="welcome-panel-head"><h2 id="welcomePanelTitle">Le tue lezioni</h2><span id="welcomeBadge">OGGI</span></div><div id="welcomeLessons" class="welcome-lessons"></div><div id="welcomeCountdown"></div><details class="welcome-recent"><summary>Ultimi appunti <span>ACCESSO RAPIDO</span></summary><div id="welcomeRecent" class="welcome-recent-list"></div></details></section></main><footer class="welcome-footer"><span class="welcome-footer-note">Archivio locale &#xB7; i tuoi appunti restano sul dispositivo</span><div class="welcome-footer-actions"><button class="welcome-voice" type="button" id="speakBriefingBtn">Ascolta briefing</button><button class="welcome-command" type="button" id="voiceSettingsBtn">Voce</button><button class="welcome-command welcome-mute" type="button" id="voiceMuteBtn" aria-pressed="false" aria-label="Disattiva voce automatica">&#x1F50A; Voce attiva</button><button class="welcome-command" type="button" id="welcomeCommandBtn">Ctrl+K&nbsp; Comandi</button><button class="welcome-enter" type="button" id="enterArchiveBtn">Entra nei miei appunti</button></div></footer></div></dialog>
   <dialog id="voiceSettingsDialog" class="voice-settings-dialog" aria-labelledby="voiceSettingsTitle"><div class="dialog-head"><div><h2 id="voiceSettingsTitle">Configurazione vocale</h2><p class="voice-settings-subtitle">Regola la voce del briefing</p></div><button class="icon-btn" type="button" data-close="voiceSettingsDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body voice-settings-body"><label for="speechVoiceSelect">Voce disponibile<select id="speechVoiceSelect"><option value="">Italiano predefinito del dispositivo</option></select><small class="voice-settings-hint">Le voci dipendono dal browser e dal dispositivo. Per un risultato pi&#xF9; naturale, prova una voce italiana &#x201C;Natural&#x201D; o &#x201C;Enhanced&#x201D;, se disponibile.</small></label><button class="btn voice-preset" id="jarvisVoicePresetBtn" type="button">Applica preset JARVIS &#xB7; Decisa</button><label class="voice-range-label" for="speechPitch"><span>Tono <output id="speechPitchValue">0,88</output></span><input id="speechPitch" type="range" min="0.65" max="1.25" step="0.05" value="0.88"></label><label class="voice-range-label" for="speechRate"><span>Velocit&#xE0; <output id="speechRateValue">0,92&#xD7;</output></span><input id="speechRate" type="range" min="0.75" max="1.15" step="0.05" value="0.92"></label><p class="voice-settings-hint">Il preset abbassa leggermente il tono e rallenta il ritmo. La naturalezza dipende soprattutto dalla voce italiana installata nel dispositivo; il browser non pu&#xF2; riprodurre esattamente la voce del film.</p></div><div class="dialog-foot voice-settings-foot"><button class="btn" id="previewVoiceBtn" type="button">Prova la voce</button><div class="foot-right"><button class="btn" type="button" data-close="voiceSettingsDialog">Chiudi</button><button class="btn btn-primary" id="saveVoiceSettingsBtn" type="button">Salva</button></div></div></dialog>
   <dialog id="docxPreviewDialog" aria-labelledby="docxPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="docxPreviewTitle">Anteprima documento</h2><p>Anteprima locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadDocxBtn" type="button">Scarica</button><button class="icon-btn" type="button" data-close="docxPreviewDialog" aria-label="Chiudi anteprima">&#xD7;</button></div></div><div class="docx-preview-scroll"><div id="docxPreviewError" class="docx-preview-error hidden" role="status"></div><article id="docxContent" class="docx-content"></article></div></dialog>
   <dialog id="videoPreviewDialog" aria-labelledby="videoPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="videoPreviewTitle">Video lezione</h2><p>Riproduzione locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadVideoBtn" type="button">Scarica</button><button class="icon-btn" type="button" data-close="videoPreviewDialog" aria-label="Chiudi video">&#xD7;</button></div></div><div class="video-stage"><div id="videoPreviewError" class="docx-preview-error hidden" role="status"></div><video id="videoPlayer" controls playsinline preload="metadata"></video></div></dialog>
@@ -1000,32 +1025,7 @@
   const dayKey = () => { const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
   const ensureGoal = () => { const day=dayKey(); if(!data.studyGoal||data.studyGoal.day!==day)data.studyGoal={day,text:'',done:false}; return data.studyGoal; };
   const renderGoal = () => { const goal=ensureGoal(); $('goalText').value=goal.text||''; $('goalDoneBtn').disabled=!goal.text||goal.done; $('goalDoneBtn').textContent=goal.done?'Fatto, per oggi':'Segna come fatto'; $('goalStatus').textContent=goal.done?'Piccolo passo completato. Per oggi pu\u00F2 bastare.':goal.text?'Un passo alla volta, con i tuoi tempi.':'Facoltativo, senza scadenze rigide.'; };
-  const DEFAULT_SCHEDULE = {
-    '2026-10-27':[{start:'14:00',end:'16:00',subject:'Biochimica'},{start:'16:00',end:'18:00',subject:'Fisica'}],
-    '2026-10-28':[{start:'09:00',end:'13:00',subject:'Anatomia'},{start:'14:00',end:'18:00',subject:'Movimento adattato'}],
-    '2026-10-29':[{start:'08:00',end:'11:00',subject:'Pediatria'}],
-    '2026-10-30':[{start:'10:00',end:'13:00',subject:'Chimica'},{start:'15:00',end:'18:00',subject:'Teoria del movimento'}],
-    '2026-11-02':[{start:'08:30',end:'12:30',subject:'Movimento adattato',place:'Palestra'}],
-    '2026-11-03':[{start:'14:00',end:'16:00',subject:'Biochimica'},{start:'16:00',end:'18:00',subject:'Fisica'}],
-    '2026-11-04':[{start:'09:00',end:'13:00',subject:'Anatomia'},{start:'14:00',end:'16:00',subject:'Biochimica'}],
-    '2026-11-05':[],
-    '2026-11-06':[{start:'10:00',end:'13:00',subject:'Chimica'},{start:'15:00',end:'18:00',subject:'Teoria del movimento'}],
-    '2026-11-09':[],
-    '2026-11-10':[{start:'14:00',end:'16:00',subject:'Biochimica'},{start:'16:00',end:'18:00',subject:'Fisica'}],
-    '2026-11-11':[{start:'09:00',end:'13:00',subject:'Anatomia'},{start:'14:00',end:'16:00',subject:'Biochimica'}],
-    '2026-11-12':[{start:'08:00',end:'11:00',subject:'Pediatria'}],
-    '2026-11-13':[{start:'09:00',end:'11:00',subject:'Chimica'},{start:'11:00',end:'13:00',subject:'Antropologia'},{start:'14:00',end:'17:00',subject:'Movimento adattato',place:'Palestra'},{start:'17:00',end:'19:00',subject:'Teoria del movimento'}],
-    '2026-11-16':[{start:'08:30',end:'12:30',subject:'Movimento adattato',place:'Palestra'}],
-    '2026-11-17':[{start:'14:00',end:'16:00',subject:'Biochimica'},{start:'16:00',end:'18:00',subject:'Fisica'}],
-    '2026-11-18':[{start:'09:00',end:'13:00',subject:'Anatomia'},{start:'14:00',end:'16:00',subject:'Biochimica'},{start:'17:00',end:'18:00',subject:'Antropologia'}],
-    '2026-11-19':[{start:'08:00',end:'11:00',subject:'Pediatria'}],
-    '2026-11-20':[{start:'09:00',end:'11:00',subject:'Chimica'},{start:'11:00',end:'13:00',subject:'Antropologia'},{start:'14:00',end:'17:00',subject:'Movimento adattato',place:'Palestra'},{start:'17:00',end:'19:00',subject:'Teoria del movimento'}],
-    '2026-11-23':[],
-    '2026-11-24':[{start:'14:00',end:'16:00',subject:'Biochimica'},{start:'16:00',end:'18:00',subject:'Fisica'}],
-    '2026-11-25':[{start:'09:00',end:'13:00',subject:'Anatomia'},{start:'14:00',end:'16:00',subject:'Biochimica'},{start:'17:00',end:'18:00',subject:'Antropologia'}],
-    '2026-11-26':[{start:'08:00',end:'11:00',subject:'Pediatria'}],
-    '2026-11-27':[{start:'09:00',end:'11:00',subject:'Chimica'},{start:'11:00',end:'13:00',subject:'Antropologia'},{start:'14:00',end:'17:00',subject:'Movimento adattato',place:'Palestra'},{start:'17:00',end:'19:00',subject:'Teoria del movimento'}]
-  };
+  const DEFAULT_SCHEDULE = {};
   const cloneJson = value => JSON.parse(JSON.stringify(value));
   /* Garantisce che i dati (nuovi, vecchi o importati) abbiano tutti i campi attesi. */
   function normalizeData(d){
@@ -1037,6 +1037,7 @@
   normalizeData(data);
   const scheduleMap = () => data.schedule||{};
   const allLessons = () => {const map=scheduleMap();return Object.keys(map).sort().flatMap(date=>(map[date]||[]).map(lesson=>({...lesson,date})));};
+  const userName=()=>{try{return (localStorage.getItem('appunti-user-name')||'').trim();}catch{return '';}};
   const greetingWord = (now=new Date()) => {const hour=now.getHours();return hour<5?'Ciao':hour<12?'Buongiorno':hour<18?'Buon pomeriggio':'Buonasera';};
   const foldText = value => String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('it');
   const calendarSubjectNames = {'Movimento adattato':['Movimento adattato',"Tecniche e didattiche del movimento umano adattato all'et\u00E0 evolutiva"],'Anatomia':['Anatomia','Anatomia umana'],'Teoria del movimento':['Teoria del movimento','Teoria e metodologia del movimento umano'],'Antropologia':['Antropologia','Antro'],'Biochimica':['Biochimica'],'Fisica':['Fisica'],'Chimica':['Chimica'],'Pediatria':['Pediatria']};
@@ -1067,7 +1068,7 @@
   }
   function renderWelcome(){
     const today=dayKey(),lessons=scheduleMap()[today]||[],now=new Date(),greeting=greetingWord(now),title=$('welcomeTitle'),name=document.createElement('span');
-    title.replaceChildren(document.createTextNode(greeting+', '),name);name.textContent='Mattia.';$('welcomeDate').textContent=calendarDateLabel(today);
+    title.replaceChildren(document.createTextNode(userName()?greeting+', ':greeting),name);name.textContent=userName()?userName()+'.':'.';$('welcomeDate').textContent=calendarDateLabel(today);
     let badge='OGGI',panelTitle='Le tue lezioni',intro='',rows='';
     const all=allLessons(),next=all.find(lesson=>lesson.date>today);
     const lessonRow=(lesson,date=null)=>{const subject=calendarSubject(lesson.subject),time=date?calendarDateLabel(date)+' \u00B7 '+lesson.start:lesson.start+'\u2013'+lesson.end,meta=date?(lesson.place||'Prossimo appuntamento'):(lesson.place||'');return '<article class="welcome-lesson"><span class="welcome-lesson-time">'+escapeHtml(time)+'</span><span class="welcome-lesson-name">'+escapeHtml(lesson.subject)+(meta?'<small>'+escapeHtml(meta)+'</small>':'')+'</span>'+(subject?'<button class="btn" type="button" data-welcome-subject="'+escapeHtml(subject.id)+'">Apri appunti</button>':'<span class="daily-next">Materia non presente</span>')+'</article>';};
@@ -1223,7 +1224,7 @@
   function applyJarvisVoicePreset(){$('speechPitch').value='.78';$('speechRate').value='.88';updateVoiceRangeLabels();showToast('Preset JARVIS applicato: tono pi\u00F9 profondo e ritmo pi\u00F9 controllato. Provalo e salva se ti piace.');}
   function openVoiceSettings(){if(!window.speechSynthesis||!window.SpeechSynthesisUtterance){showToast('La sintesi vocale non \u00E8 disponibile in questo browser.');return;}const settings=readVoiceSettings();populateSpeechVoices();$('speechPitch').value=settings.pitch??.78;$('speechRate').value=settings.rate??.88;updateVoiceRangeLabels();$('voiceSettingsDialog').showModal();}
   function saveVoiceSettings(){data.voiceSettings={voiceURI:$('speechVoiceSelect').value,pitch:Number($('speechPitch').value),rate:Number($('speechRate').value)};save();$('voiceSettingsDialog').close();showToast('Impostazioni vocali salvate su questo dispositivo.');}
-  function previewVoiceSettings(){if(!window.speechSynthesis||!window.SpeechSynthesisUtterance)return;const synth=window.speechSynthesis;synth.cancel();const utterance=speechUtterance('Sistema pronto. Ciao Mattia, questa \u00E8 la voce del tuo archivio.',{voiceURI:$('speechVoiceSelect').value,pitch:Number($('speechPitch').value),rate:Number($('speechRate').value)});synth.speak(utterance);}
+  function previewVoiceSettings(){if(!window.speechSynthesis||!window.SpeechSynthesisUtterance)return;const synth=window.speechSynthesis;synth.cancel();const utterance=speechUtterance('Sistema pronto. Ciao'+(userName()?' '+userName():'')+', questa \u00E8 la voce del tuo archivio.',{voiceURI:$('speechVoiceSelect').value,pitch:Number($('speechPitch').value),rate:Number($('speechRate').value)});synth.speak(utterance);}
   function toggleVoiceBriefing(){
     const synth=window.speechSynthesis;if(!synth||!window.SpeechSynthesisUtterance)return;
     synth.cancel();synth.speak(speechUtterance(buildWelcomeSpeech()));
@@ -1241,7 +1242,7 @@
     else lessonText='Non hai ancora inserito un orario.';
     const exam=upcomingExams()[0];let examText='';
     if(exam){const days=daysUntil(exam.date);if(days<=30)examText=' Prossimo esame: '+exam.title+', '+(days===0?'oggi':days===1?'domani':'tra '+days+' giorni')+'.';}
-    return greetingWord()+' Mattia. '+lessonText+examText+' Il sistema \u00E8 operativo. Archivio universitario caricato e pronto.';
+    return greetingWord()+(userName()?' '+userName():'')+'. '+lessonText+examText+' Il sistema \u00E8 operativo. Archivio universitario caricato e pronto.';
   }
   /* Il saluto parlato parte una sola volta al giorno; "Ascolta briefing" resta sempre disponibile. */
   function attemptGreeting(){
@@ -1352,6 +1353,7 @@
   }
   function commandEntries(query=''){
     const q=String(query||'').trim().toLocaleLowerCase('it'),actions=[{kind:'home',category:'Sistema',label:'Apri panoramica',detail:'Torna alla dashboard',icon:'>'},{kind:'upload',category:'Sistema',label:'Carica appunti',detail:'Aggiungi file all\u2019archivio',icon:'>'},{kind:'backup',category:'Sistema',label:'Esporta backup',detail:'Salva una copia dei tuoi materiali',icon:'>'},{kind:'recent',category:'Sistema',label:'Ultimi file',detail:'Vai agli ultimi materiali aperti',icon:'>'},{kind:'schedule',category:'Sistema',label:'Gestisci orario',detail:'Importa un .ics o modifica le lezioni',icon:'>'},{kind:'exam',category:'Sistema',label:'Aggiungi esame',detail:'Imposta il conto alla rovescia',icon:'>'}];
+    actions.push({kind:'setname',category:'Sistema',label:'Imposta il tuo nome',detail:'Usato nei saluti',icon:'>'});
     if(q)actions.unshift({kind:'search',category:'Ricerca',label:'Cerca \u201C'+query.trim()+'\u201D',detail:'Cerca in appunti, cartelle e materie',icon:'>'});
     const subjects=data.subjects.map(subject=>({kind:'subject',id:subject.id,category:'Materie',label:subject.name,detail:data.notes.filter(note=>note.subjectId===subject.id).length+' appunti',icon:subjectIcon(subject.name),match:subject.name}));
     const notes=sortedNotes().map(note=>({kind:'note',id:note.id,category:'Appunti',label:note.title||fileTitle(note.fileName)||'Appunto senza titolo',detail:(data.subjects.find(subject=>subject.id===note.subjectId)?.name||'Materia')+(note.fileName?' \u00B7 '+note.fileName.split('.').pop().toUpperCase():''),icon:'>',match:(note.title||'')+' '+(note.fileName||'')+' '+(note.body||'')}));
@@ -1366,6 +1368,7 @@
   }
   function executeCommand(kind,id,query=''){
     if($('commandDialog').open)$('commandDialog').close();
+    if(kind==='setname'){const value=prompt('Come ti chiami?',userName());if(value!==null){try{localStorage.setItem('appunti-user-name',value.trim().slice(0,40));}catch{}renderWelcome();showToast('Nome salvato.');}return;}
     if(kind==='schedule'){openSchedule();return;}
     if(kind==='exam'){openExam();return;}
     if(kind==='home'){data.activeSubject='all';activeFolderId=null;$('search').value='';render();return;}
