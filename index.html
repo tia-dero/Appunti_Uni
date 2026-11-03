@@ -4,6 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#07131b">
+  <meta name="description" content="Archivio locale di appunti e slide universitarie">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Appunti universit&#xE0;</title>
   <style>
     :root { --shadow-hover:0 12px 28px #19262b1a; }
@@ -859,6 +864,7 @@
     <div class="brand"><span class="brand-mark" aria-hidden="true">SM</span><span>Appunti <span class="brand-sub">Scienze motorie &#xB7; Insubria</span></span></div>
     <div class="system-status" aria-label="Sistema attivo e archivio locale"><span class="system-led"></span><span>CORE ATTIVO<small id="systemMsg">ARCHIVIO LOCALE</small></span><time id="appClock">--:--</time></div>
     <div class="top-actions">
+      <button class="btn hidden" id="installBtn" type="button">Installa app</button>
       <button class="btn" id="importBtn" type="button">Importa</button>
       <button class="btn" id="exportBtn" type="button">Backup</button>
       <input class="file-input" id="importFile" type="file" accept=".zip,.json,application/zip,application/json">
@@ -900,7 +906,7 @@
   <dialog id="voiceSettingsDialog" class="voice-settings-dialog" aria-labelledby="voiceSettingsTitle"><div class="dialog-head"><div><h2 id="voiceSettingsTitle">Configurazione vocale</h2><p class="voice-settings-subtitle">Regola la voce del briefing</p></div><button class="icon-btn" type="button" data-close="voiceSettingsDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body voice-settings-body"><label for="speechVoiceSelect">Voce disponibile<select id="speechVoiceSelect"><option value="">Italiano predefinito del dispositivo</option></select><small class="voice-settings-hint">Le voci dipendono dal browser e dal dispositivo. Per un risultato pi&#xF9; naturale, prova una voce italiana &#x201C;Natural&#x201D; o &#x201C;Enhanced&#x201D;, se disponibile.</small></label><button class="btn voice-preset" id="jarvisVoicePresetBtn" type="button">Applica preset JARVIS &#xB7; Decisa</button><label class="voice-range-label" for="speechPitch"><span>Tono <output id="speechPitchValue">0,88</output></span><input id="speechPitch" type="range" min="0.65" max="1.25" step="0.05" value="0.88"></label><label class="voice-range-label" for="speechRate"><span>Velocit&#xE0; <output id="speechRateValue">0,92&#xD7;</output></span><input id="speechRate" type="range" min="0.75" max="1.15" step="0.05" value="0.92"></label><p class="voice-settings-hint">Il preset abbassa leggermente il tono e rallenta il ritmo. La naturalezza dipende soprattutto dalla voce italiana installata nel dispositivo; il browser non pu&#xF2; riprodurre esattamente la voce del film.</p></div><div class="dialog-foot voice-settings-foot"><button class="btn" id="previewVoiceBtn" type="button">Prova la voce</button><div class="foot-right"><button class="btn" type="button" data-close="voiceSettingsDialog">Chiudi</button><button class="btn btn-primary" id="saveVoiceSettingsBtn" type="button">Salva</button></div></div></dialog>
   <dialog id="docxPreviewDialog" aria-labelledby="docxPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="docxPreviewTitle">Anteprima documento</h2><p>Anteprima locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadDocxBtn" type="button">Scarica</button><button class="icon-btn" type="button" data-close="docxPreviewDialog" aria-label="Chiudi anteprima">&#xD7;</button></div></div><div class="docx-preview-scroll"><div id="docxPreviewError" class="docx-preview-error hidden" role="status"></div><article id="docxContent" class="docx-content"></article></div></dialog>
   <dialog id="videoPreviewDialog" aria-labelledby="videoPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="videoPreviewTitle">Video lezione</h2><p>Riproduzione locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadVideoBtn" type="button">Scarica</button><button class="icon-btn" type="button" data-close="videoPreviewDialog" aria-label="Chiudi video">&#xD7;</button></div></div><div class="video-stage"><div id="videoPreviewError" class="docx-preview-error hidden" role="status"></div><video id="videoPlayer" controls playsinline preload="metadata"></video></div></dialog>
-  <dialog id="commandDialog" class="command-dialog" aria-label="Comandi rapidi"><div class="command-head"><span><i></i>INTERFACCIA COMANDI</span><kbd>ESC</kbd></div><label class="command-input-wrap" for="commandInput"><input id="commandInput" type="search" autocomplete="off" placeholder="Cerca materia, appunto o azione&#x2026; (es. apri anatomia, ultimi file)"></label><div id="commandResults" class="command-results"></div><div class="command-foot"><span>Frecce su e giù per scegliere &#xB7; Invio per aprire</span><span><kbd>CTRL</kbd> + <kbd>K</kbd></span></div></dialog>
+  <dialog id="commandDialog" class="command-dialog" aria-label="Comandi rapidi"><div class="command-head"><span><i></i>INTERFACCIA COMANDI</span><kbd>ESC</kbd></div><label class="command-input-wrap" for="commandInput"><input id="commandInput" type="search" autocomplete="off" placeholder="Cerca materia, appunto o azione&#x2026; (es. apri anatomia, ultimi file)"></label><div id="commandResults" class="command-results"></div><div class="command-foot"><span>Frecce su e giÃ¹ per scegliere &#xB7; Invio per aprire</span><span><kbd>CTRL</kbd> + <kbd>K</kbd></span></div></dialog>
 
   <dialog id="scheduleDialog" class="wide-dialog" aria-labelledby="scheduleTitle"><div class="dialog-head"><h2 id="scheduleTitle">Orario delle lezioni</h2><button class="icon-btn" type="button" data-close="scheduleDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body sched-body">
     <section class="sched-block"><h3>Importa un calendario</h3><p class="sched-help">Scegli un file <b>.ics</b> esportato da Google Calendar, Outlook, Apple Calendar o dal portale dell&#x2019;universit&#xE0;. Le lezioni ripetute ogni settimana vengono espanse automaticamente.</p><div class="sched-row"><select id="schedMode" aria-label="Come importare"><option value="replace">Sostituisci l&#x2019;orario attuale</option><option value="merge">Aggiungi alle lezioni esistenti</option></select><button class="btn btn-primary" id="schedImportBtn" type="button">Scegli file .ics</button></div><input class="file-input" id="icsFile" type="file" accept=".ics,text/calendar"><p class="sched-msg" id="schedImportMsg" aria-live="polite"></p></section>
@@ -964,7 +970,7 @@
   const sortedNotes = () => [...data.notes].sort((a,b)=>(Number(b.updatedAt)||0)-(Number(a.updatedAt)||0));
   const recentlyOpenedNotes = () => (data.recentlyOpened||[]).map(item=>({note:data.notes.find(note=>note.id===item.noteId),openedAt:Number(item.openedAt)||0})).filter(item=>item.note);
   function recordNoteOpened(noteId){if(!data.notes.some(note=>note.id===noteId))return;data.recentlyOpened=(data.recentlyOpened||[]).filter(item=>item.noteId!==noteId);data.recentlyOpened.unshift({noteId,openedAt:Date.now()});data.recentlyOpened=data.recentlyOpened.slice(0,8);recordView(data.notes.find(note=>note.id===noteId)?.subjectId);setSystemMessage();save();renderLogStrip();}
-  const showToast = message => { const el=$('toast'); el.textContent=message; el.classList.remove('hidden'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.add('hidden'),2600); };
+  const showToast = (message,ms=2600) => { const el=$('toast'); el.textContent=message; el.classList.remove('hidden'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.add('hidden'),ms); };
   function recordActivity(action,detail='',subject=''){data.activityLog.unshift({id:uid(),action,detail,subject,at:Date.now()});data.activityLog=data.activityLog.slice(0,30);}
   function renderActivity(){const root=$('activityList');if(!root)return;const items=(data.activityLog||[]).slice(0,7);root.innerHTML=items.length?items.map(item=>'<div class="activity-item"><span class="activity-node"></span><span class="activity-text">'+escapeHtml(item.action||'Attivit\u00E0')+' \u00B7 '+escapeHtml(item.detail||'')+(item.subject?'<small>'+escapeHtml(item.subject)+'</small>':'')+'</span><time class="activity-time">'+new Date(Number(item.at)||Date.now()).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})+'</time></div>').join(''):'<div class="activity-empty">In attesa della prima attivit\u00E0 nell\u2019archivio.</div>';}
   const dateLabel = value => { const d=new Date(Number(value)||Date.now()); return Number.isNaN(d.getTime())?'Data non disponibile':d.toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'}); };
@@ -1805,7 +1811,7 @@
   async function zipList(blob){
     const tailStart=Math.max(0,blob.size-65557),tail=new DataView(await blob.slice(tailStart).arrayBuffer());let eocd=-1;
     for(let i=tail.byteLength-22;i>=0;i--){if(tail.getUint32(i,true)===0x06054b50){eocd=i;break;}}
-    if(eocd<0)throw new Error('Il file non è uno ZIP valido.');
+    if(eocd<0)throw new Error('Il file non Ã¨ uno ZIP valido.');
     const count=tail.getUint16(eocd+10,true),size=tail.getUint32(eocd+12,true),offset=tail.getUint32(eocd+16,true);
     if(offset===0xFFFFFFFF||count===0xFFFF)throw new Error('ZIP troppo grande (formato ZIP64 non supportato).');
     const directory=new DataView(await blob.slice(offset,offset+size).arrayBuffer()),decoder=new TextDecoder(),entries=new Map();let cursor=0;
@@ -1876,27 +1882,34 @@
     indexState.running=false;if($('search').value.trim())render();
   }
   const loadTextIndex=async()=>{for(const item of await listTexts())setIndexEntry(item.id,item.text||'');};
-  const indexStatusText=()=>indexState.running?' · sto leggendo i file ('+indexState.done+'/'+indexState.total+')':'';
+  const indexStatusText=()=>indexState.running?' Â· sto leggendo i file ('+indexState.done+'/'+indexState.total+')':'';
   function contentHit(note,foldedQuery){
     const entry=textIndex.get(note.attachmentId);if(!entry||!entry.folded)return '';const at=entry.folded.indexOf(foldedQuery);if(at<0)return '';
     const from=Math.max(0,at-60),to=Math.min(entry.raw.length,at+foldedQuery.length+90),clean=text=>escapeHtml(text.replace(/\s+/g,' '));
-    return (from>0?'…':'')+clean(entry.raw.slice(from,at))+'<mark>'+clean(entry.raw.slice(at,at+foldedQuery.length))+'</mark>'+clean(entry.raw.slice(at+foldedQuery.length,to))+(to<entry.raw.length?'…':'');
+    return (from>0?'â€¦':'')+clean(entry.raw.slice(from,at))+'<mark>'+clean(entry.raw.slice(at,at+foldedQuery.length))+'</mark>'+clean(entry.raw.slice(at+foldedQuery.length,to))+(to<entry.raw.length?'â€¦':'');
   }
 
   /* =====================================================================
      Lettore PDF integrato (pdf.js si scarica solo la prima volta che serve)
      ===================================================================== */
-  const PDFJS_BASE='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+  const PDFJS_SOURCES=['vendor/pdfjs/','https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/'];
   let pdfjsPromise=null,pdfjsFailedAt=0,pdfView=null;
-  function loadPdfJs(){
-    if(window.pdfjsLib)return Promise.resolve(window.pdfjsLib);
-    if(Date.now()-pdfjsFailedAt<60000)return Promise.reject(new Error('pdf.js non disponibile'));
-    if(!pdfjsPromise)pdfjsPromise=new Promise((resolve,reject)=>{
-      const script=document.createElement('script');script.src=PDFJS_BASE+'pdf.min.js';script.async=true;
-      script.onload=async()=>{try{const response=await fetch(PDFJS_BASE+'pdf.worker.min.js');if(!response.ok)throw new Error('worker');window.pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([await response.blob()],{type:'text/javascript'}));resolve(window.pdfjsLib);}catch(error){reject(error);}};
-      script.onerror=()=>reject(new Error('pdf.js non raggiungibile'));
+  function loadPdfScript(base){
+    return new Promise((resolve,reject)=>{
+      const script=document.createElement('script');script.src=base+'pdf.min.js';script.async=true;
+      script.onload=async()=>{try{const response=await fetch(base+'pdf.worker.min.js');if(!response.ok)throw new Error('worker');window.pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([await response.blob()],{type:'text/javascript'}));resolve(window.pdfjsLib);}catch(error){reject(error);}};
+      script.onerror=()=>{script.remove();reject(new Error('pdf.js non raggiungibile'));};
       document.head.append(script);
-    }).catch(error=>{pdfjsPromise=null;pdfjsFailedAt=Date.now();throw error;});
+    });
+  }
+  function loadPdfJs(){
+    if(window.pdfjsLib&&window.pdfjsLib.GlobalWorkerOptions.workerSrc)return Promise.resolve(window.pdfjsLib);
+    if(Date.now()-pdfjsFailedAt<60000)return Promise.reject(new Error('pdf.js non disponibile'));
+    if(!pdfjsPromise)pdfjsPromise=(async()=>{
+      let last;
+      for(const base of PDFJS_SOURCES){try{return await loadPdfScript(base);}catch(error){last=error;}}
+      throw last;
+    })().catch(error=>{pdfjsPromise=null;pdfjsFailedAt=Date.now();throw error;});
     return pdfjsPromise;
   }
   function pdfClose(){if(!pdfView)return;pdfView.observer?.disconnect();try{pdfView.doc.destroy();}catch{}pdfView=null;$('pdfPages').replaceChildren();}
@@ -1933,7 +1946,7 @@
   function updatePdfMeta(){
     if(!pdfView)return;const scroll=$('pdfScroll'),pages=$('pdfPages').children;let current=1;
     const top=scroll.getBoundingClientRect().top;for(let i=0;i<pages.length;i++){if(pages[i].getBoundingClientRect().top-top<=scroll.clientHeight/3)current=i+1;else break;}
-    $('pdfMeta').textContent='Pagina '+current+' di '+pdfView.doc.numPages+' · lettore integrato';
+    $('pdfMeta').textContent='Pagina '+current+' di '+pdfView.doc.numPages+' Â· lettore integrato';
   }
   function zoomPdf(factor){if(!pdfView)return;const scroll=$('pdfScroll'),ratio=scroll.scrollHeight?scroll.scrollTop/scroll.scrollHeight:0;pdfView.mult=Math.min(4,Math.max(.4,factor===0?1:pdfView.mult*factor));buildPdfPages();scroll.scrollTop=ratio*scroll.scrollHeight;updatePdfMeta();}
   let pdfScrollFrame=0,pdfResizeTimer=0;
@@ -1951,7 +1964,7 @@
     activeFileRecord=record;const name=record.name||note.fileName||'file',ext=name.split('.').pop().toLowerCase();
     $('fileDialogTitle').textContent=note.title||fileTitle(name);
     $('fileInfo').innerHTML=fileTypeBadge(name)+'<span class="file-info-name">'+escapeHtml(name)+'</span><span class="file-info-size">'+formatSize(record.size||record.blob.size)+'</span>';
-    $('fileInfoNote').textContent=/^pptx?$/.test(ext)?'Le presentazioni perdono layout e animazioni se mostrate nel browser: scaricala e aprila con PowerPoint, Keynote o Google Presentazioni.':'Questo formato non si può mostrare nel browser: scaricalo per aprirlo con l’app giusta.';
+    $('fileInfoNote').textContent=/^pptx?$/.test(ext)?'Le presentazioni perdono layout e animazioni se mostrate nel browser: scaricala e aprila con PowerPoint, Keynote o Google Presentazioni.':'Questo formato non si puÃ² mostrare nel browser: scaricalo per aprirlo con lâ€™app giusta.';
     const body=$('fileText');body.replaceChildren();$('fileTextWrap').classList.add('hidden');$('fileTextWrap').open=false;
     if(!$('fileDialog').open)$('fileDialog').showModal();
     try{
@@ -2035,10 +2048,10 @@
     for(const date of dates)total+=map[date].length;
     for(const date of dates){
       if(shown>=150)break;
-      html+='<div class="sched-day"><h4>'+escapeHtml(calendarDateLabel(date))+'</h4>'+map[date].map((lesson,index)=>{shown++;return '<div class="sched-item"><span class="sched-time">'+escapeHtml(lesson.start)+'–'+escapeHtml(lesson.end)+'</span><span class="sched-name">'+escapeHtml(lesson.subject)+(lesson.place?'<small>'+escapeHtml(lesson.place)+'</small>':'')+'</span><span class="sched-actions"><button class="btn" type="button" data-sched-edit="'+date+'|'+index+'">Modifica</button><button class="btn btn-danger" type="button" data-sched-del="'+date+'|'+index+'">Elimina</button></span></div>';}).join('')+'</div>';
+      html+='<div class="sched-day"><h4>'+escapeHtml(calendarDateLabel(date))+'</h4>'+map[date].map((lesson,index)=>{shown++;return '<div class="sched-item"><span class="sched-time">'+escapeHtml(lesson.start)+'â€“'+escapeHtml(lesson.end)+'</span><span class="sched-name">'+escapeHtml(lesson.subject)+(lesson.place?'<small>'+escapeHtml(lesson.place)+'</small>':'')+'</span><span class="sched-actions"><button class="btn" type="button" data-sched-edit="'+date+'|'+index+'">Modifica</button><button class="btn btn-danger" type="button" data-sched-del="'+date+'|'+index+'">Elimina</button></span></div>';}).join('')+'</div>';
     }
     $('schedCount').textContent=total?'('+total+')':'';
-    $('schedList').innerHTML=html?html+(total>shown?'<p class="sched-empty">…e altre '+(total-shown)+' lezioni più avanti.</p>':''):'<p class="sched-empty">Nessuna lezione in programma da oggi in poi.</p>';
+    $('schedList').innerHTML=html?html+(total>shown?'<p class="sched-empty">â€¦e altre '+(total-shown)+' lezioni piÃ¹ avanti.</p>':''):'<p class="sched-empty">Nessuna lezione in programma da oggi in poi.</p>';
   }
   function openSchedule(){
     $('lessonSubjectList').innerHTML=data.subjects.map(subject=>'<option value="'+escapeHtml(subject.name)+'"></option>').join('');
@@ -2049,9 +2062,9 @@
     const file=event.target.files?.[0];event.target.value='';if(!file)return;const msg=$('schedImportMsg');
     try{
       const {map,count}=scheduleFromIcs(await file.text());
-      if(!count){msg.textContent='Nel file non ho trovato lezioni (gli eventi “tutto il giorno” vengono ignorati).';return;}
+      if(!count){msg.textContent='Nel file non ho trovato lezioni (gli eventi â€œtutto il giornoâ€� vengono ignorati).';return;}
       const replace=$('schedMode').value==='replace';
-      if(replace&&allLessons().length&&!confirm('Sostituire l’orario attuale con le '+count+' lezioni del file?'))return;
+      if(replace&&allLessons().length&&!confirm('Sostituire lâ€™orario attuale con le '+count+' lezioni del file?'))return;
       let added=count;if(replace)data.schedule=map;else added=mergeSchedule(data.schedule=scheduleMap(),map);
       const dates=Object.keys(map).sort();recordActivity('Orario importato',added+' lezioni');afterScheduleChange();
       msg.textContent='Fatto: '+added+' lezioni '+(replace?'importate':'aggiunte')+' (dal '+calendarDate(dates[0]).toLocaleDateString('it-IT')+' al '+calendarDate(dates[dates.length-1]).toLocaleDateString('it-IT')+').';
@@ -2059,7 +2072,7 @@
   });
   $('lessonForm').addEventListener('submit',event=>{
     event.preventDefault();const subject=$('lessonSubject').value.trim(),date=$('lessonDate').value,start=$('lessonStart').value,end=$('lessonEnd').value,place=$('lessonPlace').value.trim(),repeat=editingLesson?0:Math.min(30,Math.max(0,parseInt($('lessonRepeat').value,10)||0));
-    if(!subject||!date||!start||!end)return;if(end<=start){showToast('L’ora di fine deve essere dopo quella di inizio.');return;}
+    if(!subject||!date||!start||!end)return;if(end<=start){showToast('Lâ€™ora di fine deve essere dopo quella di inizio.');return;}
     const map=data.schedule=scheduleMap();
     if(editingLesson){const old=map[editingLesson.date];if(old){old.splice(editingLesson.index,1);if(!old.length)delete map[editingLesson.date];}}
     for(let week=0;week<=repeat;week++){const d=calendarDate(date);d.setDate(d.getDate()+7*week);const key=toKey(d.getFullYear(),d.getMonth()+1,d.getDate()),list=map[key]=map[key]||[];list.push({start,end,subject,...(place?{place}:{})});list.sort((a,b)=>a.start.localeCompare(b.start));}
@@ -2073,7 +2086,7 @@
     editingLesson={date,index};$('lessonSubject').value=lesson.subject;$('lessonDate').value=date;$('lessonStart').value=lesson.start;$('lessonEnd').value=lesson.end;$('lessonPlace').value=lesson.place||'';
     $('lessonFormTitle').textContent='Modifica lezione';$('lessonSubmitBtn').textContent='Salva modifiche';$('lessonCancelEdit').classList.remove('hidden');$('lessonRepeatWrap').classList.add('hidden');$('lessonForm').scrollIntoView({behavior:'smooth',block:'nearest'});
   });
-  $('schedClearBtn').addEventListener('click',()=>{if(!allLessons().length){showToast('L’orario è già vuoto.');return;}if(confirm('Eliminare tutte le lezioni dall’orario?')){data.schedule={};recordActivity('Orario svuotato','');resetLessonForm();afterScheduleChange();}});
+  $('schedClearBtn').addEventListener('click',()=>{if(!allLessons().length){showToast('Lâ€™orario Ã¨ giÃ  vuoto.');return;}if(confirm('Eliminare tutte le lezioni dallâ€™orario?')){data.schedule={};recordActivity('Orario svuotato','');resetLessonForm();afterScheduleChange();}});
 
   /* =====================================================================
      Esami e conto alla rovescia
@@ -2082,13 +2095,13 @@
   const upcomingExams=()=>(data.exams||[]).filter(exam=>exam.date&&daysUntil(exam.date)>=0).sort((a,b)=>(a.date+(a.time||'99:99')).localeCompare(b.date+(b.time||'99:99')));
   function examStripMarkup(){
     const exam=upcomingExams()[0];if(!exam)return '';const days=daysUntil(exam.date);
-    return '<div class="countdown-strip exam-strip"><span class="countdown-orbit">'+(days===0?'OGGI':days+'g')+'</span><span><span class="countdown-label">PROSSIMO ESAME</span><span class="countdown-course">'+escapeHtml(exam.title)+'<small>'+escapeHtml(calendarDateLabel(exam.date))+(exam.time?' · '+escapeHtml(exam.time):'')+'</small></span></span></div>';
+    return '<div class="countdown-strip exam-strip"><span class="countdown-orbit">'+(days===0?'OGGI':days+'g')+'</span><span><span class="countdown-label">PROSSIMO ESAME</span><span class="countdown-course">'+escapeHtml(exam.title)+'<small>'+escapeHtml(calendarDateLabel(exam.date))+(exam.time?' Â· '+escapeHtml(exam.time):'')+'</small></span></span></div>';
   }
   function renderExams(){
     const root=$('examsCard');if(!root)return;const list=upcomingExams();
     root.innerHTML='<div class="exams-head"><div><p class="section-eyebrow">Il conto alla rovescia</p><h2>Esami</h2></div><button class="btn" type="button" id="addExamBtn">+ Aggiungi esame</button></div>'+(list.length?'<div class="exams-list">'+list.map(exam=>{
       const days=daysUntil(exam.date),level=days<=3?' is-urgent':days<=10?' is-soon':'',subject=calendarSubject(exam.title);
-      return '<article class="exam-item'+level+'"><span class="exam-days"><b>'+(days===0?'Oggi':days)+'</b>'+(days===0?'':'<small>'+(days===1?'giorno':'giorni')+'</small>')+'</span><span class="exam-info"><strong>'+escapeHtml(exam.title)+'</strong><small>'+escapeHtml(calendarDateLabel(exam.date))+(exam.time?' · '+escapeHtml(exam.time):'')+(exam.place?' · '+escapeHtml(exam.place):'')+'</small></span><span class="exam-actions">'+(subject?'<button class="btn" type="button" data-exam-open="'+escapeHtml(subject.id)+'">Appunti</button>':'')+'<button class="btn" type="button" data-exam-edit="'+escapeHtml(exam.id)+'">Modifica</button></span></article>';
+      return '<article class="exam-item'+level+'"><span class="exam-days"><b>'+(days===0?'Oggi':days)+'</b>'+(days===0?'':'<small>'+(days===1?'giorno':'giorni')+'</small>')+'</span><span class="exam-info"><strong>'+escapeHtml(exam.title)+'</strong><small>'+escapeHtml(calendarDateLabel(exam.date))+(exam.time?' Â· '+escapeHtml(exam.time):'')+(exam.place?' Â· '+escapeHtml(exam.place):'')+'</small></span><span class="exam-actions">'+(subject?'<button class="btn" type="button" data-exam-open="'+escapeHtml(subject.id)+'">Appunti</button>':'')+'<button class="btn" type="button" data-exam-edit="'+escapeHtml(exam.id)+'">Modifica</button></span></article>';
     }).join('')+'</div>':'<p class="exams-empty">Nessun esame in programma. Aggiungi la data e vedrai qui quanti giorni mancano.</p>');
     $('addExamBtn').addEventListener('click',()=>openExam());
     root.querySelectorAll('[data-exam-edit]').forEach(button=>button.addEventListener('click',()=>openExam(button.dataset.examEdit)));
@@ -2107,7 +2120,7 @@
     if(editingExamId){const exam=data.exams.find(item=>item.id===editingExamId);if(exam)Object.assign(exam,fields);}else data.exams.push({id:uid(),...fields});
     recordActivity(editingExamId?'Esame modificato':'Esame aggiunto',title);save();$('examDialog').close();render();renderWelcome();showToast('Esame salvato.');
   });
-  $('examDeleteBtn').addEventListener('click',()=>{const exam=data.exams.find(item=>item.id===editingExamId);if(!exam||!confirm('Eliminare l’esame “'+exam.title+'”?'))return;data.exams=data.exams.filter(item=>item.id!==exam.id);recordActivity('Esame eliminato',exam.title);save();$('examDialog').close();render();renderWelcome();});
+  $('examDeleteBtn').addEventListener('click',()=>{const exam=data.exams.find(item=>item.id===editingExamId);if(!exam||!confirm('Eliminare lâ€™esame â€œ'+exam.title+'â€�?'))return;data.exams=data.exams.filter(item=>item.id!==exam.id);recordActivity('Esame eliminato',exam.title);save();$('examDialog').close();render();renderWelcome();});
 
   /* =====================================================================
      Salvataggio sicuro, promemoria e backup in ZIP
@@ -2115,8 +2128,8 @@
   async function updateStorageStatus(){
     const text=$('storageText');if(!text)return;let persisted=false,usage='';
     try{if(navigator.storage?.persisted)persisted=await navigator.storage.persisted();}catch{}
-    try{const estimate=await navigator.storage.estimate();if(estimate?.usage!=null)usage=' · '+formatSize(estimate.usage);}catch{}
-    text.textContent=(persisted?'Archivio protetto':'Archivio locale')+usage+(persisted?'':' · fai backup');
+    try{const estimate=await navigator.storage.estimate();if(estimate?.usage!=null)usage=' Â· '+formatSize(estimate.usage);}catch{}
+    text.textContent=(persisted?'Archivio protetto':'Archivio locale')+usage+(persisted?'':' Â· fai backup');
     $('storageStatus').title=persisted?'Il browser non cancella questi dati da solo.':'Il browser potrebbe cancellare questi dati se lo spazio scarseggia: fai un backup ogni tanto.';
   }
   async function initStorage(){try{if(navigator.storage?.persist&&!(await navigator.storage.persisted()))await navigator.storage.persist();}catch{}updateStorageStatus();}
@@ -2124,7 +2137,7 @@
     const el=$('backupBanner');if(!el)return;
     const last=Number(data.lastBackupAt)||0,age=last?Math.floor((Date.now()-last)/86400000):null,needed=data.notes.length>0&&(age===null||age>=14)&&data.backupSnooze!==dayKey();
     el.classList.toggle('hidden',!needed);if(!needed){el.innerHTML='';return;}
-    el.innerHTML='<span class="backup-icon" aria-hidden="true">'+svgIcon('avviso')+'</span><span class="backup-text"><strong>'+(age===null?'Non hai ancora fatto nessun backup.':'Ultimo backup: '+age+' giorni fa.')+'</strong> I tuoi '+data.notes.length+' file stanno solo in questo browser: se i dati del sito vengono cancellati, si perdono.</span><span class="backup-actions"><button class="btn btn-primary" id="backupNowBtn" type="button">Fai il backup</button><button class="btn" id="backupLaterBtn" type="button">Più tardi</button></span>';
+    el.innerHTML='<span class="backup-icon" aria-hidden="true">'+svgIcon('avviso')+'</span><span class="backup-text"><strong>'+(age===null?'Non hai ancora fatto nessun backup.':'Ultimo backup: '+age+' giorni fa.')+'</strong> I tuoi '+data.notes.length+' file stanno solo in questo browser: se i dati del sito vengono cancellati, si perdono.</span><span class="backup-actions"><button class="btn btn-primary" id="backupNowBtn" type="button">Fai il backup</button><button class="btn" id="backupLaterBtn" type="button">PiÃ¹ tardi</button></span>';
     $('backupNowBtn').addEventListener('click',()=>$('exportBtn').click());
     $('backupLaterBtn').addEventListener('click',()=>{data.backupSnooze=dayKey();save();renderBackupBanner();});
   }
@@ -2132,7 +2145,7 @@
   $('exportBtn').addEventListener('click',async()=>{
     const button=$('exportBtn');if(button.disabled)return;button.disabled=true;
     try{
-      showToast('Preparo il backup…');
+      showToast('Preparo il backupâ€¦');
       const referenced=new Set(data.notes.map(note=>note.attachmentId).filter(Boolean)),entries=[],manifest=[],used=new Set();
       for(const record of await listAttachments()){
         if(!referenced.has(record.id))continue;
@@ -2142,7 +2155,7 @@
       }
       data.lastBackupAt=Date.now();recordActivity('Backup esportato',data.notes.length+' appunti');save();
       const payload={...data,files:manifest,backupCreatedAt:new Date().toISOString(),format:2};
-      entries.unshift({name:'LEGGIMI.txt',blob:new Blob(['Backup di Appunti università\r\n\r\ndati.json  -> materie, cartelle, orario, esami e impostazioni (serve per reimportare)\r\nmateriali/ -> i tuoi file, ordinati per materia: li puoi aprire anche senza l’app\r\n\r\nPer ripristinare: nell’app premi "Importa" e scegli questo file .zip.\r\n'],{type:'text/plain'})});
+      entries.unshift({name:'LEGGIMI.txt',blob:new Blob(['Backup di Appunti universitÃ \r\n\r\ndati.json  -> materie, cartelle, orario, esami e impostazioni (serve per reimportare)\r\nmateriali/ -> i tuoi file, ordinati per materia: li puoi aprire anche senza lâ€™app\r\n\r\nPer ripristinare: nellâ€™app premi "Importa" e scegli questo file .zip.\r\n'],{type:'text/plain'})});
       entries.unshift({name:'dati.json',blob:new Blob([JSON.stringify(payload)],{type:'application/json'})});
       const zip=await buildZip(entries),url=URL.createObjectURL(zip),a=document.createElement('a');a.href=url;a.download='backup-appunti-'+new Date().toISOString().slice(0,10)+'.zip';a.click();setTimeout(()=>URL.revokeObjectURL(url),120000);
       renderActivity();renderBackupBanner();showToast('Backup scaricato ('+formatSize(zip.size)+').');
@@ -2155,13 +2168,13 @@
     try{
       let imported,loadFile;
       if(/\.zip$/i.test(file.name)||file.type==='application/zip'){
-        const entries=await zipList(file),manifest=entries.get('dati.json');if(!manifest)throw new Error('Questo ZIP non è un backup di Appunti.');
+        const entries=await zipList(file),manifest=entries.get('dati.json');if(!manifest)throw new Error('Questo ZIP non Ã¨ un backup di Appunti.');
         imported=JSON.parse(await (await zipEntryBlob(file,manifest)).text());
         loadFile=async item=>{const entry=entries.get(item.path);return entry?new Blob([await zipEntryBlob(file,entry)],{type:item.type||'application/octet-stream'}):null;};
       }else{imported=JSON.parse(await file.text());loadFile=async item=>item.data?base64Blob(item.data,item.type):null;}
       if(!Array.isArray(imported.subjects)||!Array.isArray(imported.notes))throw new Error('Formato non valido');
       if(!confirm('Importare questo backup? Gli appunti presenti verranno sostituiti.'))return;
-      showToast('Importo il backup…');
+      showToast('Importo il backupâ€¦');
       for(const item of Array.isArray(imported.files)?imported.files:[]){if(!item.id)continue;const blob=await loadFile(item);if(blob)await putAttachmentRecord({id:item.id,name:item.name||'appunti',type:item.type||'application/octet-stream',size:item.size||blob.size,blob});}
       const {files,backupCreatedAt,format,...rest}=imported;
       data=normalizeData({...rest,activeSubject:'all'});
@@ -2169,6 +2182,18 @@
       recordActivity('Backup importato',data.notes.length+' appunti');activeFolderId=null;showArchive=false;save();await cleanupAttachments();render();renderWelcome();showToast('Backup importato.');runIndexer();updateStorageStatus();
     }catch(error){showToast(error?.message&&error.message!=='Formato non valido'?error.message:'File non valido o impossibile da importare.');}
   });
+
+  /* PWA: installazione e funzionamento offline */
+  let installPrompt=null;
+  window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();installPrompt=event;$('installBtn').classList.remove('hidden');});
+  window.addEventListener('appinstalled',()=>{installPrompt=null;$('installBtn').classList.add('hidden');showToast('App installata.');});
+  $('installBtn').addEventListener('click',async()=>{if(!installPrompt)return;installPrompt.prompt();try{await installPrompt.userChoice;}catch{}installPrompt=null;$('installBtn').classList.add('hidden');});
+  if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
+    navigator.serviceWorker.register('service-worker.js').then(reg=>{
+      const watch=worker=>worker&&worker.addEventListener('statechange',()=>{if(worker.state==='installed'&&navigator.serviceWorker.controller)showToast('Nuova versione scaricata: ricarica la pagina per usarla.',8000);});
+      watch(reg.installing);reg.addEventListener('updatefound',()=>watch(reg.installing));
+    }).catch(()=>{});
+  }
 
   setSystemMessage(); render(); renderWelcome(); updateAppClock(); setInterval(updateAppClock,30000); $('welcomeDialog').showModal(); startWelcomeFx(); setTimeout(speakWelcomeGreeting, 700);
   initStorage(); loadTextIndex().then(()=>setTimeout(runIndexer,1200)).catch(()=>{});
