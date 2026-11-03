@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#07131b">
   <meta name="description" content="Archivio locale di appunti e slide universitarie">
   <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/png" href="icons/icon-192.png">
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Appunti universit&#xE0;</title>
   <style>
@@ -1892,7 +1892,7 @@
   /* =====================================================================
      Lettore PDF integrato (pdf.js si scarica solo la prima volta che serve)
      ===================================================================== */
-  const PDFJS_SOURCES=['vendor/pdfjs/','https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/'];
+  const PDFJS_SOURCES=['./','https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/'];
   let pdfjsPromise=null,pdfjsFailedAt=0,pdfView=null;
   function loadPdfScript(base){
     return new Promise((resolve,reject)=>{
