@@ -4,11 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#07131b">
-  <meta name="description" content="Archivio locale di appunti e slide universitarie">
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/png" href="icons/icon-192.png">
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Appunti universit&#xE0;</title>
   <style>
     :root { --shadow-hover:0 12px 28px #19262b1a; }
@@ -482,8 +477,8 @@
     .welcome-recent { margin-top:13px; padding-top:11px; border-top:1px solid #35cde328; }
     .welcome-recent summary { display:flex; align-items:center; justify-content:space-between; gap:10px; color:#b5c8c8; font-size:12px; font-weight:720; cursor:pointer; list-style:none; }
     .welcome-recent summary::-webkit-details-marker { display:none; }
-    .welcome-recent summary::after { margin-left:auto; color:#62e6f0; content:"+"; font-size:13px; }
-    .welcome-recent[open] summary::after { content:"-"; }
+    .welcome-recent summary::after { margin-left:auto; color:#62e6f0; content:"\002304"; font-size:13px; }
+    .welcome-recent[open] summary::after { content:"\002303"; }
     .welcome-recent summary span { color:#63888d; font-size:10.5px; font-weight:750; letter-spacing:.12em; }
     .welcome-recent-list { display:grid; gap:5px; margin-top:9px; }
     .welcome-recent-item { display:flex; align-items:center; gap:9px; width:100%; padding:8px 9px; border:1px solid #29434a; border-radius:6px; background:#0a171ce6; color:#d7e5e2; text-align:left; cursor:pointer; transition:border-color .14s,background .14s; }
@@ -675,7 +670,7 @@
     }
     @media(max-width:480px) {
       .command-trigger { font-size:0; min-width:36px; justify-content:center; }
-      .command-trigger::before { font-size:12px; content:"K"; }
+      .command-trigger::before { font-size:12px; content:"\002318"; }
       .holo-map-header > span { font-size:10.5px; }
       .activity-item { grid-template-columns:10px minmax(0,1fr) auto; gap:6px; }
       .welcome-footer-actions { display:grid; grid-template-columns:1fr 1fr; }
@@ -842,21 +837,6 @@
       .sched-time { grid-column:1/-1; }
       .pdf-scroll { padding:6px; }
     }
-    .search { padding-left:14px; }
-    .search-icon { display:none; }
-    .file-type-badge { letter-spacing:.06em; }
-    .ico { display:block; width:1em; height:1em; }
-    .nav-icon .ico { width:20px; height:20px; }
-    .nav-icon { width:24px; }
-    .holo-node-icon .ico { width:16px; height:16px; }
-    .module-loader-icon .ico { width:17px; height:17px; }
-    .command-item-icon .ico { width:15px; height:15px; }
-    .stat-symbol .ico,.daily-mark .ico,.goal-icon .ico { width:19px; height:19px; }
-    .folder-icon .ico { width:18px; height:18px; }
-    .attachment-symbol .ico { width:17px; height:17px; }
-    .welcome-recent-icon .ico { width:14px; height:14px; }
-    .backup-icon .ico { width:22px; height:22px; }
-    .countdown-orbit { box-sizing:border-box; padding:0 2px; text-align:center; line-height:1.2; letter-spacing:0; word-spacing:-1px; overflow:hidden; }
   </style>
 </head>
 <body class="jarvis-ui">
@@ -864,36 +844,35 @@
     <div class="brand"><span class="brand-mark" aria-hidden="true">SM</span><span>Appunti <span class="brand-sub">Scienze motorie &#xB7; Insubria</span></span></div>
     <div class="system-status" aria-label="Sistema attivo e archivio locale"><span class="system-led"></span><span>CORE ATTIVO<small id="systemMsg">ARCHIVIO LOCALE</small></span><time id="appClock">--:--</time></div>
     <div class="top-actions">
-      <button class="btn hidden" id="installBtn" type="button">Installa app</button>
-      <button class="btn" id="importBtn" type="button">Importa</button>
-      <button class="btn" id="exportBtn" type="button">Backup</button>
+      <button class="btn" id="importBtn" type="button">&#x2B07; Importa</button>
+      <button class="btn" id="exportBtn" type="button">&#x25A3; Backup</button>
       <input class="file-input" id="importFile" type="file" accept=".zip,.json,application/zip,application/json">
     </div>
   </header>
   <div class="layout">
     <aside><div class="side-head"><span class="side-monogram">IN</span><div><strong>INSUBRIA</strong><small>SPORT SCIENCE</small></div></div><p class="side-label">Il mio spazio</p><nav class="subject-list" id="subjectList" aria-label="Panoramica e materie"></nav><button class="side-add" id="addSubjectBtn" type="button">+ Aggiungi materia</button><div class="side-bottom" id="storageStatus"><span class="offline-dot"></span><span id="storageText">Archivio locale &#xB7; sempre tuo</span></div></aside>
     <main>
-      <div class="toolbar"><div class="search-wrap"><input id="search" class="search" type="search" placeholder="Cerca per titolo o dentro i file&#x2026;" aria-label="Cerca appunti, materie o testo dentro i file"></div><button class="btn command-trigger" id="commandButton" type="button" title="Comandi rapidi &#xB7; Ctrl+K">Ctrl+K <span>COMANDI</span></button><div class="subject-actions hidden" id="subjectActions"><button class="btn" id="renameSubjectBtn" type="button">Rinomina</button><button class="btn btn-danger" id="deleteSubjectBtn" type="button">Elimina</button></div></div>
+      <div class="toolbar"><div class="search-wrap"><span class="search-icon" aria-hidden="true">&#x2315;</span><input id="search" class="search" type="search" placeholder="Cerca per titolo o dentro i file&#x2026;" aria-label="Cerca appunti, materie o testo dentro i file"></div><button class="btn command-trigger" id="commandButton" type="button" title="Comandi rapidi &#xB7; Ctrl+K">&#x2318;K <span>COMANDI</span></button><div class="subject-actions hidden" id="subjectActions"><button class="btn" id="renameSubjectBtn" type="button">Rinomina</button><button class="btn btn-danger" id="deleteSubjectBtn" type="button">Elimina</button></div></div>
       <section id="dashboardView">
         <section class="backup-banner hidden" id="backupBanner" role="status"></section>
         <section class="daily-card" id="dailyCard" aria-label="Lezioni di oggi"></section>
         <section class="exams-card" id="examsCard" aria-label="Esami"></section>
-        <div class="dashboard-hero"><div><p class="hero-kicker">Sport science &#xB7; Insubria</p><h1>Allenati allo<br><span>studio.</span></h1><p class="hero-copy">Il tuo spazio per lezioni, esami e idee in movimento. Tutto organizzato, pronto per il prossimo obiettivo.</p><div class="hero-actions"><button class="btn btn-primary" id="newNoteBtn" type="button">+ Carica appunti</button><span class="hero-meta">FOCUS &#xB7; COSTANZA &#xB7; PROGRESSO</span></div></div><div class="hero-art" aria-hidden="true"><div class="orbit"></div><div class="orbit orbit-two"></div><div class="orbit-core">SM</div><span class="art-tag">MOTION / LAB 01</span></div></div>
+        <div class="dashboard-hero"><div><p class="hero-kicker">Sport science &#xB7; Insubria</p><h1>Allenati allo<br><span>studio.</span></h1><p class="hero-copy">Il tuo spazio per lezioni, esami e idee in movimento. Tutto organizzato, pronto per il prossimo obiettivo.</p><div class="hero-actions"><button class="btn btn-primary" id="newNoteBtn" type="button">+ Carica appunti</button><span class="hero-meta">FOCUS &#xB7; COSTANZA &#xB7; PROGRESSO</span></div></div><div class="hero-art" aria-hidden="true"><div class="orbit"></div><div class="orbit orbit-two"></div><div class="orbit-core">&#x2726;</div><span class="art-tag">MOTION / LAB 01</span></div></div>
 
         <section class="log-strip hidden" id="logStrip" aria-label="Ultimi materiali visualizzati"></section>
         <div class="stats-grid" id="statsGrid"></div>
-        <section class="goal-card" aria-label="Micro-obiettivo facoltativo"><div class="goal-intro"><span class="goal-icon"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg></span><div><p class="section-eyebrow">Un passo alla volta</p><h2>Il tuo micro-obiettivo</h2><p>Un piccolo passo, scelto da te. Puoi cambiarlo quando vuoi.</p></div></div><div class="goal-entry"><input id="goalText" maxlength="120" placeholder="Es. Rileggere una pagina di anatomia" aria-label="Il tuo micro-obiettivo di oggi"><div class="goal-actions"><button class="btn" id="saveGoalBtn" type="button">Salva obiettivo</button><button class="btn btn-primary" id="goalDoneBtn" type="button">Segna come fatto</button></div><p class="goal-status" id="goalStatus" aria-live="polite"></p></div></section>
-        <section><div class="section-head"><div><p class="section-eyebrow">Il tuo percorso</p><h2>Le tue materie</h2></div><button class="section-link" id="dashboardAddSubject" type="button">+ Aggiungi materia</button></div><section class="holo-map-panel"><div class="holo-map-header"><div><p class="section-eyebrow">Rete accademica &#xB7; live</p><h3>Mappa delle materie</h3></div><span>NODI ATTIVI</span></div><p class="consult-hint hidden" id="consultHint"></p><div class="holo-map" id="subjectMap" aria-label="Mappa interattiva delle materie"></div></section></section>
-        <section class="recent-section"><div class="section-head"><div><p class="section-eyebrow">Log di consultazione</p><h2>Archivio recente</h2></div><button class="section-link" id="toggleArchive" type="button">Apri archivio completo</button></div><div class="notes" id="recentNotes"></div><section id="archiveBlock" class="hidden" style="margin-top:20px"><div class="section-head"><div><p class="section-eyebrow">Tutto il materiale</p><h2>Archivio completo</h2></div></div><div class="notes" id="archiveNotes"></div></section></section>
+        <section class="goal-card" aria-label="Micro-obiettivo facoltativo"><div class="goal-intro"><span class="goal-icon">&#x25CE;</span><div><p class="section-eyebrow">Un passo alla volta</p><h2>Il tuo micro-obiettivo</h2><p>Un piccolo passo, scelto da te. Puoi cambiarlo quando vuoi.</p></div></div><div class="goal-entry"><input id="goalText" maxlength="120" placeholder="Es. Rileggere una pagina di anatomia" aria-label="Il tuo micro-obiettivo di oggi"><div class="goal-actions"><button class="btn" id="saveGoalBtn" type="button">Salva obiettivo</button><button class="btn btn-primary" id="goalDoneBtn" type="button">Segna come fatto</button></div><p class="goal-status" id="goalStatus" aria-live="polite"></p></div></section>
+        <section><div class="section-head"><div><p class="section-eyebrow">Il tuo percorso</p><h2>Le tue materie</h2></div><button class="section-link" id="dashboardAddSubject" type="button">+ Aggiungi materia</button></div><section class="holo-map-panel"><div class="holo-map-header"><div><p class="section-eyebrow">Rete accademica &#xB7; live</p><h3>Mappa delle materie</h3></div><span>&#x2726; NODI ATTIVI</span></div><p class="consult-hint hidden" id="consultHint"></p><div class="holo-map" id="subjectMap" aria-label="Mappa interattiva delle materie"></div></section></section>
+        <section class="recent-section"><div class="section-head"><div><p class="section-eyebrow">Log di consultazione</p><h2>Archivio recente</h2></div><button class="section-link" id="toggleArchive" type="button">Apri archivio completo &#x25BE;</button></div><div class="notes" id="recentNotes"></div><section id="archiveBlock" class="hidden" style="margin-top:20px"><div class="section-head"><div><p class="section-eyebrow">Tutto il materiale</p><h2>Archivio completo</h2></div></div><div class="notes" id="archiveNotes"></div></section></section>
         <section class="activity-panel"><div class="activity-header"><div><p class="section-eyebrow">Log di sistema</p><h2>Registro attivit&#xE0;</h2></div><span class="activity-live"><i></i>LIVE</span></div><div id="activityList" class="activity-list"></div></section>
       </section>
-      <section id="subjectView" class="hidden"><div class="subject-view-head"><div><p class="section-eyebrow">Area materia &#xB7; Insubria</p><h1 id="subjectTitle"></h1><p id="subjectSubtitle"></p></div><div class="subject-top-actions"><button class="btn" id="addFolderBtn" type="button">+ Nuova cartella</button><button class="btn btn-primary" id="newNoteSubjectBtn" type="button">+ Carica appunti</button></div></div><div id="subjectOverview"><div class="section-head"><div><p class="section-eyebrow">Raccolte organizzate</p><h2>Cartelle</h2></div></div><div class="folder-grid" id="folderGrid"></div><div class="folder-empty hidden" id="folderEmpty">Nessuna cartella ancora. Creane una per raccogliere pi&#xF9; slide insieme.</div><div class="section-head loose-head"><div><p class="section-eyebrow">Materiale singolo</p><h2>Appunti senza cartella</h2></div></div><div class="notes" id="subjectNotes"></div><div class="empty hidden" id="subjectEmpty"></div></div><div id="folderDetail" class="hidden"><div class="folder-detail-head"><div class="folder-detail-title"><button class="section-link back-folders" id="backToFolders" type="button">Tutte le cartelle</button><p class="section-eyebrow">Raccolta &#xB7; materia</p><h2 id="folderTitle"></h2><p id="folderSubtitle"></p></div><div class="folder-actions"><button class="btn" id="renameFolderBtn" type="button">Rinomina</button><button class="btn btn-danger" id="deleteFolderBtn" type="button">Elimina</button><button class="btn btn-primary" id="uploadFolderBtn" type="button">+ Aggiungi slide</button></div></div><div class="notes" id="folderNotes"></div><div class="empty hidden" id="folderNotesEmpty"><strong>Cartella pronta</strong>Carica le slide qui dentro: puoi selezionarne pi&#xF9; di una.</div></div></section>
+      <section id="subjectView" class="hidden"><div class="subject-view-head"><div><p class="section-eyebrow">Area materia &#xB7; Insubria</p><h1 id="subjectTitle"></h1><p id="subjectSubtitle"></p></div><div class="subject-top-actions"><button class="btn" id="addFolderBtn" type="button">+ Nuova cartella</button><button class="btn btn-primary" id="newNoteSubjectBtn" type="button">+ Carica appunti</button></div></div><div id="subjectOverview"><div class="section-head"><div><p class="section-eyebrow">Raccolte organizzate</p><h2>Cartelle</h2></div></div><div class="folder-grid" id="folderGrid"></div><div class="folder-empty hidden" id="folderEmpty">Nessuna cartella ancora. Creane una per raccogliere pi&#xF9; slide insieme.</div><div class="section-head loose-head"><div><p class="section-eyebrow">Materiale singolo</p><h2>Appunti senza cartella</h2></div></div><div class="notes" id="subjectNotes"></div><div class="empty hidden" id="subjectEmpty"></div></div><div id="folderDetail" class="hidden"><div class="folder-detail-head"><div class="folder-detail-title"><button class="section-link back-folders" id="backToFolders" type="button">&#x219D; Tutte le cartelle</button><p class="section-eyebrow">Raccolta &#xB7; materia</p><h2 id="folderTitle"></h2><p id="folderSubtitle"></p></div><div class="folder-actions"><button class="btn" id="renameFolderBtn" type="button">Rinomina</button><button class="btn btn-danger" id="deleteFolderBtn" type="button">Elimina</button><button class="btn btn-primary" id="uploadFolderBtn" type="button">+ Aggiungi slide</button></div></div><div class="notes" id="folderNotes"></div><div class="empty hidden" id="folderNotesEmpty"><strong>Cartella pronta</strong>Carica le slide qui dentro: puoi selezionarne pi&#xF9; di una.</div></div></section>
       <section id="searchView" class="hidden"><div class="search-head"><div><p class="section-eyebrow">Ricerca nell&#x2019;archivio</p><h1>Risultati</h1><p id="searchSummary"></p></div></div><div class="notes" id="searchNotes"></div><div class="empty hidden" id="searchEmpty"><strong>Nessun risultato</strong>Prova con altre parole o cambia materia.</div></section>
     </main>
   </div>
 
-  <div class="module-loader" id="moduleLoader" role="status" aria-live="polite" aria-atomic="true"><span class="module-loader-icon" id="moduleLoaderIcon"></span><span class="module-loader-copy"><small>MODULO CARICATO</small><strong id="moduleLoaderTitle">Archivio</strong></span><span class="module-loader-status">READY</span></div>
-  <dialog id="noteDialog"><form id="noteForm" method="dialog"><div class="dialog-head" id="editorHeader"><h2 id="noteDialogTitle">Carica appunti</h2><button class="icon-btn" type="button" data-close="noteDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body" id="editorFields"><div class="field-row"><label for="noteSubject">Materia<select id="noteSubject" required></select></label><label for="noteKind">Tipo di materiale<select id="noteKind"><option>Lezione</option><option>Esame</option><option>Laboratorio</option><option>Ripasso</option><option>Progetto</option><option>Altro</option></select></label></div><div class="field-row"><label for="noteFolder">Cartella<select id="noteFolder"><option value="">Senza cartella</option></select></label><div class="folder-hint">Scegli una cartella per raccogliere insieme pi&#xF9; slide.</div></div><label for="noteTitle">Titolo (facoltativo)<input id="noteTitle" maxlength="140" placeholder="Se vuoto, user&#xF2; il nome del file"></label><label class="upload-zone" id="uploadZone" for="filePicker"><input id="filePicker" type="file" multiple accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.odt,.ods,.odp,.rtf,.txt,.md,.png,.jpg,.jpeg,.webp,.mp4,.m4v,.mov,.webm,.mkv,.avi,.ogv,.3gp"><span class="upload-symbol">+</span><strong>Trascina qui i tuoi appunti</strong><span class="upload-help">oppure clicca per scegliere PDF, Word, presentazioni, immagini o video</span><span class="upload-help">Puoi selezionare pi&#xF9; file: ognuno avr&#xE0; la sua scheda.</span></label><div id="selectedFiles" class="selected-files"></div><div id="currentAttachment" class="current-attachment hidden"><span class="attachment-symbol"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11.5 12 19.5a5 5 0 0 1-7-7l8.5-8.5a3.4 3.4 0 0 1 4.8 4.8L9.8 17.3a1.8 1.8 0 0 1-2.5-2.5l7.5-7.5"/></svg></span><div class="attachment-label"><small>FILE NELL&#x2019;ARCHIVIO</small><strong id="currentFileName"></strong></div><button class="btn" id="openAttachmentBtn" type="button">Apri file</button></div><textarea id="noteBody" class="hidden" aria-hidden="true"></textarea></div><div class="dialog-foot" id="editorActions"><button class="btn btn-danger hidden" id="deleteNoteBtn" type="button">Elimina appunto</button><div class="foot-right"><button class="btn hidden" id="focusButton" type="button">Modalit&#xE0; focus</button><button class="btn" type="button" data-close="noteDialog">Annulla</button><button class="btn btn-primary" id="submitNoteBtn" type="submit">Aggiungi all&#x2019;archivio</button></div></div><section class="focus-view hidden" id="focusView"><div class="focus-top"><div><p class="section-eyebrow">Lettura tranquilla</p><span id="focusMeta" class="focus-meta"></span></div><button class="icon-btn" type="button" data-close="noteDialog" aria-label="Chiudi">&#xD7;</button></div><h2 id="focusTitle"></h2><div id="focusContent" class="focus-content"></div><button class="btn" id="exitFocus" type="button">Torna all&#x2019;appunto</button></section></form></dialog>
+  <div class="module-loader" id="moduleLoader" role="status" aria-live="polite" aria-atomic="true"><span class="module-loader-icon" id="moduleLoaderIcon">&#x2726;</span><span class="module-loader-copy"><small>MODULO CARICATO</small><strong id="moduleLoaderTitle">Archivio</strong></span><span class="module-loader-status">READY</span></div>
+  <dialog id="noteDialog"><form id="noteForm" method="dialog"><div class="dialog-head" id="editorHeader"><h2 id="noteDialogTitle">Carica appunti</h2><button class="icon-btn" type="button" data-close="noteDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body" id="editorFields"><div class="field-row"><label for="noteSubject">Materia<select id="noteSubject" required></select></label><label for="noteKind">Tipo di materiale<select id="noteKind"><option>Lezione</option><option>Esame</option><option>Laboratorio</option><option>Ripasso</option><option>Progetto</option><option>Altro</option></select></label></div><div class="field-row"><label for="noteFolder">Cartella<select id="noteFolder"><option value="">Senza cartella</option></select></label><div class="folder-hint">Scegli una cartella per raccogliere insieme pi&#xF9; slide.</div></div><label for="noteTitle">Titolo (facoltativo)<input id="noteTitle" maxlength="140" placeholder="Se vuoto, user&#xF2; il nome del file"></label><label class="upload-zone" id="uploadZone" for="filePicker"><input id="filePicker" type="file" multiple accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.odt,.ods,.odp,.rtf,.txt,.md,.png,.jpg,.jpeg,.webp,.mp4,.m4v,.mov,.webm,.mkv,.avi,.ogv,.3gp"><span class="upload-symbol">+</span><strong>Trascina qui i tuoi appunti</strong><span class="upload-help">oppure clicca per scegliere PDF, Word, presentazioni, immagini o video</span><span class="upload-help">Puoi selezionare pi&#xF9; file: ognuno avr&#xE0; la sua scheda.</span></label><div id="selectedFiles" class="selected-files"></div><div id="currentAttachment" class="current-attachment hidden"><span class="attachment-symbol">&#x25A3;</span><div class="attachment-label"><small>FILE NELL&#x2019;ARCHIVIO</small><strong id="currentFileName"></strong></div><button class="btn" id="openAttachmentBtn" type="button">Apri file &#x2197;</button></div><textarea id="noteBody" class="hidden" aria-hidden="true"></textarea></div><div class="dialog-foot" id="editorActions"><button class="btn btn-danger hidden" id="deleteNoteBtn" type="button">Elimina appunto</button><div class="foot-right"><button class="btn hidden" id="focusButton" type="button">&#x25C9; Modalit&#xE0; focus</button><button class="btn" type="button" data-close="noteDialog">Annulla</button><button class="btn btn-primary" id="submitNoteBtn" type="submit">Aggiungi all&#x2019;archivio</button></div></div><section class="focus-view hidden" id="focusView"><div class="focus-top"><div><p class="section-eyebrow">Lettura tranquilla</p><span id="focusMeta" class="focus-meta"></span></div><button class="icon-btn" type="button" data-close="noteDialog" aria-label="Chiudi">&#xD7;</button></div><h2 id="focusTitle"></h2><div id="focusContent" class="focus-content"></div><button class="btn" id="exitFocus" type="button">&#x219D; Torna all&#x2019;appunto</button></section></form></dialog>
   <dialog id="subjectDialog">
     <form id="subjectForm" method="dialog">
       <div class="dialog-head"><h2 id="subjectDialogTitle">Aggiungi materia</h2><button class="icon-btn" type="button" data-close="subjectDialog" aria-label="Chiudi">&#xD7;</button></div>
@@ -902,11 +881,11 @@
     </form>
   </dialog>
   <dialog id="folderDialog"><form id="folderForm" method="dialog"><div class="dialog-head"><h2 id="folderDialogTitle">Nuova cartella</h2><button class="icon-btn" type="button" data-close="folderDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body"><label for="folderName">Nome della cartella<input id="folderName" maxlength="90" required placeholder="Es. Lezioni e slide del modulo"></label></div><div class="dialog-foot"><span></span><div class="foot-right"><button class="btn" type="button" data-close="folderDialog">Annulla</button><button class="btn btn-primary" type="submit">Salva cartella</button></div></div></form></dialog>
-  <dialog id="welcomeDialog" aria-labelledby="welcomeTitle"><canvas id="welcomeFx" aria-hidden="true"></canvas><div class="welcome-shell"><header class="welcome-top"><div class="welcome-brand"><span class="welcome-brand-mark">SM</span><span>APPUNTI &#xB7; INSUBRIA<small>IL TUO SPAZIO PERSONALE</small></span></div><span class="welcome-status"><i></i>SISTEMA ATTIVO &#xB7; <span id="welcomeSystemMsg">ARCHIVIO LOCALE</span><time id="welcomeClock">--:--</time></span><button class="welcome-skip" type="button" data-close="welcomeDialog">Vai all&#x2019;archivio</button></header><main class="welcome-main"><section class="welcome-copy"><div class="welcome-radar" aria-hidden="true"><span class="welcome-radar-core">SM</span></div><p class="welcome-eyebrow">Il tuo piano di oggi</p><h1 id="welcomeTitle">Ciao, <span>Mattia.</span></h1><p id="welcomeDate" class="welcome-date"></p><p id="welcomeIntro" class="welcome-intro"></p></section><section class="welcome-panel" aria-label="Materie di oggi"><div class="welcome-panel-head"><h2 id="welcomePanelTitle">Le tue lezioni</h2><span id="welcomeBadge">OGGI</span></div><div id="welcomeLessons" class="welcome-lessons"></div><div id="welcomeCountdown"></div><details class="welcome-recent"><summary>Ultimi appunti <span>ACCESSO RAPIDO</span></summary><div id="welcomeRecent" class="welcome-recent-list"></div></details></section></main><footer class="welcome-footer"><span class="welcome-footer-note">Archivio locale &#xB7; i tuoi appunti restano sul dispositivo</span><div class="welcome-footer-actions"><button class="welcome-voice" type="button" id="speakBriefingBtn">Ascolta briefing</button><button class="welcome-command" type="button" id="voiceSettingsBtn">Voce</button><button class="welcome-command welcome-mute" type="button" id="voiceMuteBtn" aria-pressed="false" aria-label="Disattiva voce automatica">&#x1F50A; Voce attiva</button><button class="welcome-command" type="button" id="welcomeCommandBtn">Ctrl+K&nbsp; Comandi</button><button class="welcome-enter" type="button" id="enterArchiveBtn">Entra nei miei appunti</button></div></footer></div></dialog>
-  <dialog id="voiceSettingsDialog" class="voice-settings-dialog" aria-labelledby="voiceSettingsTitle"><div class="dialog-head"><div><h2 id="voiceSettingsTitle">Configurazione vocale</h2><p class="voice-settings-subtitle">Regola la voce del briefing</p></div><button class="icon-btn" type="button" data-close="voiceSettingsDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body voice-settings-body"><label for="speechVoiceSelect">Voce disponibile<select id="speechVoiceSelect"><option value="">Italiano predefinito del dispositivo</option></select><small class="voice-settings-hint">Le voci dipendono dal browser e dal dispositivo. Per un risultato pi&#xF9; naturale, prova una voce italiana &#x201C;Natural&#x201D; o &#x201C;Enhanced&#x201D;, se disponibile.</small></label><button class="btn voice-preset" id="jarvisVoicePresetBtn" type="button">Applica preset JARVIS &#xB7; Decisa</button><label class="voice-range-label" for="speechPitch"><span>Tono <output id="speechPitchValue">0,88</output></span><input id="speechPitch" type="range" min="0.65" max="1.25" step="0.05" value="0.88"></label><label class="voice-range-label" for="speechRate"><span>Velocit&#xE0; <output id="speechRateValue">0,92&#xD7;</output></span><input id="speechRate" type="range" min="0.75" max="1.15" step="0.05" value="0.92"></label><p class="voice-settings-hint">Il preset abbassa leggermente il tono e rallenta il ritmo. La naturalezza dipende soprattutto dalla voce italiana installata nel dispositivo; il browser non pu&#xF2; riprodurre esattamente la voce del film.</p></div><div class="dialog-foot voice-settings-foot"><button class="btn" id="previewVoiceBtn" type="button">Prova la voce</button><div class="foot-right"><button class="btn" type="button" data-close="voiceSettingsDialog">Chiudi</button><button class="btn btn-primary" id="saveVoiceSettingsBtn" type="button">Salva</button></div></div></dialog>
-  <dialog id="docxPreviewDialog" aria-labelledby="docxPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="docxPreviewTitle">Anteprima documento</h2><p>Anteprima locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadDocxBtn" type="button">Scarica</button><button class="icon-btn" type="button" data-close="docxPreviewDialog" aria-label="Chiudi anteprima">&#xD7;</button></div></div><div class="docx-preview-scroll"><div id="docxPreviewError" class="docx-preview-error hidden" role="status"></div><article id="docxContent" class="docx-content"></article></div></dialog>
-  <dialog id="videoPreviewDialog" aria-labelledby="videoPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="videoPreviewTitle">Video lezione</h2><p>Riproduzione locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadVideoBtn" type="button">Scarica</button><button class="icon-btn" type="button" data-close="videoPreviewDialog" aria-label="Chiudi video">&#xD7;</button></div></div><div class="video-stage"><div id="videoPreviewError" class="docx-preview-error hidden" role="status"></div><video id="videoPlayer" controls playsinline preload="metadata"></video></div></dialog>
-  <dialog id="commandDialog" class="command-dialog" aria-label="Comandi rapidi"><div class="command-head"><span><i></i>INTERFACCIA COMANDI</span><kbd>ESC</kbd></div><label class="command-input-wrap" for="commandInput"><input id="commandInput" type="search" autocomplete="off" placeholder="Cerca materia, appunto o azione&#x2026; (es. apri anatomia, ultimi file)"></label><div id="commandResults" class="command-results"></div><div class="command-foot"><span>Frecce su e giÃ¹ per scegliere &#xB7; Invio per aprire</span><span><kbd>CTRL</kbd> + <kbd>K</kbd></span></div></dialog>
+  <dialog id="welcomeDialog" aria-labelledby="welcomeTitle"><canvas id="welcomeFx" aria-hidden="true"></canvas><div class="welcome-shell"><header class="welcome-top"><div class="welcome-brand"><span class="welcome-brand-mark">SM</span><span>APPUNTI &#xB7; INSUBRIA<small>IL TUO SPAZIO PERSONALE</small></span></div><span class="welcome-status"><i></i>SISTEMA ATTIVO &#xB7; <span id="welcomeSystemMsg">ARCHIVIO LOCALE</span><time id="welcomeClock">--:--</time></span><button class="welcome-skip" type="button" data-close="welcomeDialog">Vai all&#x2019;archivio &#x2192;</button></header><main class="welcome-main"><section class="welcome-copy"><div class="welcome-radar" aria-hidden="true"><span class="welcome-radar-core">SM</span></div><p class="welcome-eyebrow">Il tuo piano di oggi</p><h1 id="welcomeTitle">Ciao, <span>Mattia.</span></h1><p id="welcomeDate" class="welcome-date"></p><p id="welcomeIntro" class="welcome-intro"></p></section><section class="welcome-panel" aria-label="Materie di oggi"><div class="welcome-panel-head"><h2 id="welcomePanelTitle">Le tue lezioni</h2><span id="welcomeBadge">OGGI</span></div><div id="welcomeLessons" class="welcome-lessons"></div><div id="welcomeCountdown"></div><details class="welcome-recent"><summary>Ultimi appunti <span>ACCESSO RAPIDO</span></summary><div id="welcomeRecent" class="welcome-recent-list"></div></details></section></main><footer class="welcome-footer"><span class="welcome-footer-note">Archivio locale &#xB7; i tuoi appunti restano sul dispositivo</span><div class="welcome-footer-actions"><button class="welcome-voice" type="button" id="speakBriefingBtn">&#x25B6; Ascolta briefing</button><button class="welcome-command" type="button" id="voiceSettingsBtn">&#x266B; Voce</button><button class="welcome-command welcome-mute" type="button" id="voiceMuteBtn" aria-pressed="false" aria-label="Disattiva voce automatica">&#x1F50A; Voce attiva</button><button class="welcome-command" type="button" id="welcomeCommandBtn">&#x2318;K&nbsp; Comandi</button><button class="welcome-enter" type="button" id="enterArchiveBtn">Entra nei miei appunti&nbsp; &#x2192;</button></div></footer></div></dialog>
+  <dialog id="voiceSettingsDialog" class="voice-settings-dialog" aria-labelledby="voiceSettingsTitle"><div class="dialog-head"><div><h2 id="voiceSettingsTitle">Configurazione vocale</h2><p class="voice-settings-subtitle">Regola la voce del briefing</p></div><button class="icon-btn" type="button" data-close="voiceSettingsDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body voice-settings-body"><label for="speechVoiceSelect">Voce disponibile<select id="speechVoiceSelect"><option value="">Italiano predefinito del dispositivo</option></select><small class="voice-settings-hint">Le voci dipendono dal browser e dal dispositivo. Per un risultato pi&#xF9; naturale, prova una voce italiana &#x201C;Natural&#x201D; o &#x201C;Enhanced&#x201D;, se disponibile.</small></label><button class="btn voice-preset" id="jarvisVoicePresetBtn" type="button">&#x2726; Applica preset JARVIS &#xB7; Decisa</button><label class="voice-range-label" for="speechPitch"><span>Tono <output id="speechPitchValue">0,88</output></span><input id="speechPitch" type="range" min="0.65" max="1.25" step="0.05" value="0.88"></label><label class="voice-range-label" for="speechRate"><span>Velocit&#xE0; <output id="speechRateValue">0,92&#xD7;</output></span><input id="speechRate" type="range" min="0.75" max="1.15" step="0.05" value="0.92"></label><p class="voice-settings-hint">Il preset abbassa leggermente il tono e rallenta il ritmo. La naturalezza dipende soprattutto dalla voce italiana installata nel dispositivo; il browser non pu&#xF2; riprodurre esattamente la voce del film.</p></div><div class="dialog-foot voice-settings-foot"><button class="btn" id="previewVoiceBtn" type="button">&#x25B6; Prova la voce</button><div class="foot-right"><button class="btn" type="button" data-close="voiceSettingsDialog">Chiudi</button><button class="btn btn-primary" id="saveVoiceSettingsBtn" type="button">Salva</button></div></div></dialog>
+  <dialog id="docxPreviewDialog" aria-labelledby="docxPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="docxPreviewTitle">Anteprima documento</h2><p>Anteprima locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadDocxBtn" type="button">&#x2B07; Scarica</button><button class="icon-btn" type="button" data-close="docxPreviewDialog" aria-label="Chiudi anteprima">&#xD7;</button></div></div><div class="docx-preview-scroll"><div id="docxPreviewError" class="docx-preview-error hidden" role="status"></div><article id="docxContent" class="docx-content"></article></div></dialog>
+  <dialog id="videoPreviewDialog" aria-labelledby="videoPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="videoPreviewTitle">Video lezione</h2><p>Riproduzione locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadVideoBtn" type="button">&#x21A7; Scarica</button><button class="icon-btn" type="button" data-close="videoPreviewDialog" aria-label="Chiudi video">&#xD7;</button></div></div><div class="video-stage"><div id="videoPreviewError" class="docx-preview-error hidden" role="status"></div><video id="videoPlayer" controls playsinline preload="metadata"></video></div></dialog>
+  <dialog id="commandDialog" class="command-dialog" aria-label="Comandi rapidi"><div class="command-head"><span><i></i>INTERFACCIA COMANDI</span><kbd>ESC</kbd></div><label class="command-input-wrap" for="commandInput"><span>&#x2315;</span><input id="commandInput" type="search" autocomplete="off" placeholder="Cerca materia, appunto o azione&#x2026; (es. apri anatomia, ultimi file)"></label><div id="commandResults" class="command-results"></div><div class="command-foot"><span>&#x2191;&#x2193; per scegliere &#xB7; Invio per aprire</span><span><kbd>CTRL</kbd> + <kbd>K</kbd></span></div></dialog>
 
   <dialog id="scheduleDialog" class="wide-dialog" aria-labelledby="scheduleTitle"><div class="dialog-head"><h2 id="scheduleTitle">Orario delle lezioni</h2><button class="icon-btn" type="button" data-close="scheduleDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body sched-body">
     <section class="sched-block"><h3>Importa un calendario</h3><p class="sched-help">Scegli un file <b>.ics</b> esportato da Google Calendar, Outlook, Apple Calendar o dal portale dell&#x2019;universit&#xE0;. Le lezioni ripetute ogni settimana vengono espanse automaticamente.</p><div class="sched-row"><select id="schedMode" aria-label="Come importare"><option value="replace">Sostituisci l&#x2019;orario attuale</option><option value="merge">Aggiungi alle lezioni esistenti</option></select><button class="btn btn-primary" id="schedImportBtn" type="button">Scegli file .ics</button></div><input class="file-input" id="icsFile" type="file" accept=".ics,text/calendar"><p class="sched-msg" id="schedImportMsg" aria-live="polite"></p></section>
@@ -914,8 +893,8 @@
     <section class="sched-block"><h3>Prossime lezioni <span class="sched-count" id="schedCount"></span></h3><div class="sched-list" id="schedList"></div></section>
   </div><div class="dialog-foot"><button class="btn btn-danger" id="schedClearBtn" type="button">Svuota orario</button><div class="foot-right"><button class="btn" type="button" data-close="scheduleDialog">Chiudi</button></div></div></dialog>
   <dialog id="examDialog" aria-labelledby="examDialogTitle"><form id="examForm" method="dialog"><div class="dialog-head"><h2 id="examDialogTitle">Aggiungi esame</h2><button class="icon-btn" type="button" data-close="examDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body"><label>Materia o titolo<input id="examTitle" list="examSubjectList" maxlength="90" required placeholder="Es. Anatomia"><datalist id="examSubjectList"></datalist></label><div class="field-row"><label>Data<input id="examDate" type="date" required></label><label>Ora (facoltativa)<input id="examTime" type="time"></label></div><label>Luogo (facoltativo)<input id="examPlace" maxlength="60" placeholder="Es. Aula magna"></label></div><div class="dialog-foot"><button class="btn btn-danger hidden" id="examDeleteBtn" type="button">Elimina</button><div class="foot-right"><button class="btn" type="button" data-close="examDialog">Annulla</button><button class="btn btn-primary" type="submit">Salva esame</button></div></div></form></dialog>
-  <dialog id="pdfDialog" class="viewer-dialog" aria-labelledby="pdfTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="pdfTitle">Documento PDF</h2><p id="pdfMeta">Lettore integrato &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="pdfZoomOut" type="button" aria-label="Riduci zoom">&#x2212;</button><button class="btn pdf-zoom-label" id="pdfZoomLabel" type="button" aria-label="Adatta alla larghezza">Adatta</button><button class="btn" id="pdfZoomIn" type="button" aria-label="Aumenta zoom">+</button><button class="btn" id="pdfDownload" type="button">Scarica</button><button class="icon-btn" type="button" data-close="pdfDialog" aria-label="Chiudi PDF">&#xD7;</button></div></div><div class="pdf-scroll" id="pdfScroll"><div id="pdfError" class="docx-preview-error hidden" role="status"></div><div id="pdfPages" class="pdf-pages"></div></div></dialog>
-  <dialog id="fileDialog" aria-labelledby="fileDialogTitle"><div class="dialog-head"><h2 id="fileDialogTitle">File</h2><button class="icon-btn" type="button" data-close="fileDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body"><div class="file-info" id="fileInfo"></div><p class="file-info-note" id="fileInfoNote"></p><details class="file-text" id="fileTextWrap"><summary>Testo estratto dal file</summary><div id="fileText" class="file-text-body"></div></details></div><div class="dialog-foot"><span></span><div class="foot-right"><button class="btn" type="button" data-close="fileDialog">Chiudi</button><button class="btn btn-primary" id="fileDownloadBtn" type="button">Scarica il file</button></div></div></dialog>
+  <dialog id="pdfDialog" class="viewer-dialog" aria-labelledby="pdfTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="pdfTitle">Documento PDF</h2><p id="pdfMeta">Lettore integrato &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="pdfZoomOut" type="button" aria-label="Riduci zoom">&#x2212;</button><button class="btn pdf-zoom-label" id="pdfZoomLabel" type="button" aria-label="Adatta alla larghezza">Adatta</button><button class="btn" id="pdfZoomIn" type="button" aria-label="Aumenta zoom">+</button><button class="btn" id="pdfDownload" type="button">&#x2B07; Scarica</button><button class="icon-btn" type="button" data-close="pdfDialog" aria-label="Chiudi PDF">&#xD7;</button></div></div><div class="pdf-scroll" id="pdfScroll"><div id="pdfError" class="docx-preview-error hidden" role="status"></div><div id="pdfPages" class="pdf-pages"></div></div></dialog>
+  <dialog id="fileDialog" aria-labelledby="fileDialogTitle"><div class="dialog-head"><h2 id="fileDialogTitle">File</h2><button class="icon-btn" type="button" data-close="fileDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body"><div class="file-info" id="fileInfo"></div><p class="file-info-note" id="fileInfoNote"></p><details class="file-text" id="fileTextWrap"><summary>Testo estratto dal file</summary><div id="fileText" class="file-text-body"></div></details></div><div class="dialog-foot"><span></span><div class="foot-right"><button class="btn" type="button" data-close="fileDialog">Chiudi</button><button class="btn btn-primary" id="fileDownloadBtn" type="button">&#x2B07; Scarica il file</button></div></div></dialog>
   <div class="toast hidden" id="toast" role="status"></div>
 <script>
 (() => {
@@ -961,8 +940,8 @@
   const listAttachments = () => dbOperation('readonly',store=>store.getAll());
   const cleanupAttachments = async () => { const used=new Set(data.notes.map(n=>n.attachmentId).filter(Boolean)); for(const item of await listAttachments())if(!used.has(item.id))await deleteAttachment(item.id); for(const item of await listTexts().catch(()=>[]))if(!used.has(item.id)){await deleteText(item.id).catch(()=>{});textIndex.delete(item.id);} };
   const fileTitle = name => String(name||'Appunti').replace(/\.[^/.]+$/,'').replace(/[_-]+/g,' ').trim()||'Appunti';
-  const fileTypeMeta = name => {const ext=String(name||'').split('.').pop().toLocaleLowerCase('it');if(ext==='pdf')return{label:'PDF',icon:'P',className:'file-pdf'};if(['doc','docx','odt','rtf'].includes(ext))return{label:'WORD',icon:'W',className:'file-word'};if(['ppt','pptx','odp'].includes(ext))return{label:'SLIDE',icon:'S',className:'file-slides'};if(['png','jpg','jpeg','webp','gif'].includes(ext))return{label:'IMG',icon:'I',className:'file-image'};if(['mp4','m4v','mov','webm','mkv','avi','ogv','3gp'].includes(ext))return{label:'VIDEO',icon:'V',className:'file-video'};return{label:ext?ext.toUpperCase():'FILE',icon:'F',className:'file-generic'};};
-  const fileTypeBadge = name => {const file=fileTypeMeta(name);return '<span class="file-type-badge '+file.className+'">'+file.label+'</span>';};
+  const fileTypeMeta = name => {const ext=String(name||'').split('.').pop().toLocaleLowerCase('it');if(ext==='pdf')return{label:'PDF',icon:'\u25A4',className:'file-pdf'};if(['doc','docx','odt','rtf'].includes(ext))return{label:'WORD',icon:'\u25A4',className:'file-word'};if(['ppt','pptx','odp'].includes(ext))return{label:'SLIDE',icon:'\u25A5',className:'file-slides'};if(['png','jpg','jpeg','webp','gif'].includes(ext))return{label:'IMG',icon:'\u25A7',className:'file-image'};if(['mp4','m4v','mov','webm','mkv','avi','ogv','3gp'].includes(ext))return{label:'VIDEO',icon:'\u25B6',className:'file-video'};return{label:ext?ext.toUpperCase():'FILE',icon:'\u25A3',className:'file-generic'};};
+  const fileTypeBadge = name => {const file=fileTypeMeta(name);return '<span class="file-type-badge '+file.className+'"><b>'+file.icon+'</b>'+file.label+'</span>';};
   const formatSize = bytes => {const n=Number(bytes)||0;if(n<1024)return n+' B';if(n<1024*1024)return (n/1024).toFixed(0)+' KB';return (n/(1024*1024)).toFixed(1)+' MB';};
   const blobBase64 = blob => new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]||'');reader.onerror=()=>reject(reader.error);reader.readAsDataURL(blob);});
   const base64Blob = (value,type) => {const binary=atob(value),bytes=new Uint8Array(binary.length);for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);return new Blob([bytes],{type:type||'application/octet-stream'});};
@@ -970,13 +949,13 @@
   const sortedNotes = () => [...data.notes].sort((a,b)=>(Number(b.updatedAt)||0)-(Number(a.updatedAt)||0));
   const recentlyOpenedNotes = () => (data.recentlyOpened||[]).map(item=>({note:data.notes.find(note=>note.id===item.noteId),openedAt:Number(item.openedAt)||0})).filter(item=>item.note);
   function recordNoteOpened(noteId){if(!data.notes.some(note=>note.id===noteId))return;data.recentlyOpened=(data.recentlyOpened||[]).filter(item=>item.noteId!==noteId);data.recentlyOpened.unshift({noteId,openedAt:Date.now()});data.recentlyOpened=data.recentlyOpened.slice(0,8);recordView(data.notes.find(note=>note.id===noteId)?.subjectId);setSystemMessage();save();renderLogStrip();}
-  const showToast = (message,ms=2600) => { const el=$('toast'); el.textContent=message; el.classList.remove('hidden'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.add('hidden'),ms); };
+  const showToast = message => { const el=$('toast'); el.textContent=message; el.classList.remove('hidden'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.add('hidden'),2600); };
   function recordActivity(action,detail='',subject=''){data.activityLog.unshift({id:uid(),action,detail,subject,at:Date.now()});data.activityLog=data.activityLog.slice(0,30);}
   function renderActivity(){const root=$('activityList');if(!root)return;const items=(data.activityLog||[]).slice(0,7);root.innerHTML=items.length?items.map(item=>'<div class="activity-item"><span class="activity-node"></span><span class="activity-text">'+escapeHtml(item.action||'Attivit\u00E0')+' \u00B7 '+escapeHtml(item.detail||'')+(item.subject?'<small>'+escapeHtml(item.subject)+'</small>':'')+'</span><time class="activity-time">'+new Date(Number(item.at)||Date.now()).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})+'</time></div>').join(''):'<div class="activity-empty">In attesa della prima attivit\u00E0 nell\u2019archivio.</div>';}
   const dateLabel = value => { const d=new Date(Number(value)||Date.now()); return Number.isNaN(d.getTime())?'Data non disponibile':d.toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'}); };
   const dayKey = () => { const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
   const ensureGoal = () => { const day=dayKey(); if(!data.studyGoal||data.studyGoal.day!==day)data.studyGoal={day,text:'',done:false}; return data.studyGoal; };
-  const renderGoal = () => { const goal=ensureGoal(); $('goalText').value=goal.text||''; $('goalDoneBtn').disabled=!goal.text||goal.done; $('goalDoneBtn').textContent=goal.done?'Fatto, per oggi':'Segna come fatto'; $('goalStatus').textContent=goal.done?'Piccolo passo completato. Per oggi pu\u00F2 bastare.':goal.text?'Un passo alla volta, con i tuoi tempi.':'Facoltativo, senza scadenze rigide.'; };
+  const renderGoal = () => { const goal=ensureGoal(); $('goalText').value=goal.text||''; $('goalDoneBtn').disabled=!goal.text||goal.done; $('goalDoneBtn').textContent=goal.done?'\u2713 Fatto, per oggi':'Segna come fatto'; $('goalStatus').textContent=goal.done?'Piccolo passo completato. Per oggi pu\u00F2 bastare.':goal.text?'Un passo alla volta, con i tuoi tempi.':'Facoltativo, senza scadenze rigide.'; };
   const DEFAULT_SCHEDULE = {
     '2026-10-27':[{start:'14:00',end:'16:00',subject:'Biochimica'},{start:'16:00',end:'18:00',subject:'Fisica'}],
     '2026-10-28':[{start:'09:00',end:'13:00',subject:'Anatomia'},{start:'14:00',end:'18:00',subject:'Movimento adattato'}],
@@ -1028,7 +1007,7 @@
   function renderDailySchedule(){
     const today=dayKey(),lessons=scheduleMap()[today]||[],all=allLessons(),next=all.find(lesson=>lesson.date>today);
     const badge=lessons.length?'OGGI':all.length?'GIORNATA LIBERA':'ORARIO VUOTO';let body='';
-    const openButton=lesson=>{const subject=calendarSubject(lesson.subject);return subject?'<button class="btn daily-course-action" type="button" data-daily-subject="'+escapeHtml(subject.id)+'">Apri appunti</button>':'<span class="daily-next">Aggiungi la materia per collegare gli appunti</span>';};
+    const openButton=lesson=>{const subject=calendarSubject(lesson.subject);return subject?'<button class="btn daily-course-action" type="button" data-daily-subject="'+escapeHtml(subject.id)+'">Apri appunti \u2197</button>':'<span class="daily-next">Aggiungi la materia per collegare gli appunti</span>';};
     if(lessons.length){
       body='<div class="daily-lessons">'+lessons.map(lesson=>'<article class="daily-lesson"><span class="daily-time">'+escapeHtml(lesson.start)+'\u2013'+escapeHtml(lesson.end)+'</span><span class="daily-course"><strong>'+escapeHtml(lesson.subject)+'</strong>'+(lesson.place?'<small>'+escapeHtml(lesson.place)+'</small>':'')+'</span>'+openButton(lesson)+'</article>').join('')+'</div>';
     }else if(all.length){
@@ -1038,7 +1017,7 @@
       body='<p class="daily-message"><strong>Non hai ancora un orario.</strong> Importa un calendario (.ics) o aggiungi le lezioni a mano con il pulsante Orario: qui vedrai quelle di oggi e il conto alla prossima.</p>';
     }
     const nextClass=nextScheduledLesson();if(nextClass)body+=countdownMarkup(nextClass,'PROSSIMA LEZIONE');
-    $('dailyCard').innerHTML='<div class="daily-head"><div class="daily-heading"><span class="daily-mark" aria-hidden="true">'+svgIcon('calendario')+'</span><div><h2>Lezioni di oggi</h2><p>'+escapeHtml(calendarDateLabel(today))+'</p></div></div><div class="daily-head-actions"><span class="daily-label">'+badge+'</span><button class="btn" type="button" id="openScheduleBtn">Orario</button></div></div>'+body;updateCountdowns();
+    $('dailyCard').innerHTML='<div class="daily-head"><div class="daily-heading"><span class="daily-mark" aria-hidden="true">\u25A6</span><div><h2>Lezioni di oggi</h2><p>'+escapeHtml(calendarDateLabel(today))+'</p></div></div><div class="daily-head-actions"><span class="daily-label">'+badge+'</span><button class="btn" type="button" id="openScheduleBtn">Orario</button></div></div>'+body;updateCountdowns();
     $('dailyCard').querySelectorAll('[data-daily-subject]').forEach(button=>button.addEventListener('click',()=>activateSubject(button.dataset.dailySubject,true)));
     $('openScheduleBtn').addEventListener('click',openSchedule);
   }
@@ -1047,14 +1026,14 @@
     title.replaceChildren(document.createTextNode(greeting+', '),name);name.textContent='Mattia.';$('welcomeDate').textContent=calendarDateLabel(today);
     let badge='OGGI',panelTitle='Le tue lezioni',intro='',rows='';
     const all=allLessons(),next=all.find(lesson=>lesson.date>today);
-    const lessonRow=(lesson,date=null)=>{const subject=calendarSubject(lesson.subject),time=date?calendarDateLabel(date)+' \u00B7 '+lesson.start:lesson.start+'\u2013'+lesson.end,meta=date?(lesson.place||'Prossimo appuntamento'):(lesson.place||'');return '<article class="welcome-lesson"><span class="welcome-lesson-time">'+escapeHtml(time)+'</span><span class="welcome-lesson-name">'+escapeHtml(lesson.subject)+(meta?'<small>'+escapeHtml(meta)+'</small>':'')+'</span>'+(subject?'<button class="btn" type="button" data-welcome-subject="'+escapeHtml(subject.id)+'">Apri appunti</button>':'<span class="daily-next">Materia non presente</span>')+'</article>';};
+    const lessonRow=(lesson,date=null)=>{const subject=calendarSubject(lesson.subject),time=date?calendarDateLabel(date)+' \u00B7 '+lesson.start:lesson.start+'\u2013'+lesson.end,meta=date?(lesson.place||'Prossimo appuntamento'):(lesson.place||'');return '<article class="welcome-lesson"><span class="welcome-lesson-time">'+escapeHtml(time)+'</span><span class="welcome-lesson-name">'+escapeHtml(lesson.subject)+(meta?'<small>'+escapeHtml(meta)+'</small>':'')+'</span>'+(subject?'<button class="btn" type="button" data-welcome-subject="'+escapeHtml(subject.id)+'">Apri appunti \u2197</button>':'<span class="daily-next">Materia non presente</span>')+'</article>';};
     if(lessons.length){intro='Ecco le materie che hai oggi. Apri l\u2019area di una materia per ritrovare subito appunti e slide.';rows=lessons.map(lesson=>lessonRow(lesson)).join('');}
     else if(next){badge='GIORNATA LIBERA';panelTitle='Prossima lezione';intro='Per oggi non risultano lezioni nel calendario. Ecco il prossimo appuntamento: nel frattempo i tuoi appunti restano qui.';rows=lessonRow(next,next.date);}
     else if(all.length){badge='ORARIO CONCLUSO';panelTitle='Il tuo archivio';intro='Non ci sono altre lezioni nel calendario. Puoi aggiornare l\u2019orario dal pulsante Orario nella panoramica.';rows='<div class="welcome-empty"><strong>Nessuna lezione in programma.</strong>Entra nell\u2019archivio e scegli la materia da consultare.</div>';}
     else{badge='ORARIO VUOTO';panelTitle='Il tuo archivio';intro='Non hai ancora inserito un orario. Puoi importarlo (.ics) o aggiungerlo a mano dalla panoramica.';rows='<div class="welcome-empty"><strong>Nessuna lezione disponibile.</strong>Gli appunti sono a portata di mano quando vuoi.</div>';}
     $('welcomeBadge').textContent=badge;$('welcomePanelTitle').textContent=panelTitle;$('welcomeIntro').textContent=intro;$('welcomeLessons').innerHTML=rows;
     const nextClass=nextScheduledLesson();$('welcomeCountdown').innerHTML=(nextClass?countdownMarkup(nextClass,'CONTO ALLA PROSSIMA LEZIONE'):'')+examStripMarkup();updateCountdowns();
-    const recent=recentlyOpenedNotes().slice(0,3);$('welcomeRecent').innerHTML=recent.length?recent.map(item=>{const note=item.note,subject=data.subjects.find(entry=>entry.id===note.subjectId),title=note.title||fileTitle(note.fileName)||'Appunto senza titolo',type=fileTypeMeta(note.fileName);return '<button class="welcome-recent-item" type="button" data-welcome-note="'+escapeHtml(note.id)+'"><span class="welcome-recent-icon">'+svgIcon('file')+'</span><span class="welcome-recent-text">'+escapeHtml(title)+'<small>'+escapeHtml(subject?.name||'Materia')+' \u00B7 '+escapeHtml(type.label)+'</small></span><span class="welcome-recent-arrow">></span></button>';}).join(''):'<div class="welcome-empty"><strong>Nessun materiale aperto ancora.</strong>Qui compariranno gli ultimi materiali consultati.</div>';
+    const recent=recentlyOpenedNotes().slice(0,3);$('welcomeRecent').innerHTML=recent.length?recent.map(item=>{const note=item.note,subject=data.subjects.find(entry=>entry.id===note.subjectId),title=note.title||fileTitle(note.fileName)||'Appunto senza titolo',type=fileTypeMeta(note.fileName);return '<button class="welcome-recent-item" type="button" data-welcome-note="'+escapeHtml(note.id)+'"><span class="welcome-recent-icon">'+type.icon+'</span><span class="welcome-recent-text">'+escapeHtml(title)+'<small>'+escapeHtml(subject?.name||'Materia')+' \u00B7 '+escapeHtml(type.label)+'</small></span><span class="welcome-recent-arrow">\u203A</span></button>';}).join(''):'<div class="welcome-empty"><strong>Nessun materiale aperto ancora.</strong>Qui compariranno gli ultimi materiali consultati.</div>';
     $('welcomeLessons').querySelectorAll('[data-welcome-subject]').forEach(button=>button.addEventListener('click',()=>{if($('welcomeDialog').open)$('welcomeDialog').close();activateSubject(button.dataset.welcomeSubject,true);}));
     $('welcomeRecent').querySelectorAll('[data-welcome-note]').forEach(button=>button.addEventListener('click',()=>{const note=data.notes.find(item=>item.id===button.dataset.welcomeNote);if(!note)return;if($('welcomeDialog').open)$('welcomeDialog').close();recordNoteOpened(note.id);if(note.attachmentId)openAttachmentForNote(note.id);else openNote(note.id);}));
   }
@@ -1095,16 +1074,16 @@
   }
   function smartCommandEntries(q,subjects,notes){
     const key=calendarKey(q).replace(/[\u2019\u2018`]/g,"'").replace(/\s+/g,' ');if(!key)return null;
-    const noteEntry=note=>({kind:'note',id:note.id,category:'Ultimi file',label:note.title||fileTitle(note.fileName)||'Appunto senza titolo',detail:(data.subjects.find(s=>s.id===note.subjectId)?.name||'Materia')+(note.fileName?' \u00B7 '+note.fileName.split('.').pop().toUpperCase():''),icon:'>'});
+    const noteEntry=note=>({kind:'note',id:note.id,category:'Ultimi file',label:note.title||fileTitle(note.fileName)||'Appunto senza titolo',detail:(data.subjects.find(s=>s.id===note.subjectId)?.name||'Materia')+(note.fileName?' \u00B7 '+note.fileName.split('.').pop().toUpperCase():''),icon:'\u2726'});
     if(/^(?:(?:mostra|apri|vai a|vedi)\s+)?(?:gli\s+|i\s+)?(?:ultim\w*|recent\w*|archivio recente)(?:\s+(?:file|appunti|document\w*|material\w*|aperti|visti|visualizzati|accessi))*$/.test(key)){
       const opened=recentlyOpenedNotes().map(item=>item.note),pool=opened.length?opened:sortedNotes(),list=pool.slice(0,6).map(noteEntry);
-      list.push({kind:'recent',category:'Ultimi file',label:'Vai all\u2019archivio recente',detail:'Mostra la riga degli ultimi accessi nella panoramica',icon:'>'});return list;
+      list.push({kind:'recent',category:'Ultimi file',label:'Vai all\u2019archivio recente',detail:'Mostra la riga degli ultimi accessi nella panoramica',icon:'\u203A'});return list;
     }
     const open=/^(?:apri|vai a|vai su|vai in|mostra|entra in)\s+(?:(?:la|il|lo|le|i|gli)\s+|l')?(?:(?:materia|cartella|appunto|appunti|file)\s+)?(.+)$/.exec(key);if(!open)return null;
     const term=open[1].trim();
-    if(/^(panoramica|home|dashboard|inizio)$/.test(term))return [{kind:'home',category:'Apri',label:'Apri panoramica',detail:'Torna alla dashboard',icon:'>'}];
-    if(/^(backup|esporta\w*)$/.test(term))return [{kind:'backup',category:'Apri',label:'Esporta backup',detail:'Salva una copia dei tuoi materiali',icon:'>'}];
-    if(/^(carica\w*|upload|nuovo appunto)$/.test(term))return [{kind:'upload',category:'Apri',label:'Carica appunti',detail:'Aggiungi file all\u2019archivio',icon:'>'}];
+    if(/^(panoramica|home|dashboard|inizio)$/.test(term))return [{kind:'home',category:'Apri',label:'Apri panoramica',detail:'Torna alla dashboard',icon:'\u2726'}];
+    if(/^(backup|esporta\w*)$/.test(term))return [{kind:'backup',category:'Apri',label:'Esporta backup',detail:'Salva una copia dei tuoi materiali',icon:'\u2726'}];
+    if(/^(carica\w*|upload|nuovo appunto)$/.test(term))return [{kind:'upload',category:'Apri',label:'Carica appunti',detail:'Aggiungi file all\u2019archivio',icon:'\u2726'}];
     const found=[...subjects.filter(item=>calendarKey(item.match).includes(term)),...notes.filter(item=>calendarKey(item.match).includes(term)).slice(0,6)].map(item=>({...item,category:'Apri',label:'Apri '+item.label}));
     return found.length?found:null;
   }
@@ -1208,7 +1187,7 @@
   let welcomeGreetingAttempted=false;
   let welcomeGreetingPending=false;
   function isVoiceMuted(){return data.voiceMuted===true;}
-  function updateVoiceMuteButton(){const button=$('voiceMuteBtn');if(!button)return;const muted=isVoiceMuted();button.textContent=muted?'Voce disattivata':'Voce attiva';button.setAttribute('aria-pressed',String(muted));button.setAttribute('aria-label',muted?'Attiva voce automatica':'Disattiva voce automatica');}
+  function updateVoiceMuteButton(){const button=$('voiceMuteBtn');if(!button)return;const muted=isVoiceMuted();button.textContent=muted?'\uD83D\uDD07 Voce disattivata':'\uD83D\uDD0A Voce attiva';button.setAttribute('aria-pressed',String(muted));button.setAttribute('aria-label',muted?'Attiva voce automatica':'Disattiva voce automatica');}
   function toggleVoiceMute(){data.voiceMuted=!isVoiceMuted();welcomeGreetingPending=false;welcomeGreetingAttempted=true;if(data.voiceMuted&&window.speechSynthesis){window.speechSynthesis.cancel();setTimeout(()=>{if(isVoiceMuted())window.speechSynthesis.cancel();},120);}save();updateVoiceMuteButton();showToast(data.voiceMuted?'Voce disattivata. JARVIS rester\u00E0 in silenzio.':'Voce riattivata. Il saluto automatico sar\u00E0 disponibile alla prossima apertura.');}
   function buildWelcomeSpeech(){
     const lessons=scheduleMap()[dayKey()]||[],spoken=time=>{const [h,m]=String(time).split(':').map(Number);return m?h+' e '+m:String(h);};
@@ -1238,37 +1217,8 @@
   window.addEventListener('pointerdown',retryWelcomeGreetingAfterInteraction,{passive:true});
   window.addEventListener('keydown',retryWelcomeGreetingAfterInteraction);
 
-  /* Icone disegnate (SVG): una per materia, ereditano il colore del testo. */
-  const ICON_PATHS = {
-    home:'<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-6h4v6"/>',
-    anatomia:'<path d="M8 16 16 8"/><circle cx="5.4" cy="14.6" r="2.4"/><circle cx="9.4" cy="18.6" r="2.4"/><circle cx="14.6" cy="5.4" r="2.4"/><circle cx="18.6" cy="9.4" r="2.4"/>',
-    chimica:'<path d="M9 3h6"/><path d="M10 3v6.2L4.6 18.4A1.6 1.6 0 0 0 6 21h12a1.6 1.6 0 0 0 1.4-2.6L14 9.2V3"/><path d="M7.4 15h9.2"/>',
-    fisica:'<ellipse cx="12" cy="12" rx="10" ry="4.2"/><ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(120 12 12)"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/>',
-    biochimica:'<path d="M8 3c0 5 8 5 8 9s-8 4-8 9"/><path d="M16 3c0 5-8 5-8 9s8 4 8 9"/><path d="M9.6 5.8h4.8M9.6 18.2h4.8"/>',
-    adattato:'<circle cx="11" cy="4.2" r="1.8"/><path d="M11 8v6h5l2.6 5.5"/><path d="M11 11h4.5"/><path d="M7.6 11.6a5.2 5.2 0 1 0 7.2 6.6"/>',
-    movimento:'<circle cx="14.5" cy="4.3" r="1.9"/><path d="M12.8 8.2 9.6 12l3.2 2.4-1.4 5.6"/><path d="M9.6 12 6.4 13M13.2 9.8l3.8 2.2"/><path d="M12.8 14.4l3.4 2.6 3-.2"/>',
-    pediatria:'<circle cx="12" cy="12.8" r="8"/><path d="M12 4.8c-.2-1.6 1.3-2.4 2.6-1.4"/><circle cx="9" cy="12.2" r=".9" fill="currentColor"/><circle cx="15" cy="12.2" r=".9" fill="currentColor"/><path d="M9.2 15.6c1.7 1.5 4 1.5 5.6 0"/>',
-    antropologia:'<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.6 2.7-6 6-6s6 2.4 6 6"/><circle cx="17.2" cy="9" r="2.4"/><path d="M16.2 14.2c2.9 0 4.8 2 4.8 5"/>',
-    biomeccanica:'<circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="6.4"/><path d="M12 2.5v3.1M12 18.4v3.1M2.5 12h3.1M18.4 12h3.1M5.3 5.3l2.2 2.2M16.5 16.5l2.2 2.2M18.7 5.3l-2.2 2.2M7.5 16.5l-2.2 2.2"/>',
-    fisiologia:'<path d="M3 12.5h4l2.2-6 4.2 11 2.2-5h5.4"/>',
-    nutrizione:'<path d="M12 7.4C9.6 5.6 5 6.6 5 11.8c0 4.2 3 8.2 5.2 8.2.9 0 1.2-.5 1.8-.5s.9.5 1.8.5c2.2 0 5.2-4 5.2-8.2 0-5.2-4.6-6.2-7-4.4z"/><path d="M12 7.4c0-2 1-3.2 3-3.6"/>',
-    libro:'<path d="M4.5 5.5A1.5 1.5 0 0 1 6 4h13v14.5H6A1.5 1.5 0 0 0 4.5 20z"/><path d="M4.5 20A1.5 1.5 0 0 1 6 18.5h13"/>',
-    calendario:'<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
-    obiettivo:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/>',
-    layers:'<path d="M12 3.5 21 8.5l-9 5-9-5z"/><path d="M3 12.5l9 5 9-5"/><path d="M3 16.5l9 5 9-5"/>',
-    file:'<path d="M6 3h8l5 5v13H6z"/><path d="M14 3v5h5"/><path d="M9 13h7M9 17h7"/>',
-    orologio:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5.5l3.5 2"/>',
-    cartella:'<path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.8l2 2.5h8.2A1.5 1.5 0 0 1 21 9v9.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z"/>',
-    clip:'<path d="M20 11.5 12 19.5a5 5 0 0 1-7-7l8.5-8.5a3.4 3.4 0 0 1 4.8 4.8L9.8 17.3a1.8 1.8 0 0 1-2.5-2.5l7.5-7.5"/>',
-    avviso:'<path d="M12 3.5 21.5 20h-19z"/><path d="M12 10v4.5"/><circle cx="12" cy="17.3" r=".9" fill="currentColor"/>'
-  };
-  const svgIcon = key => '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+(ICON_PATHS[key]||ICON_PATHS.libro)+'</svg>';
-  const subjectIcon = name => {
-    const n=String(name||'').toLocaleLowerCase('it');
-    const key=n.includes('anatom')?'anatomia':n.includes('biochim')?'biochimica':n.includes('chimic')?'chimica':n.includes('fisiol')?'fisiologia':n.includes('fisic')?'fisica':n.includes('biomeccan')?'biomeccanica':n.includes('pediatr')?'pediatria':n.includes('antrop')?'antropologia':n.includes('nutriz')?'nutrizione':n.includes('adattat')?'adattato':(n.includes('movimento')||n.includes('tecniche')||n.includes('teoria')||n.includes('sport')||n.includes('motor')||n.includes('allen'))?'movimento':'libro';
-    return svgIcon(key);
-  };
-  function showModuleLoaded(subjectId){const subject=data.subjects.find(item=>item.id===subjectId);if(!subject)return;const loader=$('moduleLoader');setSystemMessage();$('moduleLoaderIcon').innerHTML=subjectIcon(subject.name);$('moduleLoaderTitle').textContent=subject.name;loader.classList.remove('is-visible');void loader.offsetWidth;loader.classList.add('is-visible');clearTimeout(moduleLoaderTimer);moduleLoaderTimer=setTimeout(()=>loader.classList.remove('is-visible'),1900);}
+  const subjectIcon = name => { const n=String(name).toLocaleLowerCase('it'); if(n.includes('anatom'))return '\u271A'; if(n.includes('biochim'))return '\u232C'; if(n.includes('chimic'))return '\u2697'; if(n.includes('fisic'))return '\u223F'; if(n.includes('biomeccan'))return '\u2301'; if(n.includes('pediatr'))return '\u2661'; if(n.includes('antrop'))return '\u25C9'; if(n.includes('fisiol'))return '\u2665'; if(n.includes('psicol'))return '\u25C9'; if(n.includes('nutriz'))return '\u2733'; if(n.includes('movimento')||n.includes('tecniche')||n.includes('teoria')||n.includes('sport')||n.includes('motor')||n.includes('allen'))return '\u2197'; return '\u25C8'; };
+  function showModuleLoaded(subjectId){const subject=data.subjects.find(item=>item.id===subjectId);if(!subject)return;const loader=$('moduleLoader');setSystemMessage();$('moduleLoaderIcon').textContent=subjectIcon(subject.name);$('moduleLoaderTitle').textContent=subject.name;loader.classList.remove('is-visible');void loader.offsetWidth;loader.classList.add('is-visible');clearTimeout(moduleLoaderTimer);moduleLoaderTimer=setTimeout(()=>loader.classList.remove('is-visible'),1900);}
   function activateSubject(subjectId,scroll=false){if(!data.subjects.some(subject=>subject.id===subjectId))return;data.activeSubject=subjectId;activeFolderId=null;$('search').value='';showArchive=false;recordView(subjectId);save();render();showModuleLoaded(subjectId);if(scroll)window.scrollTo({top:0,behavior:'smooth'});}
   const kindClass = kind => ({'esame':'kind-esame','laboratorio':'kind-laboratorio','ripasso':'kind-ripasso','progetto':'kind-progetto'}[String(kind||'Lezione').toLocaleLowerCase('it')] || '');
   const noteCard = (note, showCourse=true, openedAt=0, snippet='') => {
@@ -1281,7 +1231,7 @@
   const bindNoteCards = root => root.querySelectorAll('[data-note]').forEach(button=>button.addEventListener('click',()=>{recordNoteOpened(button.dataset.note);openNote(button.dataset.note);}));
   const render = () => {
     const nav=$('subjectList');
-    nav.innerHTML='<button class="subject '+(data.activeSubject==='all'?'active':'')+'" data-subject="all"><span class="nav-icon">'+svgIcon('home')+'</span><span class="subject-name">Panoramica</span><span class="subject-count">'+data.notes.length+'</span></button>'+data.subjects.map(s=>{
+    nav.innerHTML='<button class="subject '+(data.activeSubject==='all'?'active':'')+'" data-subject="all"><span class="nav-icon">\u2302</span><span class="subject-name">Panoramica</span><span class="subject-count">'+data.notes.length+'</span></button>'+data.subjects.map(s=>{
       const count=data.notes.filter(n=>n.subjectId===s.id).length;
       return '<button class="subject '+(data.activeSubject===s.id?'active':'')+'" data-subject="'+escapeHtml(s.id)+'"><span class="nav-icon">'+subjectIcon(s.name)+'</span><span class="subject-name">'+escapeHtml(s.name)+'</span><span class="subject-count">'+count+'</span></button>';
     }).join('');
@@ -1299,7 +1249,7 @@
         $('folderTitle').textContent=folder.name; $('folderSubtitle').textContent=folderItems.length+' slide in questa cartella';
         $('folderNotes').innerHTML=folderItems.map(n=>noteCard(n,false)).join(''); bindNoteCards($('folderNotes')); $('folderNotesEmpty').classList.toggle('hidden',folderItems.length!==0);
       }else{
-        $('folderGrid').innerHTML=subjectFolders.map(folder=>{const count=items.filter(n=>n.folderId===folder.id).length;return '<button class="folder-card" data-folder="'+escapeHtml(folder.id)+'"><span class="folder-icon">'+svgIcon('cartella')+'</span><span class="folder-info"><span class="folder-name">'+escapeHtml(folder.name)+'</span><span class="folder-count">'+count+' slide'+(count===1?'':'')+'</span></span><span class="folder-arrow">></span></button>';}).join('');
+        $('folderGrid').innerHTML=subjectFolders.map(folder=>{const count=items.filter(n=>n.folderId===folder.id).length;return '<button class="folder-card" data-folder="'+escapeHtml(folder.id)+'"><span class="folder-icon">\u25A4</span><span class="folder-info"><span class="folder-name">'+escapeHtml(folder.name)+'</span><span class="folder-count">'+count+' slide'+(count===1?'':'')+'</span></span><span class="folder-arrow">\u203A</span></button>';}).join('');
         $('folderEmpty').classList.toggle('hidden',subjectFolders.length!==0); $('folderGrid').querySelectorAll('[data-folder]').forEach(button=>button.addEventListener('click',()=>{activeFolderId=button.dataset.folder;render();}));
         const loose=items.filter(n=>!n.folderId); $('subjectNotes').innerHTML=loose.map(n=>noteCard(n,false)).join(''); bindNoteCards($('subjectNotes'));
         $('subjectEmpty').classList.toggle('hidden',loose.length!==0); if(!loose.length)$('subjectEmpty').innerHTML='<strong>Qui non ci sono appunti senza cartella</strong>Crea una cartella o carica file direttamente nella materia.';
@@ -1314,9 +1264,9 @@
     if(isDashboard){
       renderDailySchedule(); renderExams(); renderBackupBanner(); renderGoal(); renderSubjectMap(); renderConsultHint(); renderLogStrip(); renderActivity();
       const notes=sortedNotes(), recent=notes.filter(n=>Date.now()-(Number(n.updatedAt)||0)<7*24*60*60*1000).length;
-      $('statsGrid').innerHTML='<article class="stat-card"><span class="stat-symbol">'+svgIcon('layers')+'</span><div><span class="stat-label">Materie attive</span><strong class="stat-value">'+data.subjects.length+'</strong></div></article><article class="stat-card"><span class="stat-symbol">'+svgIcon('file')+'</span><div><span class="stat-label">Appunti raccolti</span><strong class="stat-value">'+data.notes.length+'</strong></div></article><article class="stat-card"><span class="stat-symbol">'+svgIcon('orologio')+'</span><div><span class="stat-label">Aggiornati \u00B7 7 gg</span><strong class="stat-value">'+recent+'</strong></div></article>';
+      $('statsGrid').innerHTML='<article class="stat-card"><span class="stat-symbol">\u2726</span><div><span class="stat-label">Materie attive</span><strong class="stat-value">'+data.subjects.length+'</strong></div></article><article class="stat-card"><span class="stat-symbol">\u2726</span><div><span class="stat-label">Appunti raccolti</span><strong class="stat-value">'+data.notes.length+'</strong></div></article><article class="stat-card"><span class="stat-symbol">\u2726</span><div><span class="stat-label">Aggiornati \u00B7 7 gg</span><strong class="stat-value">'+recent+'</strong></div></article>';
       const recentOpened=recentlyOpenedNotes().slice(0,4);$('recentNotes').innerHTML=recentOpened.map(item=>noteCard(item.note,true,item.openedAt)).join('')||'<div class="dashboard-empty" style="grid-column:1/-1"><strong>Il tuo archivio aspetta il primo accesso</strong>Quando apri un materiale, lo ritroverai qui.</div>'; bindNoteCards($('recentNotes'));
-      $('archiveBlock').classList.toggle('hidden',!showArchive); $('toggleArchive').textContent=showArchive?'Nascondi archivio':'Apri archivio completo';
+      $('archiveBlock').classList.toggle('hidden',!showArchive); $('toggleArchive').textContent=showArchive?'Nascondi archivio \u25B4':'Apri archivio completo \u25BE';
       if(showArchive){$('archiveNotes').innerHTML=notes.map(n=>noteCard(n,true)).join('')||'<div class="dashboard-empty" style="grid-column:1/-1"><strong>L\u2019archivio \u00E8 vuoto</strong>Carica un file per vederlo qui.</div>';bindNoteCards($('archiveNotes'));}
     }
   };
@@ -1328,17 +1278,17 @@
     root.querySelectorAll('[data-map-subject]').forEach(button=>button.addEventListener('click',()=>activateSubject(button.dataset.mapSubject,true)));
   }
   function commandEntries(query=''){
-    const q=String(query||'').trim().toLocaleLowerCase('it'),actions=[{kind:'home',category:'Sistema',label:'Apri panoramica',detail:'Torna alla dashboard',icon:'>'},{kind:'upload',category:'Sistema',label:'Carica appunti',detail:'Aggiungi file all\u2019archivio',icon:'>'},{kind:'backup',category:'Sistema',label:'Esporta backup',detail:'Salva una copia dei tuoi materiali',icon:'>'},{kind:'recent',category:'Sistema',label:'Ultimi file',detail:'Vai agli ultimi materiali aperti',icon:'>'},{kind:'schedule',category:'Sistema',label:'Gestisci orario',detail:'Importa un .ics o modifica le lezioni',icon:'>'},{kind:'exam',category:'Sistema',label:'Aggiungi esame',detail:'Imposta il conto alla rovescia',icon:'>'}];
-    if(q)actions.unshift({kind:'search',category:'Ricerca',label:'Cerca \u201C'+query.trim()+'\u201D',detail:'Cerca in appunti, cartelle e materie',icon:'>'});
+    const q=String(query||'').trim().toLocaleLowerCase('it'),actions=[{kind:'home',category:'Sistema',label:'Apri panoramica',detail:'Torna alla dashboard',icon:'\u2726'},{kind:'upload',category:'Sistema',label:'Carica appunti',detail:'Aggiungi file all\u2019archivio',icon:'\u2726'},{kind:'backup',category:'Sistema',label:'Esporta backup',detail:'Salva una copia dei tuoi materiali',icon:'\u2726'},{kind:'recent',category:'Sistema',label:'Ultimi file',detail:'Vai agli ultimi materiali aperti',icon:'\u203A'},{kind:'schedule',category:'Sistema',label:'Gestisci orario',detail:'Importa un .ics o modifica le lezioni',icon:'\u2726'},{kind:'exam',category:'Sistema',label:'Aggiungi esame',detail:'Imposta il conto alla rovescia',icon:'\u2726'}];
+    if(q)actions.unshift({kind:'search',category:'Ricerca',label:'Cerca \u201C'+query.trim()+'\u201D',detail:'Cerca in appunti, cartelle e materie',icon:'\u2726'});
     const subjects=data.subjects.map(subject=>({kind:'subject',id:subject.id,category:'Materie',label:subject.name,detail:data.notes.filter(note=>note.subjectId===subject.id).length+' appunti',icon:subjectIcon(subject.name),match:subject.name}));
-    const notes=sortedNotes().map(note=>({kind:'note',id:note.id,category:'Appunti',label:note.title||fileTitle(note.fileName)||'Appunto senza titolo',detail:(data.subjects.find(subject=>subject.id===note.subjectId)?.name||'Materia')+(note.fileName?' \u00B7 '+note.fileName.split('.').pop().toUpperCase():''),icon:'>',match:(note.title||'')+' '+(note.fileName||'')+' '+(note.body||'')}));
+    const notes=sortedNotes().map(note=>({kind:'note',id:note.id,category:'Appunti',label:note.title||fileTitle(note.fileName)||'Appunto senza titolo',detail:(data.subjects.find(subject=>subject.id===note.subjectId)?.name||'Materia')+(note.fileName?' \u00B7 '+note.fileName.split('.').pop().toUpperCase():''),icon:'\u2726',match:(note.title||'')+' '+(note.fileName||'')+' '+(note.body||'')}));
     const smart=smartCommandEntries(q,subjects,notes);if(smart)return smart.slice(0,16);
     const candidates=q?[...actions,...subjects.filter(item=>item.match.toLocaleLowerCase('it').includes(q)),...notes.filter(item=>item.match.toLocaleLowerCase('it').includes(q))]:[...actions,...subjects,...notes.slice(0,4)];
     return candidates.slice(0,16);
   }
   function renderCommandResults(){
     const items=commandEntries($('commandInput').value),root=$('commandResults');if(!items.length){root.innerHTML='<div class="command-empty">Nessun comando o risultato trovato.</div>';return;}
-    let category='';root.innerHTML=items.map(item=>{const heading=item.category!==category?'<div class="command-group-label">'+escapeHtml(item.category)+'</div>':'';category=item.category;return heading+'<button class="command-item" type="button" data-command-kind="'+escapeHtml(item.kind)+'" data-command-id="'+escapeHtml(item.id||'')+'"><span class="command-item-icon">'+item.icon+'</span><span class="command-item-copy">'+escapeHtml(item.label)+'<small>'+escapeHtml(item.detail||'')+'</small></span><span class="command-item-arrow">></span></button>';}).join('');
+    let category='';root.innerHTML=items.map(item=>{const heading=item.category!==category?'<div class="command-group-label">'+escapeHtml(item.category)+'</div>':'';category=item.category;return heading+'<button class="command-item" type="button" data-command-kind="'+escapeHtml(item.kind)+'" data-command-id="'+escapeHtml(item.id||'')+'"><span class="command-item-icon">'+item.icon+'</span><span class="command-item-copy">'+escapeHtml(item.label)+'<small>'+escapeHtml(item.detail||'')+'</small></span><span class="command-item-arrow">\u203A</span></button>';}).join('');
     root.querySelectorAll('[data-command-kind]').forEach(button=>button.addEventListener('click',()=>executeCommand(button.dataset.commandKind,button.dataset.commandId,$('commandInput').value.trim())));
   }
   function executeCommand(kind,id,query=''){
@@ -1811,7 +1761,7 @@
   async function zipList(blob){
     const tailStart=Math.max(0,blob.size-65557),tail=new DataView(await blob.slice(tailStart).arrayBuffer());let eocd=-1;
     for(let i=tail.byteLength-22;i>=0;i--){if(tail.getUint32(i,true)===0x06054b50){eocd=i;break;}}
-    if(eocd<0)throw new Error('Il file non Ã¨ uno ZIP valido.');
+    if(eocd<0)throw new Error('Il file non è uno ZIP valido.');
     const count=tail.getUint16(eocd+10,true),size=tail.getUint32(eocd+12,true),offset=tail.getUint32(eocd+16,true);
     if(offset===0xFFFFFFFF||count===0xFFFF)throw new Error('ZIP troppo grande (formato ZIP64 non supportato).');
     const directory=new DataView(await blob.slice(offset,offset+size).arrayBuffer()),decoder=new TextDecoder(),entries=new Map();let cursor=0;
@@ -1882,34 +1832,27 @@
     indexState.running=false;if($('search').value.trim())render();
   }
   const loadTextIndex=async()=>{for(const item of await listTexts())setIndexEntry(item.id,item.text||'');};
-  const indexStatusText=()=>indexState.running?' Â· sto leggendo i file ('+indexState.done+'/'+indexState.total+')':'';
+  const indexStatusText=()=>indexState.running?' · sto leggendo i file ('+indexState.done+'/'+indexState.total+')':'';
   function contentHit(note,foldedQuery){
     const entry=textIndex.get(note.attachmentId);if(!entry||!entry.folded)return '';const at=entry.folded.indexOf(foldedQuery);if(at<0)return '';
     const from=Math.max(0,at-60),to=Math.min(entry.raw.length,at+foldedQuery.length+90),clean=text=>escapeHtml(text.replace(/\s+/g,' '));
-    return (from>0?'â€¦':'')+clean(entry.raw.slice(from,at))+'<mark>'+clean(entry.raw.slice(at,at+foldedQuery.length))+'</mark>'+clean(entry.raw.slice(at+foldedQuery.length,to))+(to<entry.raw.length?'â€¦':'');
+    return (from>0?'…':'')+clean(entry.raw.slice(from,at))+'<mark>'+clean(entry.raw.slice(at,at+foldedQuery.length))+'</mark>'+clean(entry.raw.slice(at+foldedQuery.length,to))+(to<entry.raw.length?'…':'');
   }
 
   /* =====================================================================
      Lettore PDF integrato (pdf.js si scarica solo la prima volta che serve)
      ===================================================================== */
-  const PDFJS_SOURCES=['vendor/pdfjs/','https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/'];
+  const PDFJS_BASE='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
   let pdfjsPromise=null,pdfjsFailedAt=0,pdfView=null;
-  function loadPdfScript(base){
-    return new Promise((resolve,reject)=>{
-      const script=document.createElement('script');script.src=base+'pdf.min.js';script.async=true;
-      script.onload=async()=>{try{const response=await fetch(base+'pdf.worker.min.js');if(!response.ok)throw new Error('worker');window.pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([await response.blob()],{type:'text/javascript'}));resolve(window.pdfjsLib);}catch(error){reject(error);}};
-      script.onerror=()=>{script.remove();reject(new Error('pdf.js non raggiungibile'));};
-      document.head.append(script);
-    });
-  }
   function loadPdfJs(){
-    if(window.pdfjsLib&&window.pdfjsLib.GlobalWorkerOptions.workerSrc)return Promise.resolve(window.pdfjsLib);
+    if(window.pdfjsLib)return Promise.resolve(window.pdfjsLib);
     if(Date.now()-pdfjsFailedAt<60000)return Promise.reject(new Error('pdf.js non disponibile'));
-    if(!pdfjsPromise)pdfjsPromise=(async()=>{
-      let last;
-      for(const base of PDFJS_SOURCES){try{return await loadPdfScript(base);}catch(error){last=error;}}
-      throw last;
-    })().catch(error=>{pdfjsPromise=null;pdfjsFailedAt=Date.now();throw error;});
+    if(!pdfjsPromise)pdfjsPromise=new Promise((resolve,reject)=>{
+      const script=document.createElement('script');script.src=PDFJS_BASE+'pdf.min.js';script.async=true;
+      script.onload=async()=>{try{const response=await fetch(PDFJS_BASE+'pdf.worker.min.js');if(!response.ok)throw new Error('worker');window.pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([await response.blob()],{type:'text/javascript'}));resolve(window.pdfjsLib);}catch(error){reject(error);}};
+      script.onerror=()=>reject(new Error('pdf.js non raggiungibile'));
+      document.head.append(script);
+    }).catch(error=>{pdfjsPromise=null;pdfjsFailedAt=Date.now();throw error;});
     return pdfjsPromise;
   }
   function pdfClose(){if(!pdfView)return;pdfView.observer?.disconnect();try{pdfView.doc.destroy();}catch{}pdfView=null;$('pdfPages').replaceChildren();}
@@ -1946,7 +1889,7 @@
   function updatePdfMeta(){
     if(!pdfView)return;const scroll=$('pdfScroll'),pages=$('pdfPages').children;let current=1;
     const top=scroll.getBoundingClientRect().top;for(let i=0;i<pages.length;i++){if(pages[i].getBoundingClientRect().top-top<=scroll.clientHeight/3)current=i+1;else break;}
-    $('pdfMeta').textContent='Pagina '+current+' di '+pdfView.doc.numPages+' Â· lettore integrato';
+    $('pdfMeta').textContent='Pagina '+current+' di '+pdfView.doc.numPages+' · lettore integrato';
   }
   function zoomPdf(factor){if(!pdfView)return;const scroll=$('pdfScroll'),ratio=scroll.scrollHeight?scroll.scrollTop/scroll.scrollHeight:0;pdfView.mult=Math.min(4,Math.max(.4,factor===0?1:pdfView.mult*factor));buildPdfPages();scroll.scrollTop=ratio*scroll.scrollHeight;updatePdfMeta();}
   let pdfScrollFrame=0,pdfResizeTimer=0;
@@ -1964,7 +1907,7 @@
     activeFileRecord=record;const name=record.name||note.fileName||'file',ext=name.split('.').pop().toLowerCase();
     $('fileDialogTitle').textContent=note.title||fileTitle(name);
     $('fileInfo').innerHTML=fileTypeBadge(name)+'<span class="file-info-name">'+escapeHtml(name)+'</span><span class="file-info-size">'+formatSize(record.size||record.blob.size)+'</span>';
-    $('fileInfoNote').textContent=/^pptx?$/.test(ext)?'Le presentazioni perdono layout e animazioni se mostrate nel browser: scaricala e aprila con PowerPoint, Keynote o Google Presentazioni.':'Questo formato non si puÃ² mostrare nel browser: scaricalo per aprirlo con lâ€™app giusta.';
+    $('fileInfoNote').textContent=/^pptx?$/.test(ext)?'Le presentazioni perdono layout e animazioni se mostrate nel browser: scaricala e aprila con PowerPoint, Keynote o Google Presentazioni.':'Questo formato non si può mostrare nel browser: scaricalo per aprirlo con l’app giusta.';
     const body=$('fileText');body.replaceChildren();$('fileTextWrap').classList.add('hidden');$('fileTextWrap').open=false;
     if(!$('fileDialog').open)$('fileDialog').showModal();
     try{
@@ -2048,10 +1991,10 @@
     for(const date of dates)total+=map[date].length;
     for(const date of dates){
       if(shown>=150)break;
-      html+='<div class="sched-day"><h4>'+escapeHtml(calendarDateLabel(date))+'</h4>'+map[date].map((lesson,index)=>{shown++;return '<div class="sched-item"><span class="sched-time">'+escapeHtml(lesson.start)+'â€“'+escapeHtml(lesson.end)+'</span><span class="sched-name">'+escapeHtml(lesson.subject)+(lesson.place?'<small>'+escapeHtml(lesson.place)+'</small>':'')+'</span><span class="sched-actions"><button class="btn" type="button" data-sched-edit="'+date+'|'+index+'">Modifica</button><button class="btn btn-danger" type="button" data-sched-del="'+date+'|'+index+'">Elimina</button></span></div>';}).join('')+'</div>';
+      html+='<div class="sched-day"><h4>'+escapeHtml(calendarDateLabel(date))+'</h4>'+map[date].map((lesson,index)=>{shown++;return '<div class="sched-item"><span class="sched-time">'+escapeHtml(lesson.start)+'–'+escapeHtml(lesson.end)+'</span><span class="sched-name">'+escapeHtml(lesson.subject)+(lesson.place?'<small>'+escapeHtml(lesson.place)+'</small>':'')+'</span><span class="sched-actions"><button class="btn" type="button" data-sched-edit="'+date+'|'+index+'">Modifica</button><button class="btn btn-danger" type="button" data-sched-del="'+date+'|'+index+'">Elimina</button></span></div>';}).join('')+'</div>';
     }
     $('schedCount').textContent=total?'('+total+')':'';
-    $('schedList').innerHTML=html?html+(total>shown?'<p class="sched-empty">â€¦e altre '+(total-shown)+' lezioni piÃ¹ avanti.</p>':''):'<p class="sched-empty">Nessuna lezione in programma da oggi in poi.</p>';
+    $('schedList').innerHTML=html?html+(total>shown?'<p class="sched-empty">…e altre '+(total-shown)+' lezioni più avanti.</p>':''):'<p class="sched-empty">Nessuna lezione in programma da oggi in poi.</p>';
   }
   function openSchedule(){
     $('lessonSubjectList').innerHTML=data.subjects.map(subject=>'<option value="'+escapeHtml(subject.name)+'"></option>').join('');
@@ -2062,9 +2005,9 @@
     const file=event.target.files?.[0];event.target.value='';if(!file)return;const msg=$('schedImportMsg');
     try{
       const {map,count}=scheduleFromIcs(await file.text());
-      if(!count){msg.textContent='Nel file non ho trovato lezioni (gli eventi â€œtutto il giornoâ€� vengono ignorati).';return;}
+      if(!count){msg.textContent='Nel file non ho trovato lezioni (gli eventi “tutto il giorno” vengono ignorati).';return;}
       const replace=$('schedMode').value==='replace';
-      if(replace&&allLessons().length&&!confirm('Sostituire lâ€™orario attuale con le '+count+' lezioni del file?'))return;
+      if(replace&&allLessons().length&&!confirm('Sostituire l’orario attuale con le '+count+' lezioni del file?'))return;
       let added=count;if(replace)data.schedule=map;else added=mergeSchedule(data.schedule=scheduleMap(),map);
       const dates=Object.keys(map).sort();recordActivity('Orario importato',added+' lezioni');afterScheduleChange();
       msg.textContent='Fatto: '+added+' lezioni '+(replace?'importate':'aggiunte')+' (dal '+calendarDate(dates[0]).toLocaleDateString('it-IT')+' al '+calendarDate(dates[dates.length-1]).toLocaleDateString('it-IT')+').';
@@ -2072,7 +2015,7 @@
   });
   $('lessonForm').addEventListener('submit',event=>{
     event.preventDefault();const subject=$('lessonSubject').value.trim(),date=$('lessonDate').value,start=$('lessonStart').value,end=$('lessonEnd').value,place=$('lessonPlace').value.trim(),repeat=editingLesson?0:Math.min(30,Math.max(0,parseInt($('lessonRepeat').value,10)||0));
-    if(!subject||!date||!start||!end)return;if(end<=start){showToast('Lâ€™ora di fine deve essere dopo quella di inizio.');return;}
+    if(!subject||!date||!start||!end)return;if(end<=start){showToast('L’ora di fine deve essere dopo quella di inizio.');return;}
     const map=data.schedule=scheduleMap();
     if(editingLesson){const old=map[editingLesson.date];if(old){old.splice(editingLesson.index,1);if(!old.length)delete map[editingLesson.date];}}
     for(let week=0;week<=repeat;week++){const d=calendarDate(date);d.setDate(d.getDate()+7*week);const key=toKey(d.getFullYear(),d.getMonth()+1,d.getDate()),list=map[key]=map[key]||[];list.push({start,end,subject,...(place?{place}:{})});list.sort((a,b)=>a.start.localeCompare(b.start));}
@@ -2086,7 +2029,7 @@
     editingLesson={date,index};$('lessonSubject').value=lesson.subject;$('lessonDate').value=date;$('lessonStart').value=lesson.start;$('lessonEnd').value=lesson.end;$('lessonPlace').value=lesson.place||'';
     $('lessonFormTitle').textContent='Modifica lezione';$('lessonSubmitBtn').textContent='Salva modifiche';$('lessonCancelEdit').classList.remove('hidden');$('lessonRepeatWrap').classList.add('hidden');$('lessonForm').scrollIntoView({behavior:'smooth',block:'nearest'});
   });
-  $('schedClearBtn').addEventListener('click',()=>{if(!allLessons().length){showToast('Lâ€™orario Ã¨ giÃ  vuoto.');return;}if(confirm('Eliminare tutte le lezioni dallâ€™orario?')){data.schedule={};recordActivity('Orario svuotato','');resetLessonForm();afterScheduleChange();}});
+  $('schedClearBtn').addEventListener('click',()=>{if(!allLessons().length){showToast('L’orario è già vuoto.');return;}if(confirm('Eliminare tutte le lezioni dall’orario?')){data.schedule={};recordActivity('Orario svuotato','');resetLessonForm();afterScheduleChange();}});
 
   /* =====================================================================
      Esami e conto alla rovescia
@@ -2095,13 +2038,13 @@
   const upcomingExams=()=>(data.exams||[]).filter(exam=>exam.date&&daysUntil(exam.date)>=0).sort((a,b)=>(a.date+(a.time||'99:99')).localeCompare(b.date+(b.time||'99:99')));
   function examStripMarkup(){
     const exam=upcomingExams()[0];if(!exam)return '';const days=daysUntil(exam.date);
-    return '<div class="countdown-strip exam-strip"><span class="countdown-orbit">'+(days===0?'OGGI':days+'g')+'</span><span><span class="countdown-label">PROSSIMO ESAME</span><span class="countdown-course">'+escapeHtml(exam.title)+'<small>'+escapeHtml(calendarDateLabel(exam.date))+(exam.time?' Â· '+escapeHtml(exam.time):'')+'</small></span></span></div>';
+    return '<div class="countdown-strip exam-strip"><span class="countdown-orbit">'+(days===0?'OGGI':days+'g')+'</span><span><span class="countdown-label">PROSSIMO ESAME</span><span class="countdown-course">'+escapeHtml(exam.title)+'<small>'+escapeHtml(calendarDateLabel(exam.date))+(exam.time?' · '+escapeHtml(exam.time):'')+'</small></span></span></div>';
   }
   function renderExams(){
     const root=$('examsCard');if(!root)return;const list=upcomingExams();
     root.innerHTML='<div class="exams-head"><div><p class="section-eyebrow">Il conto alla rovescia</p><h2>Esami</h2></div><button class="btn" type="button" id="addExamBtn">+ Aggiungi esame</button></div>'+(list.length?'<div class="exams-list">'+list.map(exam=>{
       const days=daysUntil(exam.date),level=days<=3?' is-urgent':days<=10?' is-soon':'',subject=calendarSubject(exam.title);
-      return '<article class="exam-item'+level+'"><span class="exam-days"><b>'+(days===0?'Oggi':days)+'</b>'+(days===0?'':'<small>'+(days===1?'giorno':'giorni')+'</small>')+'</span><span class="exam-info"><strong>'+escapeHtml(exam.title)+'</strong><small>'+escapeHtml(calendarDateLabel(exam.date))+(exam.time?' Â· '+escapeHtml(exam.time):'')+(exam.place?' Â· '+escapeHtml(exam.place):'')+'</small></span><span class="exam-actions">'+(subject?'<button class="btn" type="button" data-exam-open="'+escapeHtml(subject.id)+'">Appunti</button>':'')+'<button class="btn" type="button" data-exam-edit="'+escapeHtml(exam.id)+'">Modifica</button></span></article>';
+      return '<article class="exam-item'+level+'"><span class="exam-days"><b>'+(days===0?'Oggi':days)+'</b>'+(days===0?'':'<small>'+(days===1?'giorno':'giorni')+'</small>')+'</span><span class="exam-info"><strong>'+escapeHtml(exam.title)+'</strong><small>'+escapeHtml(calendarDateLabel(exam.date))+(exam.time?' · '+escapeHtml(exam.time):'')+(exam.place?' · '+escapeHtml(exam.place):'')+'</small></span><span class="exam-actions">'+(subject?'<button class="btn" type="button" data-exam-open="'+escapeHtml(subject.id)+'">Appunti</button>':'')+'<button class="btn" type="button" data-exam-edit="'+escapeHtml(exam.id)+'">Modifica</button></span></article>';
     }).join('')+'</div>':'<p class="exams-empty">Nessun esame in programma. Aggiungi la data e vedrai qui quanti giorni mancano.</p>');
     $('addExamBtn').addEventListener('click',()=>openExam());
     root.querySelectorAll('[data-exam-edit]').forEach(button=>button.addEventListener('click',()=>openExam(button.dataset.examEdit)));
@@ -2120,7 +2063,7 @@
     if(editingExamId){const exam=data.exams.find(item=>item.id===editingExamId);if(exam)Object.assign(exam,fields);}else data.exams.push({id:uid(),...fields});
     recordActivity(editingExamId?'Esame modificato':'Esame aggiunto',title);save();$('examDialog').close();render();renderWelcome();showToast('Esame salvato.');
   });
-  $('examDeleteBtn').addEventListener('click',()=>{const exam=data.exams.find(item=>item.id===editingExamId);if(!exam||!confirm('Eliminare lâ€™esame â€œ'+exam.title+'â€�?'))return;data.exams=data.exams.filter(item=>item.id!==exam.id);recordActivity('Esame eliminato',exam.title);save();$('examDialog').close();render();renderWelcome();});
+  $('examDeleteBtn').addEventListener('click',()=>{const exam=data.exams.find(item=>item.id===editingExamId);if(!exam||!confirm('Eliminare l’esame “'+exam.title+'”?'))return;data.exams=data.exams.filter(item=>item.id!==exam.id);recordActivity('Esame eliminato',exam.title);save();$('examDialog').close();render();renderWelcome();});
 
   /* =====================================================================
      Salvataggio sicuro, promemoria e backup in ZIP
@@ -2128,8 +2071,8 @@
   async function updateStorageStatus(){
     const text=$('storageText');if(!text)return;let persisted=false,usage='';
     try{if(navigator.storage?.persisted)persisted=await navigator.storage.persisted();}catch{}
-    try{const estimate=await navigator.storage.estimate();if(estimate?.usage!=null)usage=' Â· '+formatSize(estimate.usage);}catch{}
-    text.textContent=(persisted?'Archivio protetto':'Archivio locale')+usage+(persisted?'':' Â· fai backup');
+    try{const estimate=await navigator.storage.estimate();if(estimate?.usage!=null)usage=' · '+formatSize(estimate.usage);}catch{}
+    text.textContent=(persisted?'Archivio protetto':'Archivio locale')+usage+(persisted?'':' · fai backup');
     $('storageStatus').title=persisted?'Il browser non cancella questi dati da solo.':'Il browser potrebbe cancellare questi dati se lo spazio scarseggia: fai un backup ogni tanto.';
   }
   async function initStorage(){try{if(navigator.storage?.persist&&!(await navigator.storage.persisted()))await navigator.storage.persist();}catch{}updateStorageStatus();}
@@ -2137,7 +2080,7 @@
     const el=$('backupBanner');if(!el)return;
     const last=Number(data.lastBackupAt)||0,age=last?Math.floor((Date.now()-last)/86400000):null,needed=data.notes.length>0&&(age===null||age>=14)&&data.backupSnooze!==dayKey();
     el.classList.toggle('hidden',!needed);if(!needed){el.innerHTML='';return;}
-    el.innerHTML='<span class="backup-icon" aria-hidden="true">'+svgIcon('avviso')+'</span><span class="backup-text"><strong>'+(age===null?'Non hai ancora fatto nessun backup.':'Ultimo backup: '+age+' giorni fa.')+'</strong> I tuoi '+data.notes.length+' file stanno solo in questo browser: se i dati del sito vengono cancellati, si perdono.</span><span class="backup-actions"><button class="btn btn-primary" id="backupNowBtn" type="button">Fai il backup</button><button class="btn" id="backupLaterBtn" type="button">PiÃ¹ tardi</button></span>';
+    el.innerHTML='<span class="backup-icon" aria-hidden="true">?</span><span class="backup-text"><strong>'+(age===null?'Non hai ancora fatto nessun backup.':'Ultimo backup: '+age+' giorni fa.')+'</strong> I tuoi '+data.notes.length+' file stanno solo in questo browser: se i dati del sito vengono cancellati, si perdono.</span><span class="backup-actions"><button class="btn btn-primary" id="backupNowBtn" type="button">Fai il backup</button><button class="btn" id="backupLaterBtn" type="button">Più tardi</button></span>';
     $('backupNowBtn').addEventListener('click',()=>$('exportBtn').click());
     $('backupLaterBtn').addEventListener('click',()=>{data.backupSnooze=dayKey();save();renderBackupBanner();});
   }
@@ -2145,7 +2088,7 @@
   $('exportBtn').addEventListener('click',async()=>{
     const button=$('exportBtn');if(button.disabled)return;button.disabled=true;
     try{
-      showToast('Preparo il backupâ€¦');
+      showToast('Preparo il backup…');
       const referenced=new Set(data.notes.map(note=>note.attachmentId).filter(Boolean)),entries=[],manifest=[],used=new Set();
       for(const record of await listAttachments()){
         if(!referenced.has(record.id))continue;
@@ -2155,7 +2098,7 @@
       }
       data.lastBackupAt=Date.now();recordActivity('Backup esportato',data.notes.length+' appunti');save();
       const payload={...data,files:manifest,backupCreatedAt:new Date().toISOString(),format:2};
-      entries.unshift({name:'LEGGIMI.txt',blob:new Blob(['Backup di Appunti universitÃ \r\n\r\ndati.json  -> materie, cartelle, orario, esami e impostazioni (serve per reimportare)\r\nmateriali/ -> i tuoi file, ordinati per materia: li puoi aprire anche senza lâ€™app\r\n\r\nPer ripristinare: nellâ€™app premi "Importa" e scegli questo file .zip.\r\n'],{type:'text/plain'})});
+      entries.unshift({name:'LEGGIMI.txt',blob:new Blob(['Backup di Appunti università\r\n\r\ndati.json  -> materie, cartelle, orario, esami e impostazioni (serve per reimportare)\r\nmateriali/ -> i tuoi file, ordinati per materia: li puoi aprire anche senza l’app\r\n\r\nPer ripristinare: nell’app premi "Importa" e scegli questo file .zip.\r\n'],{type:'text/plain'})});
       entries.unshift({name:'dati.json',blob:new Blob([JSON.stringify(payload)],{type:'application/json'})});
       const zip=await buildZip(entries),url=URL.createObjectURL(zip),a=document.createElement('a');a.href=url;a.download='backup-appunti-'+new Date().toISOString().slice(0,10)+'.zip';a.click();setTimeout(()=>URL.revokeObjectURL(url),120000);
       renderActivity();renderBackupBanner();showToast('Backup scaricato ('+formatSize(zip.size)+').');
@@ -2168,13 +2111,13 @@
     try{
       let imported,loadFile;
       if(/\.zip$/i.test(file.name)||file.type==='application/zip'){
-        const entries=await zipList(file),manifest=entries.get('dati.json');if(!manifest)throw new Error('Questo ZIP non Ã¨ un backup di Appunti.');
+        const entries=await zipList(file),manifest=entries.get('dati.json');if(!manifest)throw new Error('Questo ZIP non è un backup di Appunti.');
         imported=JSON.parse(await (await zipEntryBlob(file,manifest)).text());
         loadFile=async item=>{const entry=entries.get(item.path);return entry?new Blob([await zipEntryBlob(file,entry)],{type:item.type||'application/octet-stream'}):null;};
       }else{imported=JSON.parse(await file.text());loadFile=async item=>item.data?base64Blob(item.data,item.type):null;}
       if(!Array.isArray(imported.subjects)||!Array.isArray(imported.notes))throw new Error('Formato non valido');
       if(!confirm('Importare questo backup? Gli appunti presenti verranno sostituiti.'))return;
-      showToast('Importo il backupâ€¦');
+      showToast('Importo il backup…');
       for(const item of Array.isArray(imported.files)?imported.files:[]){if(!item.id)continue;const blob=await loadFile(item);if(blob)await putAttachmentRecord({id:item.id,name:item.name||'appunti',type:item.type||'application/octet-stream',size:item.size||blob.size,blob});}
       const {files,backupCreatedAt,format,...rest}=imported;
       data=normalizeData({...rest,activeSubject:'all'});
@@ -2182,18 +2125,6 @@
       recordActivity('Backup importato',data.notes.length+' appunti');activeFolderId=null;showArchive=false;save();await cleanupAttachments();render();renderWelcome();showToast('Backup importato.');runIndexer();updateStorageStatus();
     }catch(error){showToast(error?.message&&error.message!=='Formato non valido'?error.message:'File non valido o impossibile da importare.');}
   });
-
-  /* PWA: installazione e funzionamento offline */
-  let installPrompt=null;
-  window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();installPrompt=event;$('installBtn').classList.remove('hidden');});
-  window.addEventListener('appinstalled',()=>{installPrompt=null;$('installBtn').classList.add('hidden');showToast('App installata.');});
-  $('installBtn').addEventListener('click',async()=>{if(!installPrompt)return;installPrompt.prompt();try{await installPrompt.userChoice;}catch{}installPrompt=null;$('installBtn').classList.add('hidden');});
-  if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
-    navigator.serviceWorker.register('service-worker.js').then(reg=>{
-      const watch=worker=>worker&&worker.addEventListener('statechange',()=>{if(worker.state==='installed'&&navigator.serviceWorker.controller)showToast('Nuova versione scaricata: ricarica la pagina per usarla.',8000);});
-      watch(reg.installing);reg.addEventListener('updatefound',()=>watch(reg.installing));
-    }).catch(()=>{});
-  }
 
   setSystemMessage(); render(); renderWelcome(); updateAppClock(); setInterval(updateAppClock,30000); $('welcomeDialog').showModal(); startWelcomeFx(); setTimeout(speakWelcomeGreeting, 700);
   initStorage(); loadTextIndex().then(()=>setTimeout(runIndexer,1200)).catch(()=>{});
