@@ -936,6 +936,30 @@
     .holo-shell .boot-lines { min-height:132px; }
     @media (max-height:700px) { .holo-stage { width:min(210px,50vh); } .holo-name { font-size:20px; } .holo-shell { gap:8px; } .holo-shell .boot-lines { min-height:112px; line-height:1.6; } }
     @media (prefers-reduced-motion:reduce) { .holo-ring,.holo-logo,.holo-scan,#bootDialog::before { animation:none; } }
+
+    /* Ologramma: particelle, etichette orbitanti, titolo digitato, onda finale */
+    .holo-particles { position:absolute; left:18%; right:18%; bottom:2%; height:75%; pointer-events:none; }
+    .holo-particles i { position:absolute; bottom:0; left:var(--x); width:var(--s); height:var(--s); border-radius:50%; background:#8ff3ff; box-shadow:0 0 8px #1fd1ff; opacity:0; animation:holoRise var(--d) linear var(--w) infinite; }
+    @keyframes holoRise { 0% { transform:translate(0,0); opacity:0; } 15% { opacity:.95; } 100% { transform:translate(var(--dx),-210px); opacity:0; } }
+    .holo-orbit { position:absolute; inset:-20%; pointer-events:none; animation:bootspin 26s linear infinite; }
+    .holo-tag { position:absolute; transform:translate(-50%,-50%); }
+    .holo-tag span { display:block; animation:bootspin 26s linear infinite reverse; white-space:nowrap; padding:3px 8px; border:1px solid #1fd1ff55; border-radius:5px; background:#04161dcc; color:#9ff4ff; font:600 10.5px ui-monospace,Consolas,monospace; letter-spacing:.14em; box-shadow:0 0 12px #1fd1ff22; }
+    .holo-tag span b { color:#ffb24f; font-weight:700; margin-right:6px; }
+    .holo-caret { display:inline-block; width:.12em; height:.95em; margin-left:.28em; vertical-align:-.12em; background:#9ff4ff; box-shadow:0 0 10px #1fd1ff; animation:caretBlink .7s steps(1) infinite; }
+    .holo-caret.done { display:none; }
+    @keyframes caretBlink { 50% { opacity:0; } }
+    .holo-name small { opacity:0; transition:opacity .5s; }
+    .holo-name small.show { opacity:1; }
+    .holo-wave { position:absolute; inset:6%; border-radius:50%; border:2px solid #b7f8ff; box-shadow:0 0 40px #1fd1ff, inset 0 0 40px #1fd1ff88; opacity:0; pointer-events:none; }
+    #bootDialog.boot-out .holo-wave { animation:holoWave .75s ease-out forwards; }
+    #bootDialog.boot-out .holo-shell { animation:holoOut .6s ease-in .12s forwards; }
+    @keyframes holoWave { 0% { transform:scale(.3); opacity:1; } 100% { transform:scale(11); opacity:0; } }
+    @keyframes holoOut { to { opacity:0; transform:scale(1.07); filter:blur(5px) brightness(1.8); } }
+    @media (prefers-reduced-motion:reduce) { .holo-orbit,.holo-tag span,.holo-particles i,.holo-caret { animation:none; } .holo-name small { opacity:1; } }
+
+    .holo-stage { margin-bottom:46px; }
+    .holo-name { position:relative; z-index:3; }
+    @media (max-height:700px) { .holo-stage { margin-bottom:34px; } }
   </style>
 </head>
 <body class="jarvis-ui">
@@ -982,8 +1006,8 @@
   </dialog>
   <dialog id="folderDialog"><form id="folderForm" method="dialog"><div class="dialog-head"><h2 id="folderDialogTitle">Nuova cartella</h2><button class="icon-btn" type="button" data-close="folderDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body"><label for="folderName">Nome della cartella<input id="folderName" maxlength="90" required placeholder="Es. Lezioni e slide del modulo"></label></div><div class="dialog-foot"><span></span><div class="foot-right"><button class="btn" type="button" data-close="folderDialog">Annulla</button><button class="btn btn-primary" type="submit">Salva cartella</button></div></div></form></dialog>
   <dialog id="bootDialog" aria-label="Avvio del sistema"><div class="boot-shell holo-shell">
-    <div class="holo-stage" aria-hidden="true"><i class="holo-ring r1"></i><i class="holo-ring r2"></i><i class="holo-ring r3"></i><i class="holo-beam"></i><img class="holo-logo" src="logo-256.png" alt=""><i class="holo-scan"></i><i class="holo-base"></i></div>
-    <div class="holo-name">APPUNTI<small>SCIENZE MOTORIE &#xB7; INSUBRIA</small></div>
+    <div class="holo-stage" aria-hidden="true"><i class="holo-ring r1"></i><i class="holo-ring r2"></i><i class="holo-ring r3"></i><i class="holo-beam"></i><img class="holo-logo" src="logo-256.png" alt=""><i class="holo-scan"></i><i class="holo-base"></i><i class="holo-particles" id="holoParticles"></i><div class="holo-orbit" id="holoOrbit"></div><i class="holo-wave"></i></div>
+    <div class="holo-name"><span id="holoTitle">APPUNTI</span><i class="holo-caret"></i><small id="holoSub">SCIENZE MOTORIE &#xB7; INSUBRIA</small></div>
     <div class="boot-lines" id="bootLines"></div>
     <div class="boot-barwrap"><div class="boot-bar"><i id="bootBar"></i></div><span id="bootPct">0%</span></div>
     <button class="boot-skip" id="bootSkip" type="button">SALTA</button>
@@ -2318,9 +2342,15 @@
   /* Schermata di avvio con dati reali: una volta al giorno, saltabile */
   const BOOT_KEY='appunti-boot-day';
   function bootNeeded(){return true;}
+  function scrambleText(el,finalText,ms){
+    const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&',start=performance.now();
+    const tick=()=>{const t=Math.min(1,(performance.now()-start)/ms),fixed=Math.floor(finalText.length*t);let out='';for(let i=0;i<finalText.length;i++){const c=finalText[i];out+=(i<fixed||c===' ')?c:chars[Math.floor(Math.random()*chars.length)];}el.textContent=out;if(t<1)requestAnimationFrame(tick);else el.textContent=finalText;};
+    tick();
+  }
   function runBoot(done){
     const dlg=$('bootDialog'),lines=$('bootLines'),bar=$('bootBar');let finished=false,timers=[];
-    const today=dayKey(),lessons=(scheduleMap()[today]||[]).length,exam=upcomingExams()[0];
+    const fast=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,gap=fast?60:380;
+    const today=dayKey(),lessons=(scheduleMap()[today]||[]).length,exam=upcomingExams()[0],now=new Date();
     const steps=[
       ['Nucleo operativo','ATTIVO'],
       ['Archivio locale',data.notes.length+(data.notes.length===1?' appunto':' appunti')],
@@ -2330,12 +2360,25 @@
       ['Modalit\u00E0',navigator.onLine?'ONLINE':'OFFLINE'],
       ['Sistema','PRONTO']
     ];
-    const finish=()=>{if(finished)return;finished=true;timers.forEach(clearTimeout);if(dlg.open)dlg.close();done();};
-    $('bootSkip').onclick=finish;dlg.addEventListener('cancel',event=>{event.preventDefault();finish();},{once:true});
+    /* etichette dati che girano attorno agli anelli */
+    const tags=[['ORA',now.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})],['DATA',now.toLocaleDateString('it-IT',{day:'2-digit',month:'short'}).toUpperCase()],['APPUNTI',String(data.notes.length)],[exam?'ESAME':'LEZIONI',exam?(daysUntil(exam.date)===0?'OGGI':daysUntil(exam.date)+' G'):String(lessons)]];
+    const orbit=$('holoOrbit');orbit.replaceChildren();
+    tags.forEach((tag,i)=>{const angle=(i*90+45)*Math.PI/180,el=document.createElement('div');el.className='holo-tag';el.style.left=(50+50*Math.cos(angle))+'%';el.style.top=(50+50*Math.sin(angle))+'%';el.innerHTML='<span><b>'+escapeHtml(tag[0])+'</b>'+escapeHtml(tag[1])+'</span>';orbit.append(el);});
+    /* particelle che salgono dalla base */
+    const part=$('holoParticles');part.replaceChildren();
+    for(let i=0;i<(fast?0:18);i++){const el=document.createElement('i');el.style.setProperty('--x',(Math.random()*100)+'%');el.style.setProperty('--s',(2+Math.random()*3)+'px');el.style.setProperty('--d',(2+Math.random()*2.2)+'s');el.style.setProperty('--w',(-Math.random()*3)+'s');el.style.setProperty('--dx',((Math.random()-.5)*50)+'px');part.append(el);}
+    /* titolo digitato */
+    const title=$('holoTitle'),sub=$('holoSub'),caret=document.querySelector('.holo-caret'),word='APPUNTI';
+    sub.classList.remove('show');caret.classList.remove('done');
+    if(fast){title.textContent=word;caret.classList.add('done');sub.classList.add('show');}
+    else{title.textContent='';[...word].forEach((letter,i)=>timers.push(setTimeout(()=>{title.textContent=word.slice(0,i+1);},200+i*90)));timers.push(setTimeout(()=>sub.classList.add('show'),200+word.length*90+80));timers.push(setTimeout(()=>caret.classList.add('done'),200+word.length*90+900));}
+    dlg.classList.remove('boot-out');
+    const close=()=>{if(dlg.open)dlg.close();dlg.classList.remove('boot-out');done();};
+    const finish=(instant)=>{if(finished)return;finished=true;timers.forEach(clearTimeout);if(instant===true||fast){close();return;}dlg.classList.add('boot-out');setTimeout(close,720);};
+    $('bootSkip').onclick=()=>finish(true);dlg.addEventListener('cancel',event=>{event.preventDefault();finish(true);},{once:true});
     dlg.showModal();$('bootSkip').focus();
-    const fast=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,gap=fast?60:550;
-    steps.forEach((step,index)=>timers.push(setTimeout(()=>{const row=document.createElement('div');row.innerHTML='<b>OK</b>'+escapeHtml(step[0])+': '+escapeHtml(step[1]);lines.append(row);const pct=Math.round((index+1)/steps.length*100);bar.style.width=pct+'%';$('bootPct').textContent=pct+'%';},gap*(index+1))));
-    timers.push(setTimeout(finish,gap*(steps.length+2)));
+    steps.forEach((step,index)=>timers.push(setTimeout(()=>{const row=document.createElement('div'),label=document.createElement('span'),text=step[0]+': '+step[1];row.innerHTML='<b>OK</b>';row.append(label);lines.append(row);if(fast)label.textContent=text;else scrambleText(label,text,300);const pct=Math.round((index+1)/steps.length*100);bar.style.width=pct+'%';$('bootPct').textContent=pct+'%';},gap*(index+1))));
+    timers.push(setTimeout(finish,gap*(steps.length+1)));
   }
 
   /* PWA: installazione e funzionamento offline */
