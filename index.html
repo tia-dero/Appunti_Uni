@@ -2333,7 +2333,7 @@
     const finish=()=>{if(finished)return;finished=true;timers.forEach(clearTimeout);if(dlg.open)dlg.close();done();};
     $('bootSkip').onclick=finish;dlg.addEventListener('cancel',event=>{event.preventDefault();finish();},{once:true});
     dlg.showModal();$('bootSkip').focus();
-    const fast=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,gap=fast?60:380;
+    const fast=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,gap=fast?60:550;
     steps.forEach((step,index)=>timers.push(setTimeout(()=>{const row=document.createElement('div');row.innerHTML='<b>OK</b>'+escapeHtml(step[0])+': '+escapeHtml(step[1]);lines.append(row);const pct=Math.round((index+1)/steps.length*100);bar.style.width=pct+'%';$('bootPct').textContent=pct+'%';},gap*(index+1))));
     timers.push(setTimeout(finish,gap*(steps.length+2)));
   }
