@@ -910,6 +910,32 @@
     .boot-ring { overflow:visible; }
     .boot-ring img { width:96px; height:96px; border-radius:22px; animation:bootspin 1.6s linear infinite reverse; box-shadow:0 0 26px #1fd1ff44; }
     @media (prefers-reduced-motion:reduce) { .boot-ring img { animation:none; } }
+
+    /* Schermata d'avvio olografica */
+    #bootDialog { background:radial-gradient(ellipse at 50% 38%,#0b3140 0,#041118 55%,#02070a 100%); overflow:hidden; }
+    #bootDialog::before { content:""; position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(0deg,#5eeaff0a 0 1px,transparent 1px 4px); animation:holoLines 6s linear infinite; }
+    #bootDialog::after { content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(#5eeaff08 1px,transparent 1px),linear-gradient(90deg,#5eeaff08 1px,transparent 1px); background-size:44px 44px; mask-image:radial-gradient(ellipse at center,#000 10%,transparent 75%); }
+    @keyframes holoLines { to { background-position:0 80px; } }
+    .holo-shell { position:relative; z-index:1; gap:14px; justify-content:center; }
+    .holo-stage { position:relative; width:min(300px,62vw); aspect-ratio:1; display:grid; place-items:center; margin-bottom:6px; }
+    .holo-ring { position:absolute; border-radius:50%; pointer-events:none; }
+    .holo-ring.r1 { inset:0; border:1.5px solid #1fd1ff66; border-top-color:#7df3ff; border-bottom-color:transparent; animation:bootspin 3.2s linear infinite; box-shadow:0 0 28px #1fd1ff22; }
+    .holo-ring.r2 { inset:9%; border:1px dashed #1fd1ff55; animation:bootspin 11s linear infinite reverse; }
+    .holo-ring.r3 { inset:-7%; border:1px solid #ff9a2e55; border-left-color:transparent; border-right-color:#ffb24f; animation:bootspin 5.5s linear infinite reverse; }
+    .holo-logo { position:relative; width:58%; height:58%; border-radius:22%; object-fit:cover; mix-blend-mode:screen; filter:drop-shadow(0 0 18px #1fd1ffaa) saturate(1.25); animation:holoFlicker 3.4s infinite, holoFloat 4s ease-in-out infinite; }
+    .holo-scan { position:absolute; left:20%; right:20%; height:3px; top:20%; background:linear-gradient(90deg,transparent,#a8f6ff,transparent); box-shadow:0 0 16px 3px #1fd1ff99; animation:holoSweep 2.2s ease-in-out infinite; }
+    .holo-base { position:absolute; left:14%; right:14%; bottom:-6%; height:16%; border-radius:50%; background:radial-gradient(ellipse,#1fd1ff88,transparent 70%); border:1px solid #1fd1ff66; transform:perspective(200px) rotateX(62deg); box-shadow:0 0 30px #1fd1ff55; }
+    .holo-beam { position:absolute; left:26%; right:26%; top:55%; bottom:2%; background:linear-gradient(#1fd1ff00,#1fd1ff2a); clip-path:polygon(18% 0,82% 0,100% 100%,0 100%); filter:blur(2px); }
+    @keyframes holoSweep { 0%,100% { top:18%; opacity:0; } 15%,85% { opacity:1; } 50% { top:78%; } }
+    @keyframes holoFloat { 50% { transform:translateY(-7px); } }
+    @keyframes holoFlicker { 0%,100% { opacity:1; } 7% { opacity:.82; } 9% { opacity:1; } 52% { opacity:.93; } 54% { opacity:1; } 78% { opacity:.86; } 80% { opacity:1; } }
+    .holo-name { font:800 26px Inter,sans-serif; letter-spacing:.42em; padding-left:.42em; color:#e8fbff; text-shadow:0 0 18px #1fd1ffaa; text-align:center; }
+    .holo-name small { display:block; margin-top:6px; font:500 11px ui-monospace,Consolas,monospace; letter-spacing:.3em; color:#66e5f0; text-shadow:none; }
+    .boot-barwrap { display:flex; align-items:center; gap:12px; width:min(560px,100%); color:#66e5f0; font:600 12px ui-monospace,Consolas,monospace; }
+    .boot-barwrap .boot-bar { flex:1; width:auto; }
+    .holo-shell .boot-lines { min-height:132px; }
+    @media (max-height:700px) { .holo-stage { width:min(210px,50vh); } .holo-name { font-size:20px; } .holo-shell { gap:8px; } .holo-shell .boot-lines { min-height:112px; line-height:1.6; } }
+    @media (prefers-reduced-motion:reduce) { .holo-ring,.holo-logo,.holo-scan,#bootDialog::before { animation:none; } }
   </style>
 </head>
 <body class="jarvis-ui">
@@ -955,7 +981,13 @@
     </form>
   </dialog>
   <dialog id="folderDialog"><form id="folderForm" method="dialog"><div class="dialog-head"><h2 id="folderDialogTitle">Nuova cartella</h2><button class="icon-btn" type="button" data-close="folderDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body"><label for="folderName">Nome della cartella<input id="folderName" maxlength="90" required placeholder="Es. Lezioni e slide del modulo"></label></div><div class="dialog-foot"><span></span><div class="foot-right"><button class="btn" type="button" data-close="folderDialog">Annulla</button><button class="btn btn-primary" type="submit">Salva cartella</button></div></div></form></dialog>
-  <dialog id="bootDialog" aria-label="Avvio del sistema"><div class="boot-shell"><div class="boot-ring"><img src="logo-192.png" alt=""></div><div class="boot-title">AVVIO SISTEMA</div><div class="boot-lines" id="bootLines"></div><div class="boot-bar"><i id="bootBar"></i></div><button class="boot-skip" id="bootSkip" type="button">SALTA</button></div></dialog>
+  <dialog id="bootDialog" aria-label="Avvio del sistema"><div class="boot-shell holo-shell">
+    <div class="holo-stage" aria-hidden="true"><i class="holo-ring r1"></i><i class="holo-ring r2"></i><i class="holo-ring r3"></i><i class="holo-beam"></i><img class="holo-logo" src="logo-256.png" alt=""><i class="holo-scan"></i><i class="holo-base"></i></div>
+    <div class="holo-name">APPUNTI<small>SCIENZE MOTORIE &#xB7; INSUBRIA</small></div>
+    <div class="boot-lines" id="bootLines"></div>
+    <div class="boot-barwrap"><div class="boot-bar"><i id="bootBar"></i></div><span id="bootPct">0%</span></div>
+    <button class="boot-skip" id="bootSkip" type="button">SALTA</button>
+  </div></dialog>
   <dialog id="welcomeDialog" aria-labelledby="welcomeTitle"><canvas id="welcomeFx" aria-hidden="true"></canvas><div class="welcome-shell"><header class="welcome-top"><div class="welcome-brand"><span class="welcome-brand-mark"><img src="logo-192.png" alt=""></span><span>APPUNTI &#xB7; INSUBRIA<small>IL TUO SPAZIO PERSONALE</small></span></div><span class="welcome-status"><i></i>SISTEMA ATTIVO &#xB7; <span id="welcomeSystemMsg">ARCHIVIO LOCALE</span><time id="welcomeClock">--:--</time></span><button class="welcome-skip" type="button" data-close="welcomeDialog">Vai all&#x2019;archivio</button></header><main class="welcome-main"><section class="welcome-copy"><div class="welcome-radar" aria-hidden="true"><span class="welcome-radar-core">SM</span></div><p class="welcome-eyebrow">Il tuo piano di oggi</p><h1 id="welcomeTitle">Ciao, <span></span></h1><p id="welcomeDate" class="welcome-date"></p><p id="welcomeIntro" class="welcome-intro"></p></section><section class="welcome-panel" aria-label="Materie di oggi"><div class="welcome-panel-head"><h2 id="welcomePanelTitle">Le tue lezioni</h2><span id="welcomeBadge">OGGI</span></div><div id="welcomeLessons" class="welcome-lessons"></div><div id="welcomeCountdown"></div><details class="welcome-recent"><summary>Ultimi appunti <span>ACCESSO RAPIDO</span></summary><div id="welcomeRecent" class="welcome-recent-list"></div></details></section></main><footer class="welcome-footer"><span class="welcome-footer-note">Archivio locale &#xB7; i tuoi appunti restano sul dispositivo</span><div class="welcome-footer-actions"><button class="welcome-voice" type="button" id="speakBriefingBtn">Ascolta briefing</button><button class="welcome-command" type="button" id="voiceSettingsBtn">Voce</button><button class="welcome-command welcome-mute" type="button" id="voiceMuteBtn" aria-pressed="false" aria-label="Disattiva voce automatica">&#x1F50A; Voce attiva</button><button class="welcome-command" type="button" id="welcomeCommandBtn">Ctrl+K&nbsp; Comandi</button><button class="welcome-enter" type="button" id="enterArchiveBtn">Entra nei miei appunti</button></div></footer></div></dialog>
   <dialog id="voiceSettingsDialog" class="voice-settings-dialog" aria-labelledby="voiceSettingsTitle"><div class="dialog-head"><div><h2 id="voiceSettingsTitle">Configurazione vocale</h2><p class="voice-settings-subtitle">Regola la voce del briefing</p></div><button class="icon-btn" type="button" data-close="voiceSettingsDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body voice-settings-body"><label for="speechVoiceSelect">Voce disponibile<select id="speechVoiceSelect"><option value="">Italiano predefinito del dispositivo</option></select><small class="voice-settings-hint">Le voci dipendono dal browser e dal dispositivo. Per un risultato pi&#xF9; naturale, prova una voce italiana &#x201C;Natural&#x201D; o &#x201C;Enhanced&#x201D;, se disponibile.</small></label><button class="btn voice-preset" id="jarvisVoicePresetBtn" type="button">Applica preset JARVIS &#xB7; Decisa</button><label class="voice-range-label" for="speechPitch"><span>Tono <output id="speechPitchValue">0,88</output></span><input id="speechPitch" type="range" min="0.65" max="1.25" step="0.05" value="0.88"></label><label class="voice-range-label" for="speechRate"><span>Velocit&#xE0; <output id="speechRateValue">0,92&#xD7;</output></span><input id="speechRate" type="range" min="0.75" max="1.15" step="0.05" value="0.92"></label><p class="voice-settings-hint">Il preset abbassa leggermente il tono e rallenta il ritmo. La naturalezza dipende soprattutto dalla voce italiana installata nel dispositivo; il browser non pu&#xF2; riprodurre esattamente la voce del film.</p></div><div class="dialog-foot voice-settings-foot"><button class="btn" id="previewVoiceBtn" type="button">Prova la voce</button><div class="foot-right"><button class="btn" type="button" data-close="voiceSettingsDialog">Chiudi</button><button class="btn btn-primary" id="saveVoiceSettingsBtn" type="button">Salva</button></div></div></dialog>
   <dialog id="docxPreviewDialog" aria-labelledby="docxPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="docxPreviewTitle">Anteprima documento</h2><p>Anteprima locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadDocxBtn" type="button">Scarica</button><button class="icon-btn" type="button" data-close="docxPreviewDialog" aria-label="Chiudi anteprima">&#xD7;</button></div></div><div class="docx-preview-scroll"><div id="docxPreviewError" class="docx-preview-error hidden" role="status"></div><article id="docxContent" class="docx-content"></article></div></dialog>
@@ -2285,7 +2317,7 @@
 
   /* Schermata di avvio con dati reali: una volta al giorno, saltabile */
   const BOOT_KEY='appunti-boot-day';
-  function bootNeeded(){try{return localStorage.getItem(BOOT_KEY)!==dayKey();}catch{return true;}}
+  function bootNeeded(){return true;}
   function runBoot(done){
     const dlg=$('bootDialog'),lines=$('bootLines'),bar=$('bootBar');let finished=false,timers=[];
     const today=dayKey(),lessons=(scheduleMap()[today]||[]).length,exam=upcomingExams()[0];
@@ -2298,11 +2330,11 @@
       ['Modalit\u00E0',navigator.onLine?'ONLINE':'OFFLINE'],
       ['Sistema','PRONTO']
     ];
-    const finish=()=>{if(finished)return;finished=true;timers.forEach(clearTimeout);try{localStorage.setItem(BOOT_KEY,today);}catch{}if(dlg.open)dlg.close();done();};
+    const finish=()=>{if(finished)return;finished=true;timers.forEach(clearTimeout);if(dlg.open)dlg.close();done();};
     $('bootSkip').onclick=finish;dlg.addEventListener('cancel',event=>{event.preventDefault();finish();},{once:true});
     dlg.showModal();$('bootSkip').focus();
     const fast=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,gap=fast?60:380;
-    steps.forEach((step,index)=>timers.push(setTimeout(()=>{const row=document.createElement('div');row.innerHTML='<b>OK</b>'+escapeHtml(step[0])+': '+escapeHtml(step[1]);lines.append(row);bar.style.width=Math.round((index+1)/steps.length*100)+'%';},gap*(index+1))));
+    steps.forEach((step,index)=>timers.push(setTimeout(()=>{const row=document.createElement('div');row.innerHTML='<b>OK</b>'+escapeHtml(step[0])+': '+escapeHtml(step[1]);lines.append(row);const pct=Math.round((index+1)/steps.length*100);bar.style.width=pct+'%';$('bootPct').textContent=pct+'%';},gap*(index+1))));
     timers.push(setTimeout(finish,gap*(steps.length+2)));
   }
 
