@@ -1,6 +1,6 @@
 /* Service worker: cache dell'app per l'uso offline. Cambia VERSION a ogni aggiornamento. */
-const VERSION = 'appunti-v7';
-const CORE = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png',
+const VERSION = 'appunti-v8';
+const CORE = ['./', 'index.html', 'manifest.json', 'logo-48.png', 'logo-96.png', 'logo-128.png', 'logo-192.png', 'logo-256.png', 'logo-384.png', 'logo-512.png', 'logo-maskable-512.png',
   'pdf.min.js', 'pdf.worker.min.js'];
 
 self.addEventListener('install', event => {
