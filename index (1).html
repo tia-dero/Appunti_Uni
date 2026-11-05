@@ -923,6 +923,35 @@
     .holo-ring.r2 { inset:9%; border:1px dashed #1fd1ff55; animation:bootspin 11s linear infinite reverse; }
     .holo-ring.r3 { inset:-7%; border:1px solid #ff9a2e55; border-left-color:transparent; border-right-color:#ffb24f; animation:bootspin 5.5s linear infinite reverse; }
     .holo-logo { position:relative; width:58%; height:58%; border-radius:22%; object-fit:cover; mix-blend-mode:screen; filter:drop-shadow(0 0 18px #1fd1ffaa) saturate(1.25); animation:holoFlicker 3.4s infinite, holoFloat 4s ease-in-out infinite; }
+    /* Nucleo JARVIS ridisegnato: vettoriale, multilivello e indipendente dagli asset esterni */
+    .holo-stage { width:min(360px,68vw); isolation:isolate; perspective:900px; margin-bottom:28px; }
+    .holo-ring.r1 { inset:2%; border-width:2px; border-top-color:#e8fdff; border-right-color:#42e5ff; box-shadow:0 0 34px #1fd1ff44,inset 0 0 24px #1fd1ff12; }
+    .holo-ring.r2 { inset:11%; border-style:dotted; border-width:2px; }
+    .holo-ring.r3 { inset:-8%; border-width:1.5px; border-top-color:#ffb24f; border-bottom-color:transparent; }
+    .holo-ring.r4 { inset:20%; border:1px solid #8cf4ff66; border-left-color:transparent; border-right-color:transparent; transform:rotateX(68deg); animation:coreOrbitX 5.8s linear infinite; }
+    .holo-ring.r5 { inset:26%; border:1px dashed #8cf4ff66; transform:rotateY(68deg); animation:coreOrbitY 8s linear infinite reverse; }
+    .holo-emitter { position:relative; z-index:2; width:67%; aspect-ratio:1; display:grid; place-items:center; transform-style:preserve-3d; animation:coreFloat 4.2s ease-in-out infinite; }
+    .holo-emblem { width:100%; height:100%; overflow:visible; filter:drop-shadow(0 0 12px #1fd1ff99) drop-shadow(0 0 32px #1fd1ff55); animation:coreMaterialize 1.45s cubic-bezier(.16,.82,.2,1) both, coreFlicker 5.5s ease-in-out 1.45s infinite; }
+    .core-pulse { transform-origin:120px 120px; animation:corePulse 2.4s ease-in-out infinite; }
+    .core-crosshair { position:absolute; inset:-8%; border:1px solid #7cefff55; border-radius:50%; background:repeating-conic-gradient(from 0deg,#9ff4ff 0deg 1deg,transparent 1deg 30deg); mask:radial-gradient(circle,transparent 68%,#000 69% 70%,transparent 71%); animation:bootspin 18s linear infinite reverse; }
+    .core-glass { position:absolute; inset:12%; border-radius:50%; background:linear-gradient(115deg,transparent 34%,#d9ffff22 49%,transparent 62%); mix-blend-mode:screen; animation:coreGlass 3.8s ease-in-out infinite; }
+    .holo-scan { z-index:4; left:12%; right:12%; height:2px; background:linear-gradient(90deg,transparent,#e8fdff,#1fd1ff,transparent); box-shadow:0 0 22px 5px #1fd1ffbb; animation:holoSweep 2.1s ease-in-out infinite; }
+    .holo-beam { z-index:1; top:45%; bottom:-2%; left:18%; right:18%; background:linear-gradient(180deg,#1fd1ff00,#1fd1ff38 55%,#1fd1ff08); filter:blur(5px); }
+    .holo-base { z-index:2; bottom:-3%; height:13%; box-shadow:0 0 42px #1fd1ff88; animation:basePulse 2.8s ease-in-out infinite; }
+    .holo-particles { z-index:3; }
+    .holo-orbit { z-index:5; inset:-27%; }
+    .holo-tag span { border-color:#58eaff88; background:linear-gradient(135deg,#04161deF,#062b38dd); box-shadow:0 0 16px #1fd1ff33,inset 0 0 10px #1fd1ff0d; }
+    @keyframes coreMaterialize { 0% { opacity:0; transform:translateY(32px) scale(.42) rotateX(28deg); filter:blur(12px) brightness(2.4); clip-path:inset(50% 0); } 58% { opacity:.82; filter:blur(2px) brightness(1.8); clip-path:inset(0); } 100% { opacity:1; transform:none; filter:drop-shadow(0 0 12px #1fd1ff99) drop-shadow(0 0 32px #1fd1ff55); } }
+    @keyframes coreFlicker { 0%,100% { opacity:1; } 8% { opacity:.86; } 9% { opacity:1; } 48% { opacity:.94; } 50% { opacity:1; } 83% { opacity:.88; } 85% { opacity:1; } }
+    @keyframes corePulse { 0%,100% { transform:scale(.94); opacity:.76; } 50% { transform:scale(1.04); opacity:1; } }
+    @keyframes coreFloat { 0%,100% { transform:translateY(2px) rotateX(2deg); } 50% { transform:translateY(-8px) rotateX(-2deg); } }
+    @keyframes coreGlass { 0%,100% { opacity:.18; transform:rotate(-8deg); } 50% { opacity:.72; transform:rotate(8deg); } }
+    @keyframes coreOrbitX { to { transform:rotateX(68deg) rotateZ(360deg); } }
+    @keyframes coreOrbitY { to { transform:rotateY(68deg) rotateZ(360deg); } }
+    @keyframes basePulse { 0%,100% { opacity:.62; transform:perspective(200px) rotateX(62deg) scaleX(.92); } 50% { opacity:1; transform:perspective(200px) rotateX(62deg) scaleX(1.08); } }
+    @media (max-height:700px) { .holo-stage { width:min(260px,43vh); margin-bottom:20px; } }
+    @media (max-width:700px) { .holo-stage { width:min(300px,70vw); } .holo-orbit { inset:-18%; } }
+    @media (prefers-reduced-motion:reduce) { .holo-ring.r4,.holo-ring.r5,.holo-emitter,.holo-emblem,.core-pulse,.core-crosshair,.core-glass,.holo-base { animation:none !important; } }
     .holo-scan { position:absolute; left:20%; right:20%; height:3px; top:20%; background:linear-gradient(90deg,transparent,#a8f6ff,transparent); box-shadow:0 0 16px 3px #1fd1ff99; animation:holoSweep 2.2s ease-in-out infinite; }
     .holo-base { position:absolute; left:14%; right:14%; bottom:-6%; height:16%; border-radius:50%; background:radial-gradient(ellipse,#1fd1ff88,transparent 70%); border:1px solid #1fd1ff66; transform:perspective(200px) rotateX(62deg); box-shadow:0 0 30px #1fd1ff55; }
     .holo-beam { position:absolute; left:26%; right:26%; top:55%; bottom:2%; background:linear-gradient(#1fd1ff00,#1fd1ff2a); clip-path:polygon(18% 0,82% 0,100% 100%,0 100%); filter:blur(2px); }
@@ -988,7 +1017,49 @@
     #bootDialog.boot-out .holo-flash { animation:holoFlash .5s ease-out forwards; }
     @keyframes holoFlash { 0% { opacity:0; } 18% { opacity:.9; } 100% { opacity:0; } }
     @media (max-width:700px) { .hud { display:none; } }
-    @media (prefers-reduced-motion:reduce) { .holo-logo,.holo-reticle,.hud { animation:none; opacity:1; } .holo-reticle { opacity:.3; } #bootFx { display:none; } }
+    @media (prefers-reduced-motion:reduce) { .holo-logo,.holo-reticle,.hud,.holo-emitter,.holo-emblem,.core-pulse,.core-crosshair,.core-glass,.holo-ring.r4,.holo-ring.r5 { animation:none !important; opacity:1; } .holo-reticle { opacity:.3; } #bootFx { display:none; } }
+
+    /* Anelli JARVIS: scansione multilivello, tacche tecniche e orbite 3D */
+    .holo-stage { width:min(390px,70vw); margin-bottom:48px; }
+    .holo-emitter { width:54%; }
+    .holo-logo { display:block; width:74%; height:74%; object-fit:contain; border-radius:18%; mix-blend-mode:screen; filter:drop-shadow(0 0 10px #b9fbff) drop-shadow(0 0 24px #1fd1ffcc) saturate(1.25); animation:holoReveal 1.7s cubic-bezier(.3,.7,.2,1) both, holoFlicker 3.4s infinite 1.7s, holoFloat 4s ease-in-out infinite; }
+    .holo-ring.r1 { inset:1%; border:2px solid transparent; border-top-color:#eaffff; border-right-color:#43e8ff; border-bottom-color:#167fa5; border-left-color:transparent; box-shadow:0 0 28px #1fd1ff44,inset 0 0 20px #1fd1ff12; animation:bootspin 4.8s linear infinite; }
+    .holo-ring.r2 { inset:8%; border:1px dashed #74edff9c; box-shadow:0 0 15px #1fd1ff22; animation:bootspin 18s linear infinite reverse; }
+    .holo-ring.r3 { inset:-9%; border:2px solid transparent; border-top-color:#ffbd68; border-right-color:#ffbd6844; border-bottom-color:transparent; border-left-color:#ffbd6870; filter:drop-shadow(0 0 5px #ffad4a66); animation:bootspin 9s linear infinite reverse; }
+    .holo-ring.r4 { inset:18%; border:2px solid transparent; border-top-color:#bafaff; border-bottom-color:#4bdfffa8; border-radius:46%; transform:rotateX(68deg); animation:coreOrbitX 6.5s linear infinite; }
+    .holo-ring.r5 { inset:23%; border:1px dashed #72eaffb0; border-radius:42%; transform:rotateY(68deg); animation:coreOrbitY 8.5s linear infinite reverse; }
+    .holo-ring.r6 { inset:-15%; border:1px dotted #42dfff66; transform:rotateX(74deg) rotateZ(18deg); animation:outerOrbit 22s linear infinite; }
+    .holo-ring.r7 { inset:5%; border:1px solid transparent; border-top-color:#7df3ffcc; border-right-color:transparent; border-bottom-color:#7df3ff66; border-left-color:transparent; transform:rotateX(76deg) rotateY(12deg); animation:outerOrbit 12s linear infinite reverse; }
+    .holo-ring.r1::before,.holo-ring.r3::before,.holo-ring.r7::before { content:""; position:absolute; top:50%; left:-5px; width:7px; height:7px; border-radius:50%; background:#eaffff; box-shadow:0 0 8px 3px #42dfff; }
+    .holo-ring.r3::before { background:#ffc477; box-shadow:0 0 9px 3px #ff9a2e; }
+    .holo-ticks { position:absolute; inset:-4%; border-radius:50%; pointer-events:none; background:repeating-conic-gradient(from -2deg,#9df5ff 0deg 0.55deg,transparent .55deg 5deg); -webkit-mask:radial-gradient(circle,transparent 0 84%,#000 84.5% 86%,transparent 86.5%); mask:radial-gradient(circle,transparent 0 84%,#000 84.5% 86%,transparent 86.5%); opacity:.62; animation:bootspin 55s linear infinite; }
+    .holo-scan { z-index:4; left:13%; right:13%; height:2px; background:linear-gradient(90deg,transparent,#fff,#7df3ff,transparent); box-shadow:0 0 24px 6px #1fd1ffcc; }
+    .holo-base { left:10%; right:10%; bottom:-9%; height:17%; box-shadow:0 0 48px #1fd1ff99,0 0 90px #1fd1ff33; }
+    .holo-orbit { inset:-31%; }
+    @keyframes outerOrbit { to { transform:rotateX(74deg) rotateZ(378deg); } }
+    @media (max-height:700px) { .holo-stage { width:min(270px,48vh); margin-bottom:30px; } }
+    /* Interazione live: parallasse, impulso al tocco e boost delle orbite */
+    .holo-stage { --tilt-x:0deg; --tilt-y:0deg; transform:perspective(1000px) rotateX(var(--tilt-y)) rotateY(var(--tilt-x)); transform-style:preserve-3d; transition:transform .18s ease-out, filter .25s ease; cursor:crosshair; touch-action:pan-y; }
+    .holo-stage:focus-visible { outline:1px solid #8ff5ff; outline-offset:12px; border-radius:50%; }
+    .holo-stage::after { content:""; position:absolute; inset:8%; border-radius:50%; pointer-events:none; opacity:0; background:radial-gradient(circle,#d9ffff55 0, #40dfff20 28%,transparent 68%); transform:scale(.45); }
+    .holo-stage.holo-boost { filter:brightness(1.3) saturate(1.35); }
+    .holo-stage.holo-boost::after { animation:coreImpact .85s ease-out; }
+    .holo-stage.holo-boost .holo-ring.r1 { animation-duration:1.05s; }
+    .holo-stage.holo-boost .holo-ring.r2 { animation-duration:3.8s; }
+    .holo-stage.holo-boost .holo-ring.r3 { animation-duration:1.8s; }
+    .holo-stage.holo-boost .holo-ring.r4 { animation-duration:1.7s; }
+    .holo-stage.holo-boost .holo-ring.r5 { animation-duration:2.2s; }
+    .holo-stage.holo-boost .holo-ring.r6 { animation-duration:5s; }
+    .holo-stage.holo-boost .holo-ring.r7 { animation-duration:2.8s; }
+    .holo-stage.holo-boost .holo-emitter { filter:drop-shadow(0 0 22px #69edff); }
+    .holo-stage.holo-boost .holo-logo { filter:drop-shadow(0 0 18px #fff) drop-shadow(0 0 38px #1fd1ff); }
+    .holo-interact-hint { margin-top:-34px; color:#69cbd8; font:600 9px ui-monospace,Consolas,monospace; letter-spacing:.2em; text-align:center; opacity:.72; text-transform:uppercase; }
+    .holo-interact-hint b { color:#bafaff; font-weight:700; }
+    @keyframes coreImpact { 0% { opacity:0; transform:scale(.35); } 18% { opacity:1; } 100% { opacity:0; transform:scale(1.65); } }
+    @media (hover:none) { .holo-interact-hint { margin-top:-25px; } }
+    @media (prefers-reduced-motion:reduce) { .holo-stage { transform:none !important; transition:none; } .holo-stage.holo-boost::after { animation:none; } }
+    @media (max-width:700px) { .holo-stage { width:min(320px,74vw); } .holo-ring.r6 { inset:-10%; } .holo-orbit { inset:-19%; } }
+    @media (prefers-reduced-motion:reduce) { .holo-ring.r6,.holo-ring.r7,.holo-ticks { animation:none !important; } }
   </style>
 </head>
 <body class="jarvis-ui">
@@ -1040,7 +1111,18 @@
   <div class="hud hud-bl" aria-hidden="true"><span id="hudBat">ENERGIA</span><small>ALIMENTAZIONE</small></div>
   <div class="hud hud-br" aria-hidden="true"><span id="hudScreen">SCHERMO</span><small>INTERFACCIA</small></div>
   <div class="boot-shell holo-shell">
-    <div class="holo-stage" aria-hidden="true"><i class="holo-ring r1"></i><i class="holo-ring r2"></i><i class="holo-ring r3"></i><i class="holo-beam"></i><img class="holo-logo" src="logo-256.png" alt=""><i class="holo-scan"></i><i class="holo-base"></i><i class="holo-particles" id="holoParticles"></i><div class="holo-orbit" id="holoOrbit"></div><i class="holo-reticle"></i><i class="holo-wave"></i><i class="holo-flash"></i></div>
+    <div class="holo-stage" id="holoStage" role="button" tabindex="0" aria-label="Attiva impulso olografico JARVIS" title="Clicca o premi Invio per attivare il nucleo">
+      <i class="holo-ring r1"></i><i class="holo-ring r2"></i><i class="holo-ring r3"></i>
+      <i class="holo-ring r4"></i><i class="holo-ring r5"></i><i class="holo-ring r6"></i><i class="holo-ring r7"></i>
+      <i class="holo-ticks"></i><i class="holo-beam"></i><i class="holo-scan"></i>
+      <div class="holo-emitter">
+        <img class="holo-logo" src="logo-192.png" alt="Logo JARVIS" draggable="false">
+        <i class="core-crosshair"></i><i class="core-glass"></i>
+      </div>
+      <i class="holo-base"></i><i class="holo-particles" id="holoParticles"></i>
+      <div class="holo-orbit" id="holoOrbit"></div><i class="holo-reticle"></i><i class="holo-wave"></i><i class="holo-flash"></i>
+    </div>
+    <div class="holo-interact-hint"><b>MUOVI IL CURSORE</b> Â· CLICCA IL NUCLEO</div>
     <div class="holo-name"><span id="holoTitle">APPUNTI</span><i class="holo-caret"></i><small id="holoSub">SCIENZE MOTORIE &#xB7; INSUBRIA</small></div>
     <div class="boot-lines" id="bootLines"></div>
     <div class="boot-barwrap"><div class="boot-bar"><i id="bootBar"></i></div><span id="bootPct">0%</span></div>
@@ -1050,7 +1132,7 @@
   <dialog id="voiceSettingsDialog" class="voice-settings-dialog" aria-labelledby="voiceSettingsTitle"><div class="dialog-head"><div><h2 id="voiceSettingsTitle">Configurazione vocale</h2><p class="voice-settings-subtitle">Regola la voce del briefing</p></div><button class="icon-btn" type="button" data-close="voiceSettingsDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body voice-settings-body"><label for="speechVoiceSelect">Voce disponibile<select id="speechVoiceSelect"><option value="">Italiano predefinito del dispositivo</option></select><small class="voice-settings-hint">Le voci dipendono dal browser e dal dispositivo. Per un risultato pi&#xF9; naturale, prova una voce italiana &#x201C;Natural&#x201D; o &#x201C;Enhanced&#x201D;, se disponibile.</small></label><button class="btn voice-preset" id="jarvisVoicePresetBtn" type="button">Applica preset JARVIS &#xB7; Decisa</button><label class="voice-range-label" for="speechPitch"><span>Tono <output id="speechPitchValue">0,88</output></span><input id="speechPitch" type="range" min="0.65" max="1.25" step="0.05" value="0.88"></label><label class="voice-range-label" for="speechRate"><span>Velocit&#xE0; <output id="speechRateValue">0,92&#xD7;</output></span><input id="speechRate" type="range" min="0.75" max="1.15" step="0.05" value="0.92"></label><p class="voice-settings-hint">Il preset abbassa leggermente il tono e rallenta il ritmo. La naturalezza dipende soprattutto dalla voce italiana installata nel dispositivo; il browser non pu&#xF2; riprodurre esattamente la voce del film.</p></div><div class="dialog-foot voice-settings-foot"><button class="btn" id="previewVoiceBtn" type="button">Prova la voce</button><div class="foot-right"><button class="btn" type="button" data-close="voiceSettingsDialog">Chiudi</button><button class="btn btn-primary" id="saveVoiceSettingsBtn" type="button">Salva</button></div></div></dialog>
   <dialog id="docxPreviewDialog" aria-labelledby="docxPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="docxPreviewTitle">Anteprima documento</h2><p>Anteprima locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadDocxBtn" type="button">Scarica</button><button class="icon-btn" type="button" data-close="docxPreviewDialog" aria-label="Chiudi anteprima">&#xD7;</button></div></div><div class="docx-preview-scroll"><div id="docxPreviewError" class="docx-preview-error hidden" role="status"></div><article id="docxContent" class="docx-content"></article></div></dialog>
   <dialog id="videoPreviewDialog" aria-labelledby="videoPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="videoPreviewTitle">Video lezione</h2><p>Riproduzione locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadVideoBtn" type="button">Scarica</button><button class="icon-btn" type="button" data-close="videoPreviewDialog" aria-label="Chiudi video">&#xD7;</button></div></div><div class="video-stage"><div id="videoPreviewError" class="docx-preview-error hidden" role="status"></div><video id="videoPlayer" controls playsinline preload="metadata"></video></div></dialog>
-  <dialog id="commandDialog" class="command-dialog" aria-label="Comandi rapidi"><div class="command-head"><span><i></i>INTERFACCIA COMANDI</span><kbd>ESC</kbd></div><label class="command-input-wrap" for="commandInput"><input id="commandInput" type="search" autocomplete="off" placeholder="Cerca materia, appunto o azione&#x2026; (es. apri anatomia, ultimi file)"><button class="mic-btn" id="micBtn" type="button" aria-label="Comando vocale">Parla</button></label><div id="commandResults" class="command-results"></div><div class="command-foot"><span>Frecce su e giù per scegliere &#xB7; Invio per aprire</span><span><kbd>CTRL</kbd> + <kbd>K</kbd></span></div></dialog>
+  <dialog id="commandDialog" class="command-dialog" aria-label="Comandi rapidi"><div class="command-head"><span><i></i>INTERFACCIA COMANDI</span><kbd>ESC</kbd></div><label class="command-input-wrap" for="commandInput"><input id="commandInput" type="search" autocomplete="off" placeholder="Cerca materia, appunto o azione&#x2026; (es. apri anatomia, ultimi file)"><button class="mic-btn" id="micBtn" type="button" aria-label="Comando vocale">Parla</button></label><div id="commandResults" class="command-results"></div><div class="command-foot"><span>Frecce su e giÃ¹ per scegliere &#xB7; Invio per aprire</span><span><kbd>CTRL</kbd> + <kbd>K</kbd></span></div></dialog>
 
   <dialog id="scheduleDialog" class="wide-dialog" aria-labelledby="scheduleTitle"><div class="dialog-head"><h2 id="scheduleTitle">Orario delle lezioni</h2><button class="icon-btn" type="button" data-close="scheduleDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body sched-body">
     <section class="sched-block" id="remindBlock"><h3>Promemoria e calendario</h3><p class="sched-help">I promemoria arrivano finch&#xE9; l&#x2019;app &#xE8; aperta (anche ridotta a icona). Se la chiudi non possono partire: per quel caso esporta l&#x2019;orario e importalo nel calendario del telefono.</p><div class="sched-grid"><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="remindOn" style="width:auto"> Avvisami prima delle lezioni</label><label>Anticipo<select id="remindLead"><option value="10">10 minuti</option><option value="30">30 minuti</option><option value="60">1 ora</option></select></label></div><div class="foot-right" style="justify-content:flex-start;gap:8px;margin-top:8px"><button class="btn" id="remindTestBtn" type="button">Prova promemoria</button><button class="btn" id="icsExportBtn" type="button">Esporta orario ed esami (.ics)</button></div></section>
@@ -1934,7 +2016,7 @@
   async function zipList(blob){
     const tailStart=Math.max(0,blob.size-65557),tail=new DataView(await blob.slice(tailStart).arrayBuffer());let eocd=-1;
     for(let i=tail.byteLength-22;i>=0;i--){if(tail.getUint32(i,true)===0x06054b50){eocd=i;break;}}
-    if(eocd<0)throw new Error('Il file non è uno ZIP valido.');
+    if(eocd<0)throw new Error('Il file non Ã¨ uno ZIP valido.');
     const count=tail.getUint16(eocd+10,true),size=tail.getUint32(eocd+12,true),offset=tail.getUint32(eocd+16,true);
     if(offset===0xFFFFFFFF||count===0xFFFF)throw new Error('ZIP troppo grande (formato ZIP64 non supportato).');
     const directory=new DataView(await blob.slice(offset,offset+size).arrayBuffer()),decoder=new TextDecoder(),entries=new Map();let cursor=0;
@@ -2005,11 +2087,11 @@
     indexState.running=false;if($('search').value.trim())render();
   }
   const loadTextIndex=async()=>{for(const item of await listTexts())setIndexEntry(item.id,item.text||'');};
-  const indexStatusText=()=>indexState.running?' · sto leggendo i file ('+indexState.done+'/'+indexState.total+')':'';
+  const indexStatusText=()=>indexState.running?' Â· sto leggendo i file ('+indexState.done+'/'+indexState.total+')':'';
   function contentHit(note,foldedQuery){
     const entry=textIndex.get(note.attachmentId);if(!entry||!entry.folded)return '';const at=entry.folded.indexOf(foldedQuery);if(at<0)return '';
     const from=Math.max(0,at-60),to=Math.min(entry.raw.length,at+foldedQuery.length+90),clean=text=>escapeHtml(text.replace(/\s+/g,' '));
-    return (from>0?'…':'')+clean(entry.raw.slice(from,at))+'<mark>'+clean(entry.raw.slice(at,at+foldedQuery.length))+'</mark>'+clean(entry.raw.slice(at+foldedQuery.length,to))+(to<entry.raw.length?'…':'');
+    return (from>0?'â€¦':'')+clean(entry.raw.slice(from,at))+'<mark>'+clean(entry.raw.slice(at,at+foldedQuery.length))+'</mark>'+clean(entry.raw.slice(at+foldedQuery.length,to))+(to<entry.raw.length?'â€¦':'');
   }
 
   /* =====================================================================
@@ -2069,7 +2151,7 @@
   function updatePdfMeta(){
     if(!pdfView)return;const scroll=$('pdfScroll'),pages=$('pdfPages').children;let current=1;
     const top=scroll.getBoundingClientRect().top;for(let i=0;i<pages.length;i++){if(pages[i].getBoundingClientRect().top-top<=scroll.clientHeight/3)current=i+1;else break;}
-    $('pdfMeta').textContent='Pagina '+current+' di '+pdfView.doc.numPages+' · lettore integrato';
+    $('pdfMeta').textContent='Pagina '+current+' di '+pdfView.doc.numPages+' Â· lettore integrato';
   }
   function zoomPdf(factor){if(!pdfView)return;const scroll=$('pdfScroll'),ratio=scroll.scrollHeight?scroll.scrollTop/scroll.scrollHeight:0;pdfView.mult=Math.min(4,Math.max(.4,factor===0?1:pdfView.mult*factor));buildPdfPages();scroll.scrollTop=ratio*scroll.scrollHeight;updatePdfMeta();}
   let pdfScrollFrame=0,pdfResizeTimer=0;
@@ -2087,7 +2169,7 @@
     activeFileRecord=record;const name=record.name||note.fileName||'file',ext=name.split('.').pop().toLowerCase();
     $('fileDialogTitle').textContent=note.title||fileTitle(name);
     $('fileInfo').innerHTML=fileTypeBadge(name)+'<span class="file-info-name">'+escapeHtml(name)+'</span><span class="file-info-size">'+formatSize(record.size||record.blob.size)+'</span>';
-    $('fileInfoNote').textContent=/^pptx?$/.test(ext)?'Le presentazioni perdono layout e animazioni se mostrate nel browser: scaricala e aprila con PowerPoint, Keynote o Google Presentazioni.':'Questo formato non si può mostrare nel browser: scaricalo per aprirlo con l’app giusta.';
+    $('fileInfoNote').textContent=/^pptx?$/.test(ext)?'Le presentazioni perdono layout e animazioni se mostrate nel browser: scaricala e aprila con PowerPoint, Keynote o Google Presentazioni.':'Questo formato non si puÃ² mostrare nel browser: scaricalo per aprirlo con lâ€™app giusta.';
     const body=$('fileText');body.replaceChildren();$('fileTextWrap').classList.add('hidden');$('fileTextWrap').open=false;
     if(!$('fileDialog').open)$('fileDialog').showModal();
     try{
@@ -2171,10 +2253,10 @@
     for(const date of dates)total+=map[date].length;
     for(const date of dates){
       if(shown>=150)break;
-      html+='<div class="sched-day"><h4>'+escapeHtml(calendarDateLabel(date))+'</h4>'+map[date].map((lesson,index)=>{shown++;return '<div class="sched-item"><span class="sched-time">'+escapeHtml(lesson.start)+'–'+escapeHtml(lesson.end)+'</span><span class="sched-name">'+escapeHtml(lesson.subject)+(lesson.place?'<small>'+escapeHtml(lesson.place)+'</small>':'')+'</span><span class="sched-actions"><button class="btn" type="button" data-sched-edit="'+date+'|'+index+'">Modifica</button><button class="btn btn-danger" type="button" data-sched-del="'+date+'|'+index+'">Elimina</button></span></div>';}).join('')+'</div>';
+      html+='<div class="sched-day"><h4>'+escapeHtml(calendarDateLabel(date))+'</h4>'+map[date].map((lesson,index)=>{shown++;return '<div class="sched-item"><span class="sched-time">'+escapeHtml(lesson.start)+'â€“'+escapeHtml(lesson.end)+'</span><span class="sched-name">'+escapeHtml(lesson.subject)+(lesson.place?'<small>'+escapeHtml(lesson.place)+'</small>':'')+'</span><span class="sched-actions"><button class="btn" type="button" data-sched-edit="'+date+'|'+index+'">Modifica</button><button class="btn btn-danger" type="button" data-sched-del="'+date+'|'+index+'">Elimina</button></span></div>';}).join('')+'</div>';
     }
     $('schedCount').textContent=total?'('+total+')':'';
-    $('schedList').innerHTML=html?html+(total>shown?'<p class="sched-empty">…e altre '+(total-shown)+' lezioni più avanti.</p>':''):'<p class="sched-empty">Nessuna lezione in programma da oggi in poi.</p>';
+    $('schedList').innerHTML=html?html+(total>shown?'<p class="sched-empty">â€¦e altre '+(total-shown)+' lezioni piÃ¹ avanti.</p>':''):'<p class="sched-empty">Nessuna lezione in programma da oggi in poi.</p>';
   }
   function openSchedule(){
     $('lessonSubjectList').innerHTML=data.subjects.map(subject=>'<option value="'+escapeHtml(subject.name)+'"></option>').join('');
@@ -2185,9 +2267,9 @@
     const file=event.target.files?.[0];event.target.value='';if(!file)return;const msg=$('schedImportMsg');
     try{
       const {map,count}=scheduleFromIcs(await file.text());
-      if(!count){msg.textContent='Nel file non ho trovato lezioni (gli eventi “tutto il giorno” vengono ignorati).';return;}
+      if(!count){msg.textContent='Nel file non ho trovato lezioni (gli eventi â€œtutto il giornoâ€� vengono ignorati).';return;}
       const replace=$('schedMode').value==='replace';
-      if(replace&&allLessons().length&&!confirm('Sostituire l’orario attuale con le '+count+' lezioni del file?'))return;
+      if(replace&&allLessons().length&&!confirm('Sostituire lâ€™orario attuale con le '+count+' lezioni del file?'))return;
       let added=count;if(replace)data.schedule=map;else added=mergeSchedule(data.schedule=scheduleMap(),map);
       const dates=Object.keys(map).sort();recordActivity('Orario importato',added+' lezioni');afterScheduleChange();
       msg.textContent='Fatto: '+added+' lezioni '+(replace?'importate':'aggiunte')+' (dal '+calendarDate(dates[0]).toLocaleDateString('it-IT')+' al '+calendarDate(dates[dates.length-1]).toLocaleDateString('it-IT')+').';
@@ -2195,7 +2277,7 @@
   });
   $('lessonForm').addEventListener('submit',event=>{
     event.preventDefault();const subject=$('lessonSubject').value.trim(),date=$('lessonDate').value,start=$('lessonStart').value,end=$('lessonEnd').value,place=$('lessonPlace').value.trim(),repeat=editingLesson?0:Math.min(30,Math.max(0,parseInt($('lessonRepeat').value,10)||0));
-    if(!subject||!date||!start||!end)return;if(end<=start){showToast('L’ora di fine deve essere dopo quella di inizio.');return;}
+    if(!subject||!date||!start||!end)return;if(end<=start){showToast('Lâ€™ora di fine deve essere dopo quella di inizio.');return;}
     const map=data.schedule=scheduleMap();
     if(editingLesson){const old=map[editingLesson.date];if(old){old.splice(editingLesson.index,1);if(!old.length)delete map[editingLesson.date];}}
     for(let week=0;week<=repeat;week++){const d=calendarDate(date);d.setDate(d.getDate()+7*week);const key=toKey(d.getFullYear(),d.getMonth()+1,d.getDate()),list=map[key]=map[key]||[];list.push({start,end,subject,...(place?{place}:{})});list.sort((a,b)=>a.start.localeCompare(b.start));}
@@ -2209,7 +2291,7 @@
     editingLesson={date,index};$('lessonSubject').value=lesson.subject;$('lessonDate').value=date;$('lessonStart').value=lesson.start;$('lessonEnd').value=lesson.end;$('lessonPlace').value=lesson.place||'';
     $('lessonFormTitle').textContent='Modifica lezione';$('lessonSubmitBtn').textContent='Salva modifiche';$('lessonCancelEdit').classList.remove('hidden');$('lessonRepeatWrap').classList.add('hidden');$('lessonForm').scrollIntoView({behavior:'smooth',block:'nearest'});
   });
-  $('schedClearBtn').addEventListener('click',()=>{if(!allLessons().length){showToast('L’orario è già vuoto.');return;}if(confirm('Eliminare tutte le lezioni dall’orario?')){data.schedule={};recordActivity('Orario svuotato','');resetLessonForm();afterScheduleChange();}});
+  $('schedClearBtn').addEventListener('click',()=>{if(!allLessons().length){showToast('Lâ€™orario Ã¨ giÃ  vuoto.');return;}if(confirm('Eliminare tutte le lezioni dallâ€™orario?')){data.schedule={};recordActivity('Orario svuotato','');resetLessonForm();afterScheduleChange();}});
 
   /* =====================================================================
      Esami e conto alla rovescia
@@ -2218,13 +2300,13 @@
   const upcomingExams=()=>(data.exams||[]).filter(exam=>exam.date&&daysUntil(exam.date)>=0).sort((a,b)=>(a.date+(a.time||'99:99')).localeCompare(b.date+(b.time||'99:99')));
   function examStripMarkup(){
     const exam=upcomingExams()[0];if(!exam)return '';const days=daysUntil(exam.date);
-    return '<div class="countdown-strip exam-strip"><span class="countdown-orbit">'+(days===0?'OGGI':days+'g')+'</span><span><span class="countdown-label">PROSSIMO ESAME</span><span class="countdown-course">'+escapeHtml(exam.title)+'<small>'+escapeHtml(calendarDateLabel(exam.date))+(exam.time?' · '+escapeHtml(exam.time):'')+'</small></span></span></div>';
+    return '<div class="countdown-strip exam-strip"><span class="countdown-orbit">'+(days===0?'OGGI':days+'g')+'</span><span><span class="countdown-label">PROSSIMO ESAME</span><span class="countdown-course">'+escapeHtml(exam.title)+'<small>'+escapeHtml(calendarDateLabel(exam.date))+(exam.time?' Â· '+escapeHtml(exam.time):'')+'</small></span></span></div>';
   }
   function renderExams(){
     const root=$('examsCard');if(!root)return;const list=upcomingExams();
     root.innerHTML='<div class="exams-head"><div><p class="section-eyebrow">Il conto alla rovescia</p><h2>Esami</h2></div><button class="btn" type="button" id="addExamBtn">+ Aggiungi esame</button></div>'+(list.length?'<div class="exams-list">'+list.map(exam=>{
       const days=daysUntil(exam.date),level=days<=3?' is-urgent':days<=10?' is-soon':'',subject=calendarSubject(exam.title);
-      return '<article class="exam-item'+level+'"><span class="exam-days"><b>'+(days===0?'Oggi':days)+'</b>'+(days===0?'':'<small>'+(days===1?'giorno':'giorni')+'</small>')+'</span><span class="exam-info"><strong>'+escapeHtml(exam.title)+'</strong><small>'+escapeHtml(calendarDateLabel(exam.date))+(exam.time?' · '+escapeHtml(exam.time):'')+(exam.place?' · '+escapeHtml(exam.place):'')+'</small></span><span class="exam-actions">'+(subject?'<button class="btn" type="button" data-exam-open="'+escapeHtml(subject.id)+'">Appunti</button>':'')+'<button class="btn" type="button" data-exam-edit="'+escapeHtml(exam.id)+'">Modifica</button></span></article>';
+      return '<article class="exam-item'+level+'"><span class="exam-days"><b>'+(days===0?'Oggi':days)+'</b>'+(days===0?'':'<small>'+(days===1?'giorno':'giorni')+'</small>')+'</span><span class="exam-info"><strong>'+escapeHtml(exam.title)+'</strong><small>'+escapeHtml(calendarDateLabel(exam.date))+(exam.time?' Â· '+escapeHtml(exam.time):'')+(exam.place?' Â· '+escapeHtml(exam.place):'')+'</small></span><span class="exam-actions">'+(subject?'<button class="btn" type="button" data-exam-open="'+escapeHtml(subject.id)+'">Appunti</button>':'')+'<button class="btn" type="button" data-exam-edit="'+escapeHtml(exam.id)+'">Modifica</button></span></article>';
     }).join('')+'</div>':'<p class="exams-empty">Nessun esame in programma. Aggiungi la data e vedrai qui quanti giorni mancano.</p>');
     $('addExamBtn').addEventListener('click',()=>openExam());
     root.querySelectorAll('[data-exam-edit]').forEach(button=>button.addEventListener('click',()=>openExam(button.dataset.examEdit)));
@@ -2243,7 +2325,7 @@
     if(editingExamId){const exam=data.exams.find(item=>item.id===editingExamId);if(exam)Object.assign(exam,fields);}else data.exams.push({id:uid(),...fields});
     recordActivity(editingExamId?'Esame modificato':'Esame aggiunto',title);save();$('examDialog').close();render();renderWelcome();showToast('Esame salvato.');
   });
-  $('examDeleteBtn').addEventListener('click',()=>{const exam=data.exams.find(item=>item.id===editingExamId);if(!exam||!confirm('Eliminare l’esame “'+exam.title+'”?'))return;data.exams=data.exams.filter(item=>item.id!==exam.id);recordActivity('Esame eliminato',exam.title);save();$('examDialog').close();render();renderWelcome();});
+  $('examDeleteBtn').addEventListener('click',()=>{const exam=data.exams.find(item=>item.id===editingExamId);if(!exam||!confirm('Eliminare lâ€™esame â€œ'+exam.title+'â€�?'))return;data.exams=data.exams.filter(item=>item.id!==exam.id);recordActivity('Esame eliminato',exam.title);save();$('examDialog').close();render();renderWelcome();});
 
   /* =====================================================================
      Salvataggio sicuro, promemoria e backup in ZIP
@@ -2251,8 +2333,8 @@
   async function updateStorageStatus(){
     const text=$('storageText');if(!text)return;let persisted=false,usage='';
     try{if(navigator.storage?.persisted)persisted=await navigator.storage.persisted();}catch{}
-    try{const estimate=await navigator.storage.estimate();if(estimate?.usage!=null)usage=' · '+formatSize(estimate.usage);}catch{}
-    text.textContent=(persisted?'Archivio protetto':'Archivio locale')+usage+(persisted?'':' · fai backup');
+    try{const estimate=await navigator.storage.estimate();if(estimate?.usage!=null)usage=' Â· '+formatSize(estimate.usage);}catch{}
+    text.textContent=(persisted?'Archivio protetto':'Archivio locale')+usage+(persisted?'':' Â· fai backup');
     $('storageStatus').title=persisted?'Il browser non cancella questi dati da solo.':'Il browser potrebbe cancellare questi dati se lo spazio scarseggia: fai un backup ogni tanto.';
   }
   async function initStorage(){try{if(navigator.storage?.persist&&!(await navigator.storage.persisted()))await navigator.storage.persist();}catch{}updateStorageStatus();}
@@ -2260,7 +2342,7 @@
     const el=$('backupBanner');if(!el)return;
     const last=Number(data.lastBackupAt)||0,age=last?Math.floor((Date.now()-last)/86400000):null,needed=data.notes.length>0&&(age===null||age>=14)&&data.backupSnooze!==dayKey();
     el.classList.toggle('hidden',!needed);if(!needed){el.innerHTML='';return;}
-    el.innerHTML='<span class="backup-icon" aria-hidden="true">'+svgIcon('avviso')+'</span><span class="backup-text"><strong>'+(age===null?'Non hai ancora fatto nessun backup.':'Ultimo backup: '+age+' giorni fa.')+'</strong> I tuoi '+data.notes.length+' file stanno solo in questo browser: se i dati del sito vengono cancellati, si perdono.</span><span class="backup-actions"><button class="btn btn-primary" id="backupNowBtn" type="button">Fai il backup</button><button class="btn" id="backupLaterBtn" type="button">Più tardi</button></span>';
+    el.innerHTML='<span class="backup-icon" aria-hidden="true">'+svgIcon('avviso')+'</span><span class="backup-text"><strong>'+(age===null?'Non hai ancora fatto nessun backup.':'Ultimo backup: '+age+' giorni fa.')+'</strong> I tuoi '+data.notes.length+' file stanno solo in questo browser: se i dati del sito vengono cancellati, si perdono.</span><span class="backup-actions"><button class="btn btn-primary" id="backupNowBtn" type="button">Fai il backup</button><button class="btn" id="backupLaterBtn" type="button">PiÃ¹ tardi</button></span>';
     $('backupNowBtn').addEventListener('click',()=>$('exportBtn').click());
     $('backupLaterBtn').addEventListener('click',()=>{data.backupSnooze=dayKey();save();renderBackupBanner();});
   }
@@ -2268,7 +2350,7 @@
   $('exportBtn').addEventListener('click',async()=>{
     const button=$('exportBtn');if(button.disabled)return;button.disabled=true;
     try{
-      showToast('Preparo il backup…');
+      showToast('Preparo il backupâ€¦');
       const referenced=new Set(data.notes.map(note=>note.attachmentId).filter(Boolean)),entries=[],manifest=[],used=new Set();
       for(const record of await listAttachments()){
         if(!referenced.has(record.id))continue;
@@ -2278,7 +2360,7 @@
       }
       data.lastBackupAt=Date.now();recordActivity('Backup esportato',data.notes.length+' appunti');save();
       const payload={...data,files:manifest,backupCreatedAt:new Date().toISOString(),format:2};
-      entries.unshift({name:'LEGGIMI.txt',blob:new Blob(['Backup di Appunti università\r\n\r\ndati.json  -> materie, cartelle, orario, esami e impostazioni (serve per reimportare)\r\nmateriali/ -> i tuoi file, ordinati per materia: li puoi aprire anche senza l’app\r\n\r\nPer ripristinare: nell’app premi "Importa" e scegli questo file .zip.\r\n'],{type:'text/plain'})});
+      entries.unshift({name:'LEGGIMI.txt',blob:new Blob(['Backup di Appunti universitÃ \r\n\r\ndati.json  -> materie, cartelle, orario, esami e impostazioni (serve per reimportare)\r\nmateriali/ -> i tuoi file, ordinati per materia: li puoi aprire anche senza lâ€™app\r\n\r\nPer ripristinare: nellâ€™app premi "Importa" e scegli questo file .zip.\r\n'],{type:'text/plain'})});
       entries.unshift({name:'dati.json',blob:new Blob([JSON.stringify(payload)],{type:'application/json'})});
       const zip=await buildZip(entries),url=URL.createObjectURL(zip),a=document.createElement('a');a.href=url;a.download='backup-appunti-'+new Date().toISOString().slice(0,10)+'.zip';a.click();setTimeout(()=>URL.revokeObjectURL(url),120000);
       renderActivity();renderBackupBanner();showToast('Backup scaricato ('+formatSize(zip.size)+').');
@@ -2291,13 +2373,13 @@
     try{
       let imported,loadFile;
       if(/\.zip$/i.test(file.name)||file.type==='application/zip'){
-        const entries=await zipList(file),manifest=entries.get('dati.json');if(!manifest)throw new Error('Questo ZIP non è un backup di Appunti.');
+        const entries=await zipList(file),manifest=entries.get('dati.json');if(!manifest)throw new Error('Questo ZIP non Ã¨ un backup di Appunti.');
         imported=JSON.parse(await (await zipEntryBlob(file,manifest)).text());
         loadFile=async item=>{const entry=entries.get(item.path);return entry?new Blob([await zipEntryBlob(file,entry)],{type:item.type||'application/octet-stream'}):null;};
       }else{imported=JSON.parse(await file.text());loadFile=async item=>item.data?base64Blob(item.data,item.type):null;}
       if(!Array.isArray(imported.subjects)||!Array.isArray(imported.notes))throw new Error('Formato non valido');
       if(!confirm('Importare questo backup? Gli appunti presenti verranno sostituiti.'))return;
-      showToast('Importo il backup…');
+      showToast('Importo il backupâ€¦');
       for(const item of Array.isArray(imported.files)?imported.files:[]){if(!item.id)continue;const blob=await loadFile(item);if(blob)await putAttachmentRecord({id:item.id,name:item.name||'appunti',type:item.type||'application/octet-stream',size:item.size||blob.size,blob});}
       const {files,backupCreatedAt,format,...rest}=imported;
       data=normalizeData({...rest,activeSubject:'all'});
@@ -2373,8 +2455,7 @@
   $('micBtn').addEventListener('click',startListening);
   $('commandDialog').addEventListener('close',stopListening);
 
-  /* Schermata di avvio con dati reali: una volta al giorno, saltabile */
-  const BOOT_KEY='appunti-boot-day';
+  /* Schermata di avvio: mostra lâ€™ologramma a ogni nuova apertura/ricarica dellâ€™app. */
   function bootNeeded(){return true;}
   function scrambleText(el,finalText,ms){
     const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&',start=performance.now();
@@ -2406,16 +2487,17 @@
   }
   function runBoot(done){
     const dlg=$('bootDialog'),lines=$('bootLines'),bar=$('bootBar');let finished=false,timers=[];
-    const fast=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,gap=fast?60:380;
+    const fast=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,gap=fast?60:790;
+    lines.replaceChildren();bar.style.width='0%';$('bootPct').textContent='0%';
     const today=dayKey(),lessons=(scheduleMap()[today]||[]).length,exam=upcomingExams()[0],now=new Date();
     const steps=[
-      ['Nucleo operativo','ATTIVO'],
+      ['Nucleo quantico','ATTIVO'],
       ['Archivio locale',data.notes.length+(data.notes.length===1?' appunto':' appunti')],
-      ['Materie collegate',String(data.subjects.length)],
-      ['Lezioni di oggi',lessons?String(lessons):'nessuna'],
+      ['Moduli accademici',String(data.subjects.length)],
+      ['Agenda odierna',lessons?String(lessons)+' lezioni':'nessuna lezione'],
       ['Prossimo esame',exam?(daysUntil(exam.date)===0?'oggi':'tra '+daysUntil(exam.date)+' giorni'):'nessuno in programma'],
-      ['Modalit\u00E0',navigator.onLine?'ONLINE':'OFFLINE'],
-      ['Sistema','PRONTO']
+      ['Connessione',navigator.onLine?'ONLINE':'OFFLINE'],
+      ['Interfaccia','OPERATIVA']
     ];
     /* etichette dati che girano attorno agli anelli */
     const tags=[['ORA',now.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})],['DATA',now.toLocaleDateString('it-IT',{day:'2-digit',month:'short'}).toUpperCase()],['APPUNTI',String(data.notes.length)],[exam?'ESAME':'LEZIONI',exam?(daysUntil(exam.date)===0?'OGGI':daysUntil(exam.date)+' G'):String(lessons)]];
@@ -2431,16 +2513,41 @@
     else{title.textContent='';[...word].forEach((letter,i)=>timers.push(setTimeout(()=>{title.textContent=word.slice(0,i+1);},200+i*90)));timers.push(setTimeout(()=>sub.classList.add('show'),200+word.length*90+80));timers.push(setTimeout(()=>caret.classList.add('done'),200+word.length*90+900));}
     dlg.classList.remove('boot-out');
     let stopRain=()=>{};
-    const close=()=>{stopRain();if(dlg.open)dlg.close();dlg.classList.remove('boot-out');done();};
-    const finish=(instant)=>{if(finished)return;finished=true;timers.forEach(t=>{if(t&&t.__interval)clearInterval(t.__interval);else clearTimeout(t);});if(instant===true||fast){close();return;}dlg.classList.add('boot-out');setTimeout(close,720);};
+    const close=()=>{stopRain();cleanupHolo();if(dlg.open)dlg.close();dlg.classList.remove('boot-out');if(typeof done==='function')done();};
+    let bootVoiceStarted=false,bootVoiceUtterance=null,bootVoiceFallback=0,bootVoiceWatchdog=0;
+    const finish=(instant,fromVoice=false)=>{if(finished)return;finished=true;timers.forEach(t=>{if(t&&t.__interval)clearInterval(t.__interval);else clearTimeout(t);});clearTimeout(bootVoiceFallback);clearTimeout(bootVoiceWatchdog);if(!fromVoice&&window.speechSynthesis){try{window.speechSynthesis.cancel();}catch{}}if(instant===true||fast){close();return;}dlg.classList.add('boot-out');setTimeout(close,720);};
     $('bootSkip').onclick=()=>finish(true);dlg.addEventListener('cancel',event=>{event.preventDefault();finish(true);},{once:true});
     dlg.showModal();$('bootSkip').focus();
+    /* La voce accompagna l'ologramma: quando termina, la schermata si chiude da sola. */
+    if(!fast&&!isVoiceMuted()&&window.speechSynthesis&&window.SpeechSynthesisUtterance){
+      try{
+        const synth=window.speechSynthesis;
+        bootVoiceUtterance=speechUtterance(buildWelcomeSpeech());
+        bootVoiceUtterance.onstart=()=>{bootVoiceStarted=true;clearTimeout(bootVoiceFallback);bootVoiceWatchdog=setTimeout(()=>finish(false),30000);};
+        bootVoiceUtterance.onend=()=>finish(false,true);
+        bootVoiceUtterance.onerror=()=>{if(!finished)bootVoiceFallback=setTimeout(()=>finish(false),900);};
+        synth.cancel();
+        synth.speak(bootVoiceUtterance);
+        /* Se il browser blocca l'avvio automatico, non lasciare l'ologramma aperto all'infinito. */
+        bootVoiceFallback=setTimeout(()=>{if(!bootVoiceStarted)finish(false);},7200);
+      }catch(error){bootVoiceFallback=setTimeout(()=>finish(false),7000);}
+    }else{
+      bootVoiceFallback=setTimeout(()=>finish(false),fast?350:7040);
+    }
+    /* Il nucleo risponde al mouse, al touch e alla tastiera senza interferire con SALTA. */
+    const stage=$('holoStage');let boostTimer=0;
+    const resetTilt=()=>{stage.style.setProperty('--tilt-x','0deg');stage.style.setProperty('--tilt-y','0deg');};
+    const moveHolo=event=>{if(fast)return;const rect=stage.getBoundingClientRect(),x=(event.clientX-rect.left)/rect.width-.5,y=(event.clientY-rect.top)/rect.height-.5;stage.style.setProperty('--tilt-x',(x*18).toFixed(2)+'deg');stage.style.setProperty('--tilt-y',(-y*18).toFixed(2)+'deg');};
+    const pulseHolo=()=>{stage.classList.remove('holo-boost');void stage.offsetWidth;stage.classList.add('holo-boost');clearTimeout(boostTimer);boostTimer=setTimeout(()=>stage.classList.remove('holo-boost'),1450);};
+    const keyHolo=event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();pulseHolo();}};
+    dlg.addEventListener('pointermove',moveHolo);dlg.addEventListener('pointerleave',resetTilt);stage.addEventListener('click',pulseHolo);stage.addEventListener('keydown',keyHolo);
+    const cleanupHolo=()=>{dlg.removeEventListener('pointermove',moveHolo);dlg.removeEventListener('pointerleave',resetTilt);stage.removeEventListener('click',pulseHolo);stage.removeEventListener('keydown',keyHolo);clearTimeout(boostTimer);resetTilt();stage.classList.remove('holo-boost');};
     fillBootHud(timers);
     if(!fast){stopRain=startBootRain($('bootFx'));
       const stage=document.querySelector('.holo-stage'),name=document.querySelector('.holo-name');
-      timers.push(setTimeout(()=>{stage.classList.add('glitch');name.classList.add('glitch');setTimeout(()=>{stage.classList.remove('glitch');name.classList.remove('glitch');},460);},gap*4+60));}
+      timers.push(setTimeout(()=>{stage.classList.add('glitch');name.classList.add('glitch');timers.push(setTimeout(()=>{stage.classList.remove('glitch');name.classList.remove('glitch');},460));},gap*4+60));}
     steps.forEach((step,index)=>timers.push(setTimeout(()=>{const row=document.createElement('div'),label=document.createElement('span'),text=step[0]+': '+step[1];row.innerHTML='<b>OK</b>';row.append(label);lines.append(row);if(fast)label.textContent=text;else scrambleText(label,text,300);const pct=Math.round((index+1)/steps.length*100);bar.style.width=pct+'%';$('bootPct').textContent=pct+'%';},gap*(index+1))));
-    timers.push(setTimeout(finish,gap*(steps.length+1)));
+    /* La chiusura Ã¨ gestita dalla fine della voce; in modalitÃ  silenziosa resta il timer di fallback. */
   }
 
   /* PWA: installazione e funzionamento offline */
@@ -2455,7 +2562,7 @@
     }).catch(()=>{});
   }
 
-  setSystemMessage(); render(); renderWelcome(); updateAppClock(); setInterval(updateAppClock,30000); $('welcomeDialog').showModal(); startWelcomeFx(); if(bootNeeded())runBoot(()=>setTimeout(speakWelcomeGreeting,300)); else setTimeout(speakWelcomeGreeting, 700);
+  setSystemMessage(); render(); renderWelcome(); updateAppClock(); setInterval(updateAppClock,30000); $('welcomeDialog').showModal(); startWelcomeFx(); if(bootNeeded())runBoot(); else setTimeout(speakWelcomeGreeting,700);
   initStorage(); loadTextIndex().then(()=>setTimeout(runIndexer,1200)).catch(()=>{});
 })();
 </script>
