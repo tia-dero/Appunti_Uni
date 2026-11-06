@@ -1079,6 +1079,7 @@
       <button class="btn hidden" id="installBtn" type="button">Installa app</button>
       <button class="btn" id="importBtn" type="button">Importa</button>
       <button class="btn" id="exportBtn" type="button">Backup</button>
+      <button class="btn" id="autoBackupBtn" type="button" title="Backup automatico in una cartella del PC">Auto</button>
       <input class="file-input" id="importFile" type="file" accept=".zip,.json,application/zip,application/json">
     </div>
   </header>
@@ -1143,6 +1144,7 @@
   <dialog id="videoPreviewDialog" aria-labelledby="videoPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="videoPreviewTitle">Video lezione</h2><p>Riproduzione locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadVideoBtn" type="button">Scarica</button><button class="icon-btn" type="button" data-close="videoPreviewDialog" aria-label="Chiudi video">&#xD7;</button></div></div><div class="video-stage"><div id="videoPreviewError" class="docx-preview-error hidden" role="status"></div><video id="videoPlayer" controls playsinline preload="metadata"></video></div></dialog>
   <dialog id="commandDialog" class="command-dialog" aria-label="Comandi rapidi"><div class="command-head"><span><i></i>INTERFACCIA COMANDI</span><kbd>ESC</kbd></div><label class="command-input-wrap" for="commandInput"><input id="commandInput" type="search" autocomplete="off" placeholder="Cerca materia, appunto o azione&#x2026; (es. apri anatomia, ultimi file)"><button class="mic-btn" id="micBtn" type="button" aria-label="Comando vocale">Parla</button></label><div id="commandResults" class="command-results"></div><div class="command-foot"><span>Frecce su e giù per scegliere &#xB7; Invio per aprire</span><span><kbd>CTRL</kbd> + <kbd>K</kbd></span></div></dialog>
 
+  <dialog id="autoBackupDialog" aria-labelledby="autoBackupTitle"><div class="dialog-head"><h2 id="autoBackupTitle">Backup automatico</h2><button class="icon-btn" type="button" data-close="autoBackupDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body"><p class="sched-help" id="abStatus"></p><div class="sched-grid"><label>Ogni<select id="abFreq"><option value="1">giorno</option><option value="3">3 giorni</option><option value="7">settimana</option></select></label><label>Copie da tenere<select id="abKeep"><option value="3">3</option><option value="5">5</option><option value="10">10</option></select></label></div><p class="sched-help">Il backup viene salvato come .zip nella cartella scelta (consiglio: una cartella di OneDrive o Google Drive, cos&#xEC; &#xE8; anche nel cloud). Parte quando apri l&#x2019;app e sono passati i giorni impostati.</p><p class="sched-msg" id="abMsg" aria-live="polite"></p></div><div class="dialog-foot"><button class="btn btn-danger" id="abOffBtn" type="button">Disattiva</button><div class="foot-right"><button class="btn" id="abNowBtn" type="button">Salva ora</button><button class="btn btn-primary" id="abPickBtn" type="button">Scegli cartella</button></div></div></dialog>
   <dialog id="orarioDialog" class="orario-dialog" aria-label="Orario delle lezioni"><button class="orario-close" type="button" data-close="orarioDialog" aria-label="Chiudi orario">&#xD7;</button><iframe id="orarioFrame" title="Orario delle lezioni"></iframe></dialog>
   <dialog id="scheduleDialog" class="wide-dialog" aria-labelledby="scheduleTitle"><div class="dialog-head"><h2 id="scheduleTitle">Orario delle lezioni</h2><button class="icon-btn" type="button" data-close="scheduleDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body sched-body">
     <section class="sched-block" id="remindBlock"><h3>Promemoria e calendario</h3><p class="sched-help">I promemoria arrivano finch&#xE9; l&#x2019;app &#xE8; aperta (anche ridotta a icona). Se la chiudi non possono partire: per quel caso esporta l&#x2019;orario e importalo nel calendario del telefono.</p><div class="sched-grid"><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="remindOn" style="width:auto"> Avvisami prima delle lezioni</label><label>Anticipo<select id="remindLead"><option value="10">10 minuti</option><option value="30">30 minuti</option><option value="60">1 ora</option></select></label></div><div class="foot-right" style="justify-content:flex-start;gap:8px;margin-top:8px"><button class="btn" id="remindTestBtn" type="button">Prova promemoria</button><button class="btn" id="icsExportBtn" type="button">Esporta orario ed esami (.ics)</button></div></section>
@@ -2366,8 +2368,16 @@
     $('storageStatus').title=persisted?'Il browser non cancella questi dati da solo.':'Il browser potrebbe cancellare questi dati se lo spazio scarseggia: fai un backup ogni tanto.';
   }
   async function initStorage(){try{if(navigator.storage?.persist&&!(await navigator.storage.persisted()))await navigator.storage.persist();}catch{}updateStorageStatus();}
+  let abPermNeeded=false;
   function renderBackupBanner(){
     const el=$('backupBanner');if(!el)return;
+    const ab=abLoad();
+    if(ab.on&&abSupported()&&abDue()&&abPermNeeded){
+      el.classList.remove('hidden');
+      el.innerHTML='<span class="backup-icon" aria-hidden="true">'+svgIcon('avviso')+'</span><span class="backup-text"><strong>Backup automatico in attesa.</strong> Il browser vuole una tua conferma per scrivere nella cartella “'+escapeHtml(ab.folder)+'”.</span><span class="backup-actions"><button class="btn btn-primary" id="abConfirmBtn" type="button">Salva ora</button></span>';
+      $('abConfirmBtn').addEventListener('click',async()=>{const r=await abRun(true);abPermNeeded=r==='permission';renderBackupBanner();});
+      return;
+    }
     const last=Number(data.lastBackupAt)||0,age=last?Math.floor((Date.now()-last)/86400000):null,needed=data.notes.length>0&&(age===null||age>=14)&&data.backupSnooze!==dayKey();
     el.classList.toggle('hidden',!needed);if(!needed){el.innerHTML='';return;}
     el.innerHTML='<span class="backup-icon" aria-hidden="true">'+svgIcon('avviso')+'</span><span class="backup-text"><strong>'+(age===null?'Non hai ancora fatto nessun backup.':'Ultimo backup: '+age+' giorni fa.')+'</strong> I tuoi '+data.notes.length+' file stanno solo in questo browser: se i dati del sito vengono cancellati, si perdono.</span><span class="backup-actions"><button class="btn btn-primary" id="backupNowBtn" type="button">Fai il backup</button><button class="btn" id="backupLaterBtn" type="button">Più tardi</button></span>';
@@ -2375,10 +2385,7 @@
     $('backupLaterBtn').addEventListener('click',()=>{data.backupSnooze=dayKey();save();renderBackupBanner();});
   }
   const safeName=value=>String(value||'file').replace(/[\\/:*?"<>|\u0000-\u001f]/g,'_').replace(/^\.+/,'').slice(0,120)||'file';
-  $('exportBtn').addEventListener('click',async()=>{
-    const button=$('exportBtn');if(button.disabled)return;button.disabled=true;
-    try{
-      showToast('Preparo il backup…');
+  async function buildBackupZip(){
       const referenced=new Set(data.notes.map(note=>note.attachmentId).filter(Boolean)),entries=[],manifest=[],used=new Set();
       for(const record of await listAttachments()){
         if(!referenced.has(record.id))continue;
@@ -2386,11 +2393,18 @@
         let path=folder+safeName(record.name),n=2;while(used.has(path.toLowerCase())){const dot=safeName(record.name).lastIndexOf('.');const nm=safeName(record.name);path=folder+(dot>0?nm.slice(0,dot)+' ('+n+')'+nm.slice(dot):nm+' ('+n+')');n++;}
         used.add(path.toLowerCase());entries.push({name:path,blob:record.blob});manifest.push({id:record.id,name:record.name,type:record.type,size:record.size,path});
       }
-      data.lastBackupAt=Date.now();recordActivity('Backup esportato',data.notes.length+' appunti');save();
+      
       const payload={...data,files:manifest,backupCreatedAt:new Date().toISOString(),format:2};
       entries.unshift({name:'LEGGIMI.txt',blob:new Blob(['Backup di Appunti università\r\n\r\ndati.json  -> materie, cartelle, orario, esami e impostazioni (serve per reimportare)\r\nmateriali/ -> i tuoi file, ordinati per materia: li puoi aprire anche senza l’app\r\n\r\nPer ripristinare: nell’app premi "Importa" e scegli questo file .zip.\r\n'],{type:'text/plain'})});
       entries.unshift({name:'dati.json',blob:new Blob([JSON.stringify(payload)],{type:'application/json'})});
-      const zip=await buildZip(entries),url=URL.createObjectURL(zip),a=document.createElement('a');a.href=url;a.download='backup-appunti-'+new Date().toISOString().slice(0,10)+'.zip';a.click();setTimeout(()=>URL.revokeObjectURL(url),120000);
+      return buildZip(entries);
+  }
+  $('exportBtn').addEventListener('click',async()=>{
+    const button=$('exportBtn');if(button.disabled)return;button.disabled=true;
+    try{
+      showToast('Preparo il backup…');
+      const zip=await buildBackupZip();data.lastBackupAt=Date.now();recordActivity('Backup esportato',data.notes.length+' appunti');save();
+      const url=URL.createObjectURL(zip),a=document.createElement('a');a.href=url;a.download='backup-appunti-'+new Date().toISOString().slice(0,10)+'.zip';a.click();setTimeout(()=>URL.revokeObjectURL(url),120000);
       renderActivity();renderBackupBanner();showToast('Backup scaricato ('+formatSize(zip.size)+').');
     }catch(error){showToast(error?.message||'Non riesco a creare il backup.');}
     finally{button.disabled=false;}
@@ -2415,6 +2429,62 @@
       recordActivity('Backup importato',data.notes.length+' appunti');activeFolderId=null;showArchive=false;save();await cleanupAttachments();render();renderWelcome();showToast('Backup importato.');runIndexer();updateStorageStatus();
     }catch(error){showToast(error?.message&&error.message!=='Formato non valido'?error.message:'File non valido o impossibile da importare.');}
   });
+
+  /* ===== Backup automatico in una cartella (File System Access API) ===== */
+  const AB_KEY='appunti-autobackup-v1',AB_RE=/^backup-appunti-auto-\d{4}-\d{2}-\d{2}\.zip$/;
+  const abSupported=()=>typeof window.showDirectoryPicker==='function';
+  const abLoad=()=>{try{return {on:false,freq:3,keep:5,lastAt:0,folder:'',...JSON.parse(localStorage.getItem(AB_KEY)||'{}')};}catch{return {on:false,freq:3,keep:5,lastAt:0,folder:''};}};
+  const abSave=cfg=>{try{localStorage.setItem(AB_KEY,JSON.stringify(cfg));}catch{}};
+  let abDbPromise=null;
+  const abDb=()=>abDbPromise||(abDbPromise=new Promise((resolve,reject)=>{const req=indexedDB.open('appunti-autobackup-v1',1);req.onupgradeneeded=()=>req.result.createObjectStore('kv');req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);}));
+  const abGet=async()=>{const db=await abDb();return new Promise((res,rej)=>{const r=db.transaction('kv').objectStore('kv').get('dir');r.onsuccess=()=>res(r.result||null);r.onerror=()=>rej(r.error);});};
+  const abPut=async handle=>{const db=await abDb();return new Promise((res,rej)=>{const tx=db.transaction('kv','readwrite');handle?tx.objectStore('kv').put(handle,'dir'):tx.objectStore('kv').delete('dir');tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);});};
+  const abPermission=async(handle,ask)=>{try{const opts={mode:'readwrite'};if(await handle.queryPermission(opts)==='granted')return true;if(ask&&await handle.requestPermission(opts)==='granted')return true;}catch{}return false;};
+  async function abWrite(handle){
+    const zip=await buildBackupZip(),name='backup-appunti-auto-'+dayKey()+'.zip';
+    const file=await handle.getFileHandle(name,{create:true}),w=await file.createWritable();await w.write(zip);await w.close();
+    const cfg=abLoad(),names=[];for await(const entry of handle.values())if(entry.kind==='file'&&AB_RE.test(entry.name))names.push(entry.name);
+    names.sort();for(const old of names.slice(0,Math.max(0,names.length-cfg.keep)))await handle.removeEntry(old).catch(()=>{});
+    cfg.lastAt=Date.now();abSave(cfg);data.lastBackupAt=cfg.lastAt;recordActivity('Backup automatico',name);save();
+    return {name,size:zip.size};
+  }
+  async function abRun(ask){
+    const cfg=abLoad();if(!cfg.on||!abSupported())return false;
+    const handle=await abGet().catch(()=>null);if(!handle)return false;
+    if(!(await abPermission(handle,ask)))return 'permission';
+    try{const r=await abWrite(handle);showToast('Backup automatico salvato in “'+cfg.folder+'” ('+formatSize(r.size)+').');renderActivity();renderBackupBanner();return true;}
+    catch(error){showToast('Backup automatico non riuscito: '+(error?.message||'errore'));return false;}
+  }
+  const abDue=()=>{const cfg=abLoad();return cfg.on&&data.notes.length>0&&(!cfg.lastAt||Date.now()-cfg.lastAt>=cfg.freq*86400000-3600000);};
+  let abBusy=false;
+  async function abCheck(){
+    if(abBusy||!abDue())return;abBusy=true;
+    try{const r=await abRun(false);if(r==='permission'){abPermNeeded=true;renderBackupBanner();}}finally{abBusy=false;}
+  }
+  async function abRender(){
+    const cfg=abLoad(),st=$('abStatus');if(!st)return;
+    $('abFreq').value=String(cfg.freq);$('abKeep').value=String(cfg.keep);
+    $('abOffBtn').classList.toggle('hidden',!cfg.on);$('abNowBtn').classList.toggle('hidden',!cfg.on);$('abPickBtn').textContent=cfg.on?'Cambia cartella':'Scegli cartella';
+    if(!abSupported()){st.textContent='Questo browser non permette di salvare in una cartella. Usa Chrome o Edge da PC: nel frattempo il pulsante Backup scarica lo zip a mano.';$('abPickBtn').disabled=true;return;}
+    $('abPickBtn').disabled=false;
+    st.textContent=cfg.on?'Attivo · cartella “'+cfg.folder+'” · ultimo backup: '+(cfg.lastAt?new Date(cfg.lastAt).toLocaleString('it-IT',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'}):'ancora nessuno'):'Non attivo. Scegli una cartella e l’app salverà da sola una copia di tutti i tuoi appunti.';
+  }
+  $('autoBackupBtn').addEventListener('click',()=>{$('abMsg').textContent='';abRender();$('autoBackupDialog').showModal();});
+  $('abFreq').addEventListener('change',()=>{const c=abLoad();c.freq=Number($('abFreq').value)||3;abSave(c);});
+  $('abKeep').addEventListener('change',()=>{const c=abLoad();c.keep=Number($('abKeep').value)||5;abSave(c);});
+  $('abPickBtn').addEventListener('click',async()=>{
+    const msg=$('abMsg');
+    try{
+      const handle=await window.showDirectoryPicker({id:'appunti-backup',mode:'readwrite',startIn:'documents'});
+      if(!(await abPermission(handle,true))){msg.textContent='Permesso negato: senza non posso salvare nella cartella.';return;}
+      await abPut(handle);const c=abLoad();c.on=true;c.folder=handle.name;c.freq=Number($('abFreq').value)||3;c.keep=Number($('abKeep').value)||5;abSave(c);
+      msg.textContent='Salvo il primo backup…';const r=await abWrite(handle);
+      msg.textContent='Fatto: creato '+r.name+' ('+formatSize(r.size)+').';renderActivity();renderBackupBanner();abRender();
+    }catch(error){if(error?.name!=='AbortError')msg.textContent='Non riesco a usare questa cartella: '+(error?.message||'errore')+' (prova una cartella normale, es. Documenti).';}
+  });
+  $('abNowBtn').addEventListener('click',async()=>{const msg=$('abMsg');msg.textContent='Salvo…';const r=await abRun(true);msg.textContent=r===true?'Backup salvato.':r==='permission'?'Permesso non concesso.':'Non riuscito.';abRender();});
+  $('abOffBtn').addEventListener('click',async()=>{if(!confirm('Disattivare il backup automatico? I file già salvati nella cartella restano lì.'))return;const c=abLoad();c.on=false;abSave(c);await abPut(null).catch(()=>{});$('abMsg').textContent='Disattivato.';abRender();renderBackupBanner();});
+  setInterval(abCheck,30*60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)abCheck();});
 
   /* Promemoria (app aperta) ed esportazione calendario .ics */
   const REMIND_KEY='appunti-reminders-v1';
@@ -2597,7 +2667,7 @@
   }
 
   setSystemMessage(); render(); renderWelcome(); scheduleClock(); $('welcomeDialog').showModal(); startWelcomeFx(); if(bootNeeded())runBoot(); else setTimeout(speakWelcomeGreeting,700);
-  initStorage(); loadTextIndex().then(()=>setTimeout(runIndexer,1200)).catch(()=>{});
+  setTimeout(abCheck,4000); initStorage(); loadTextIndex().then(()=>setTimeout(runIndexer,1200)).catch(()=>{});
 })();
 </script>
 </body>
