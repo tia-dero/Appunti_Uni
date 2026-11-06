@@ -1060,6 +1060,14 @@
     @media (prefers-reduced-motion:reduce) { .holo-stage { transform:none !important; transition:none; } .holo-stage.holo-boost::after { animation:none; } }
     @media (max-width:700px) { .holo-stage { width:min(320px,74vw); } .holo-ring.r6 { inset:-10%; } .holo-orbit { inset:-19%; } }
     @media (prefers-reduced-motion:reduce) { .holo-ring.r6,.holo-ring.r7,.holo-ticks { animation:none !important; } }
+
+    /* Finestra dell'orario */
+    .orario-dialog { width:min(1000px,96vw); height:min(94vh,1100px); max-width:none; max-height:none; padding:0; border:1px solid #2a4660; border-radius:18px; background:#070b16; overflow:hidden; box-shadow:0 30px 80px #000c; }
+    .orario-dialog::backdrop { background:rgba(2,7,12,.78); backdrop-filter:blur(3px); }
+    .orario-dialog iframe { display:block; width:100%; height:100%; border:0; background:#070b16; }
+    .orario-close { position:absolute; top:10px; right:12px; z-index:3; width:42px; height:42px; border-radius:50%; border:1px solid #2a4660; background:#0d1c2b; color:#9ff4ff; font-size:26px; line-height:1; cursor:pointer; display:grid; place-items:center; }
+    .orario-close:hover { background:#14354b; }
+    @media (max-width:700px) { .orario-dialog { width:100vw; height:100vh; border-radius:0; border:0; } }
   </style>
 </head>
 <body class="jarvis-ui">
@@ -1067,6 +1075,7 @@
     <div class="brand"><span class="brand-mark" aria-hidden="true"><img src="logo-192.png" alt=""></span><span>Appunti <span class="brand-sub">Scienze motorie &#xB7; Insubria</span></span></div>
     <div class="system-status" aria-label="Sistema attivo e archivio locale"><span class="system-led"></span><span>CORE ATTIVO<small id="systemMsg">ARCHIVIO LOCALE</small></span><time id="appClock">--:--</time></div>
     <div class="top-actions">
+      <button class="btn" id="orarioBtn" type="button">Orario</button>
       <button class="btn hidden" id="installBtn" type="button">Installa app</button>
       <button class="btn" id="importBtn" type="button">Importa</button>
       <button class="btn" id="exportBtn" type="button">Backup</button>
@@ -1134,6 +1143,7 @@
   <dialog id="videoPreviewDialog" aria-labelledby="videoPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="videoPreviewTitle">Video lezione</h2><p>Riproduzione locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadVideoBtn" type="button">Scarica</button><button class="icon-btn" type="button" data-close="videoPreviewDialog" aria-label="Chiudi video">&#xD7;</button></div></div><div class="video-stage"><div id="videoPreviewError" class="docx-preview-error hidden" role="status"></div><video id="videoPlayer" controls playsinline preload="metadata"></video></div></dialog>
   <dialog id="commandDialog" class="command-dialog" aria-label="Comandi rapidi"><div class="command-head"><span><i></i>INTERFACCIA COMANDI</span><kbd>ESC</kbd></div><label class="command-input-wrap" for="commandInput"><input id="commandInput" type="search" autocomplete="off" placeholder="Cerca materia, appunto o azione&#x2026; (es. apri anatomia, ultimi file)"><button class="mic-btn" id="micBtn" type="button" aria-label="Comando vocale">Parla</button></label><div id="commandResults" class="command-results"></div><div class="command-foot"><span>Frecce su e giù per scegliere &#xB7; Invio per aprire</span><span><kbd>CTRL</kbd> + <kbd>K</kbd></span></div></dialog>
 
+  <dialog id="orarioDialog" class="orario-dialog" aria-label="Orario delle lezioni"><button class="orario-close" type="button" data-close="orarioDialog" aria-label="Chiudi orario">&#xD7;</button><iframe id="orarioFrame" title="Orario delle lezioni"></iframe></dialog>
   <dialog id="scheduleDialog" class="wide-dialog" aria-labelledby="scheduleTitle"><div class="dialog-head"><h2 id="scheduleTitle">Orario delle lezioni</h2><button class="icon-btn" type="button" data-close="scheduleDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body sched-body">
     <section class="sched-block" id="remindBlock"><h3>Promemoria e calendario</h3><p class="sched-help">I promemoria arrivano finch&#xE9; l&#x2019;app &#xE8; aperta (anche ridotta a icona). Se la chiudi non possono partire: per quel caso esporta l&#x2019;orario e importalo nel calendario del telefono.</p><div class="sched-grid"><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="remindOn" style="width:auto"> Avvisami prima delle lezioni</label><label>Anticipo<select id="remindLead"><option value="10">10 minuti</option><option value="30">30 minuti</option><option value="60">1 ora</option></select></label></div><div class="foot-right" style="justify-content:flex-start;gap:8px;margin-top:8px"><button class="btn" id="remindTestBtn" type="button">Prova promemoria</button><button class="btn" id="icsExportBtn" type="button">Esporta orario ed esami (.ics)</button></div></section>
     <section class="sched-block"><h3>Importa un calendario</h3><p class="sched-help">Scegli un file <b>.ics</b> esportato da Google Calendar, Outlook, Apple Calendar o dal portale dell&#x2019;universit&#xE0;. Le lezioni ripetute ogni settimana vengono espanse automaticamente.</p><div class="sched-row"><select id="schedMode" aria-label="Come importare"><option value="replace">Sostituisci l&#x2019;orario attuale</option><option value="merge">Aggiungi alle lezioni esistenti</option></select><button class="btn btn-primary" id="schedImportBtn" type="button">Scegli file .ics</button></div><input class="file-input" id="icsFile" type="file" accept=".ics,text/calendar"><p class="sched-msg" id="schedImportMsg" aria-live="polite"></p></section>
@@ -2560,6 +2570,12 @@
     steps.forEach((step,index)=>timers.push(setTimeout(()=>{const row=document.createElement('div'),label=document.createElement('span'),text=step[0]+': '+step[1];row.innerHTML='<b>OK</b>';row.append(label);lines.append(row);if(fast)label.textContent=text;else scrambleText(label,text,300);const pct=Math.round((index+1)/steps.length*100);bar.style.width=pct+'%';$('bootPct').textContent=pct+'%';},gap*(index+1))));
     /* La chiusura è gestita dalla fine della voce; in modalità silenziosa resta il timer di fallback. */
   }
+
+  /* Finestra con l'orario (pagina orario.html letta dall'archivio) */
+  function openOrario(){const frame=$('orarioFrame');frame.src='about:blank';$('orarioDialog').showModal();setTimeout(()=>{frame.src='orario.html';},30);}
+  $('orarioBtn').addEventListener('click',openOrario);
+  $('orarioDialog').addEventListener('close',()=>{$('orarioFrame').src='about:blank';});
+  window.addEventListener('message',event=>{if(event.origin!==location.origin||!event.data||event.data.appunti!=='open-schedule-editor')return;$('orarioDialog').close();openSchedule();});
 
   /* PWA: installazione e funzionamento offline */
   let installPrompt=null;
