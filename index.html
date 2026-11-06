@@ -1398,6 +1398,12 @@
   $('videoPreviewDialog').addEventListener('click',event=>{if(event.target===$('videoPreviewDialog'))$('videoPreviewDialog').close();});
   $('downloadVideoBtn').addEventListener('click',()=>{if(!activeVideo)return;const url=URL.createObjectURL(activeVideo.blob),a=document.createElement('a');a.href=url;a.download=activeVideo.name;a.click();setTimeout(()=>URL.revokeObjectURL(url),60000);});
   function updateAppClock(){const value=new Intl.DateTimeFormat('it-IT',{hour:'2-digit',minute:'2-digit'}).format(new Date());for(const id of ['appClock','welcomeClock'])if($(id))$(id).textContent=value;updateCountdowns();}
+  /* Orologio allineato al minuto del PC: si aggiorna esattamente al cambio di minuto e quando la finestra torna visibile */
+  let clockTimer=0;
+  function scheduleClock(){updateAppClock();clearTimeout(clockTimer);clockTimer=setTimeout(scheduleClock,60000-(Date.now()%60000)+60);}
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleClock();});
+  window.addEventListener('focus',scheduleClock);
+  window.addEventListener('pageshow',scheduleClock);
   const readVoiceSettings = () => data.voiceSettings||{voiceURI:'',pitch:.78,rate:.88};
   function speechUtterance(text,settings=readVoiceSettings()){
     const utterance=new SpeechSynthesisUtterance(text);utterance.lang='it-IT';utterance.pitch=Number(settings.pitch)||.78;utterance.rate=Number(settings.rate)||.88;
@@ -1465,6 +1471,7 @@
     biomeccanica:'<circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="6.4"/><path d="M12 2.5v3.1M12 18.4v3.1M2.5 12h3.1M18.4 12h3.1M5.3 5.3l2.2 2.2M16.5 16.5l2.2 2.2M18.7 5.3l-2.2 2.2M7.5 16.5l-2.2 2.2"/>',
     fisiologia:'<path d="M3 12.5h4l2.2-6 4.2 11 2.2-5h5.4"/>',
     nutrizione:'<path d="M12 7.4C9.6 5.6 5 6.6 5 11.8c0 4.2 3 8.2 5.2 8.2.9 0 1.2-.5 1.8-.5s.9.5 1.8.5c2.2 0 5.2-4 5.2-8.2 0-5.2-4.6-6.2-7-4.4z"/><path d="M12 7.4c0-2 1-3.2 3-3.6"/>',
+    biologia:'<path d="M12 3.2c4.4 0 8.3 2.7 8.3 8.2 0 5.9-3.9 9.4-8.5 9.4S3.7 17.5 3.7 12.2C3.7 6.8 7.6 3.2 12 3.2z"/><circle cx="12.6" cy="11.4" r="3.3"/><circle cx="12.6" cy="11.4" r="1" fill="currentColor"/><circle cx="6.9" cy="9" r=".85" fill="currentColor"/><circle cx="7.8" cy="15.6" r=".85" fill="currentColor"/><circle cx="16.9" cy="17" r=".85" fill="currentColor"/>',
     libro:'<path d="M4.5 5.5A1.5 1.5 0 0 1 6 4h13v14.5H6A1.5 1.5 0 0 0 4.5 20z"/><path d="M4.5 20A1.5 1.5 0 0 1 6 18.5h13"/>',
     calendario:'<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
     obiettivo:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/>',
@@ -1478,7 +1485,7 @@
   const svgIcon = key => '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+(ICON_PATHS[key]||ICON_PATHS.libro)+'</svg>';
   const subjectIcon = name => {
     const n=String(name||'').toLocaleLowerCase('it');
-    const key=n.includes('anatom')?'anatomia':n.includes('biochim')?'biochimica':n.includes('chimic')?'chimica':n.includes('fisiol')?'fisiologia':n.includes('fisic')?'fisica':n.includes('biomeccan')?'biomeccanica':n.includes('pediatr')?'pediatria':n.includes('antrop')?'antropologia':n.includes('nutriz')?'nutrizione':n.includes('adattat')?'adattato':(n.includes('movimento')||n.includes('tecniche')||n.includes('teoria')||n.includes('sport')||n.includes('motor')||n.includes('allen'))?'movimento':'libro';
+    const key=n.includes('anatom')?'anatomia':n.includes('biochim')?'biochimica':n.includes('biolog')?'biologia':n.includes('chimic')?'chimica':n.includes('fisiol')?'fisiologia':n.includes('fisic')?'fisica':n.includes('biomeccan')?'biomeccanica':n.includes('pediatr')?'pediatria':n.includes('antrop')?'antropologia':n.includes('nutriz')?'nutrizione':n.includes('adattat')?'adattato':(n.includes('movimento')||n.includes('tecniche')||n.includes('teoria')||n.includes('sport')||n.includes('motor')||n.includes('allen'))?'movimento':'libro';
     return svgIcon(key);
   };
   function showModuleLoaded(subjectId){const subject=data.subjects.find(item=>item.id===subjectId);if(!subject)return;const loader=$('moduleLoader');setSystemMessage();$('moduleLoaderIcon').innerHTML=subjectIcon(subject.name);$('moduleLoaderTitle').textContent=subject.name;loader.classList.remove('is-visible');void loader.offsetWidth;loader.classList.add('is-visible');clearTimeout(moduleLoaderTimer);moduleLoaderTimer=setTimeout(()=>loader.classList.remove('is-visible'),1900);}
@@ -2589,7 +2596,7 @@
     }).catch(()=>{});
   }
 
-  setSystemMessage(); render(); renderWelcome(); updateAppClock(); setInterval(updateAppClock,30000); $('welcomeDialog').showModal(); startWelcomeFx(); if(bootNeeded())runBoot(); else setTimeout(speakWelcomeGreeting,700);
+  setSystemMessage(); render(); renderWelcome(); scheduleClock(); $('welcomeDialog').showModal(); startWelcomeFx(); if(bootNeeded())runBoot(); else setTimeout(speakWelcomeGreeting,700);
   initStorage(); loadTextIndex().then(()=>setTimeout(runIndexer,1200)).catch(()=>{});
 })();
 </script>

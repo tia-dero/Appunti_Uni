@@ -495,7 +495,8 @@ var sx=0,sy=0,app=document.getElementById('app');
 app.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY;},{passive:true});
 app.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>70&&Math.abs(dy)<45)go(dx<0?1:-1);},{passive:true});
 render();
-setInterval(function(){now=new Date();anim=false;load2();},30000);
+function tick(){now=new Date();anim=false;load2();}
+setInterval(tick,15000);document.addEventListener('visibilitychange',function(){if(!document.hidden)tick();});window.addEventListener('focus',tick);
 function load2(){var k=sel;render();sel=k;}
 })();
 </script>
