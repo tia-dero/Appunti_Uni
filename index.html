@@ -1068,7 +1068,56 @@
     .orario-close { position:absolute; top:10px; right:12px; z-index:3; width:42px; height:42px; border-radius:50%; border:1px solid #2a4660; background:#0d1c2b; color:#9ff4ff; font-size:26px; line-height:1; cursor:pointer; display:grid; place-items:center; }
     .orario-close:hover { background:#14354b; }
     @media (max-width:700px) { .orario-dialog { width:100vw; height:100vh; border-radius:0; border:0; } }
-  </style>
+  
+    /* ===== Colore per materia ===== */
+    body.jarvis-ui .subject,.holo-node,.note-card,.folder-card,#subjectView { --sc:#58e7f4; }
+    body.jarvis-ui .subject .nav-icon { color:color-mix(in srgb,var(--sc) 78%,#9ab6b8); }
+    body.jarvis-ui .subject:hover { background:color-mix(in srgb,var(--sc) 9%,transparent); }
+    body.jarvis-ui .subject.active { border-color:color-mix(in srgb,var(--sc) 32%,transparent); background:linear-gradient(90deg,color-mix(in srgb,var(--sc) 17%,transparent),color-mix(in srgb,var(--sc) 5%,transparent)); color:var(--sc); box-shadow:inset 2px 0 var(--sc),0 0 18px color-mix(in srgb,var(--sc) 9%,transparent); }
+    body.jarvis-ui .subject.active .nav-icon,body.jarvis-ui .subject.active .subject-count { color:var(--sc); }
+    body.jarvis-ui .subject::after { background:linear-gradient(90deg,transparent,var(--sc),transparent); box-shadow:0 0 8px var(--sc); }
+    body.jarvis-ui .holo-node { border-color:color-mix(in srgb,var(--sc) 38%,#17262c); }
+    body.jarvis-ui .holo-node:hover { border-color:color-mix(in srgb,var(--sc) 75%,transparent); box-shadow:0 0 20px color-mix(in srgb,var(--sc) 20%,transparent); }
+    body.jarvis-ui .holo-node-icon { border-color:color-mix(in srgb,var(--sc) 55%,transparent); background:color-mix(in srgb,var(--sc) 12%,transparent); color:var(--sc); box-shadow:0 0 12px color-mix(in srgb,var(--sc) 18%,transparent); }
+    .holo-node::after { background:linear-gradient(90deg,transparent,var(--sc),transparent); box-shadow:0 0 8px var(--sc); }
+    body.jarvis-ui .note-card::before { background:linear-gradient(var(--sc),color-mix(in srgb,var(--sc) 35%,#0a171d)); }
+    body.jarvis-ui .note-card:hover { border-color:color-mix(in srgb,var(--sc) 60%,transparent); box-shadow:0 12px 32px #0005,0 0 22px color-mix(in srgb,var(--sc) 14%,transparent); }
+    body.jarvis-ui .note-course { color:color-mix(in srgb,var(--sc) 75%,#779398); }
+    body.jarvis-ui .folder-icon { border-color:color-mix(in srgb,var(--sc) 40%,transparent); background:color-mix(in srgb,var(--sc) 10%,transparent); color:var(--sc); }
+    body.jarvis-ui .folder-card::after { border-color:color-mix(in srgb,var(--sc) 30%,transparent); }
+    body.jarvis-ui .folder-card:hover { border-color:color-mix(in srgb,var(--sc) 60%,transparent); }
+    #subjectView .subject-view-head h1 { border-left:4px solid var(--sc); padding-left:12px; box-shadow:-6px 0 18px -8px var(--sc); }
+    .color-swatches { display:flex; flex-wrap:wrap; gap:9px; margin-top:6px; }
+    .color-swatch { width:30px; height:30px; padding:0; border:2px solid transparent; border-radius:50%; background:var(--sw); cursor:pointer; box-shadow:0 0 10px color-mix(in srgb,var(--sw) 45%,transparent); transition:transform .15s; }
+    .color-swatch:hover { transform:scale(1.12); }
+    .color-swatch[aria-pressed="true"] { border-color:#fff; transform:scale(1.12); }
+    .color-field > span { display:block; margin-top:14px; font-size:13px; }
+
+    /* ===== Parte 2: pannelli in vetro e transizioni ===== */
+    html::before { position:fixed; inset:0; z-index:-1; pointer-events:none; content:""; background:radial-gradient(520px 420px at 12% 18%,#2ad4ee24,transparent 70%),radial-gradient(620px 460px at 88% 30%,#7a6bff1c,transparent 70%),radial-gradient(560px 460px at 55% 96%,#35e0a31a,transparent 70%); }
+    body.jarvis-ui .daily-card,body.jarvis-ui .goal-card,body.jarvis-ui .stat-card,body.jarvis-ui .subject-card,body.jarvis-ui .note-card,body.jarvis-ui .folder-card,body.jarvis-ui .holo-node,body.jarvis-ui .exams-card,body.jarvis-ui .command-empty { background:linear-gradient(145deg,rgba(18,44,54,.52),rgba(9,22,29,.42)); border-color:rgba(98,226,244,.22); box-shadow:inset 0 1px 0 rgba(160,245,255,.14),inset 0 0 26px rgba(70,220,240,.035),0 12px 30px rgba(0,0,0,.28); }
+    body.jarvis-ui .daily-lesson { background:linear-gradient(130deg,rgba(18,42,50,.5),rgba(10,22,28,.4)); }
+    body.jarvis-ui .dashboard-hero { background:linear-gradient(112deg,rgba(14,36,46,.62),rgba(11,26,34,.5) 54%,rgba(12,44,56,.58)); }
+    body.jarvis-ui aside { background:linear-gradient(180deg,rgba(9,22,29,.78),rgba(8,19,26,.7)); }
+    body.jarvis-ui .topbar { background:linear-gradient(90deg,rgba(8,20,27,.78),rgba(12,27,35,.72) 60%,rgba(8,20,27,.8)); }
+    body.jarvis-ui dialog:not(#welcomeDialog):not(#docxPreviewDialog):not(#bootDialog) { background:linear-gradient(150deg,rgba(17,40,50,.86),rgba(9,20,26,.84)); }
+    body.jarvis-ui .note-card::after,body.jarvis-ui .folder-card::after,body.jarvis-ui .daily-card::after { pointer-events:none; }
+    @supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
+      html:not(.lite) body.jarvis-ui .daily-card,html:not(.lite) body.jarvis-ui .goal-card,html:not(.lite) body.jarvis-ui .stat-card,html:not(.lite) body.jarvis-ui .subject-card,html:not(.lite) body.jarvis-ui .note-card,html:not(.lite) body.jarvis-ui .folder-card,html:not(.lite) body.jarvis-ui .holo-node,html:not(.lite) body.jarvis-ui .dashboard-hero,html:not(.lite) body.jarvis-ui .exams-card { -webkit-backdrop-filter:blur(10px) saturate(1.25); backdrop-filter:blur(10px) saturate(1.25); }
+      html:not(.lite) body.jarvis-ui aside,html:not(.lite) body.jarvis-ui .topbar { -webkit-backdrop-filter:blur(14px) saturate(1.2); backdrop-filter:blur(14px) saturate(1.2); }
+      html:not(.lite) body.jarvis-ui dialog:not(#welcomeDialog):not(#docxPreviewDialog):not(#bootDialog) { -webkit-backdrop-filter:blur(18px) saturate(1.2); backdrop-filter:blur(18px) saturate(1.2); }
+    }
+    html.lite::before { display:none; }
+    html.lite body.jarvis-ui .daily-card,html.lite body.jarvis-ui .goal-card,html.lite body.jarvis-ui .stat-card,html.lite body.jarvis-ui .note-card,html.lite body.jarvis-ui .folder-card,html.lite body.jarvis-ui .holo-node { background:linear-gradient(145deg,#0e1d24,#0a171d); }
+    #dashboardView,#subjectView,#searchView { position:relative; }
+    .view-enter { animation:view-in .5s cubic-bezier(.2,.75,.2,1) both; }
+    .view-enter::before { position:absolute; z-index:6; top:0; right:0; left:0; height:2px; background:linear-gradient(90deg,transparent,var(--sc,#58e7f4),transparent); box-shadow:0 0 16px var(--sc,#58e7f4),0 0 40px color-mix(in srgb,var(--sc,#58e7f4) 40%,transparent); content:""; pointer-events:none; animation:view-scan .8s cubic-bezier(.4,0,.2,1) both; }
+    @keyframes view-in { from { opacity:0; transform:translateY(12px); filter:blur(4px); } to { opacity:1; transform:none; filter:none; } }
+    @keyframes view-scan { 0% { transform:translateY(0); opacity:0; } 12% { opacity:1; } 100% { transform:translateY(72vh); opacity:0; } }
+    .view-enter .note-card,.view-enter .folder-card,.view-enter .holo-node,.view-enter .stat-card { animation:card-in .5s cubic-bezier(.2,.75,.2,1) both; }
+    @keyframes card-in { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+    @media (prefers-reduced-motion:reduce) { .view-enter,.view-enter::before,.view-enter .note-card,.view-enter .folder-card,.view-enter .holo-node,.view-enter .stat-card { animation:none !important; } }
+</style>
 </head>
 <body class="jarvis-ui">
   <header class="topbar">
@@ -1110,7 +1159,7 @@
   <dialog id="subjectDialog">
     <form id="subjectForm" method="dialog">
       <div class="dialog-head"><h2 id="subjectDialogTitle">Aggiungi materia</h2><button class="icon-btn" type="button" data-close="subjectDialog" aria-label="Chiudi">&#xD7;</button></div>
-      <div class="dialog-body"><label for="subjectName">Nome della materia<input id="subjectName" maxlength="80" required placeholder="Es. Biomeccanica"></label></div>
+      <div class="dialog-body"><label for="subjectName">Nome della materia<input id="subjectName" maxlength="80" required placeholder="Es. Biomeccanica"></label><div class="color-field"><span>Colore della materia</span><div class="color-swatches" id="subjectColors" role="group" aria-label="Colore della materia"></div></div></div>
       <div class="dialog-foot"><span></span><div class="foot-right"><button class="btn" type="button" data-close="subjectDialog">Annulla</button><button class="btn btn-primary" type="submit">Salva</button></div></div>
     </form>
   </dialog>
@@ -1181,6 +1230,12 @@
     try { localStorage.setItem(KEY, JSON.stringify(data)); localStorage.setItem(PRESET_KEY, '1'); } catch {}
   }
   if (renamedDefaults) { try { localStorage.setItem(KEY, JSON.stringify(data)); } catch {} }
+  const SUBJECT_COLORS=['#FF8A6B','#3DD6C0','#FFD166','#B79CFF','#5CB8FF','#7BE495','#6C7BFF','#C6DC57','#FF7BB5','#D4B483','#54E8F6','#F59E0B'];
+  const nextFreeColor=()=>{const used=new Set(data.subjects.map(item=>item.color));return SUBJECT_COLORS.find(color=>!used.has(color))||SUBJECT_COLORS[data.subjects.length%SUBJECT_COLORS.length];};
+  const ensureSubjectColors=()=>{let changed=false;data.subjects.forEach(subject=>{if(!/^#[0-9a-f]{6}$/i.test(subject.color||'')){subject.color=nextFreeColor();changed=true;}});if(changed){try{localStorage.setItem(KEY,JSON.stringify(data));}catch{}}};
+  ensureSubjectColors();
+  const subjectColor=id=>data.subjects.find(item=>item.id===id)?.color||'#58e7f4';
+  const scStyle=id=>' style="--sc:'+subjectColor(id)+'"';
   data.activeSubject = 'all';
   let editingNoteId = null, editingSubjectId = null, editingFolderId = null, activeFolderId = null, showArchive = false, toastTimer, moduleLoaderTimer, pendingFiles = [], activeDocxBlob = null, activeDocxName = '', docxObjectUrls = [];
   const $ = id => document.getElementById(id);
@@ -1498,30 +1553,34 @@
     const courseLabel=showCourse&&course?'<span class="note-course">'+escapeHtml(course.name)+(folder?' \u00B7 '+escapeHtml(folder.name):'')+'</span>':'';
     const fileLabel=note.fileName?'<span class="note-file-label">'+fileTypeBadge(note.fileName)+'<span class="note-file-name">'+escapeHtml(note.fileName)+' \u00B7 '+formatSize(note.fileSize)+'</span></span>':'';
     const preview=snippet||(note.fileName?'File allegato \u00B7 '+escapeHtml((note.fileName.split('.').pop()||'FILE').toUpperCase()):escapeHtml(note.body||'Nessun file collegato.'));
-    return '<button class="note-card '+(note.attachmentId?'has-file':'')+'" data-note="'+escapeHtml(note.id)+'"><span class="note-card-top"><span class="note-kind '+kindClass(kind)+'">'+escapeHtml(kind)+'</span>'+courseLabel+'</span><span class="note-title">'+escapeHtml(note.title||fileTitle(note.fileName)||'Senza titolo')+'</span><span class="note-preview">'+preview+'</span>'+fileLabel+'<span class="note-date">'+(openedAt?'Consultato il '+dateLabel(openedAt):'Aggiornato il '+dateLabel(note.updatedAt))+'</span></button>';
+    return '<button class="note-card '+(note.attachmentId?'has-file':'')+'" data-note="'+escapeHtml(note.id)+'"'+scStyle(note.subjectId)+'><span class="note-card-top"><span class="note-kind '+kindClass(kind)+'">'+escapeHtml(kind)+'</span>'+courseLabel+'</span><span class="note-title">'+escapeHtml(note.title||fileTitle(note.fileName)||'Senza titolo')+'</span><span class="note-preview">'+preview+'</span>'+fileLabel+'<span class="note-date">'+(openedAt?'Consultato il '+dateLabel(openedAt):'Aggiornato il '+dateLabel(note.updatedAt))+'</span></button>';
   };
   const bindNoteCards = root => root.querySelectorAll('[data-note]').forEach(button=>button.addEventListener('click',()=>{recordNoteOpened(button.dataset.note);openNote(button.dataset.note);}));
+  let lastViewKey=null,viewEnterTimer=0;
   const render = () => {
     const nav=$('subjectList');
     nav.innerHTML='<button class="subject '+(data.activeSubject==='all'?'active':'')+'" data-subject="all"><span class="nav-icon">'+svgIcon('home')+'</span><span class="subject-name">Panoramica</span><span class="subject-count">'+data.notes.length+'</span></button>'+data.subjects.map(s=>{
       const count=data.notes.filter(n=>n.subjectId===s.id).length;
-      return '<button class="subject '+(data.activeSubject===s.id?'active':'')+'" data-subject="'+escapeHtml(s.id)+'"><span class="nav-icon">'+subjectIcon(s.name)+'</span><span class="subject-name">'+escapeHtml(s.name)+'</span><span class="subject-count">'+count+'</span></button>';
+      return '<button class="subject '+(data.activeSubject===s.id?'active':'')+'" data-subject="'+escapeHtml(s.id)+'"'+scStyle(s.id)+'><span class="nav-icon">'+subjectIcon(s.name)+'</span><span class="subject-name">'+escapeHtml(s.name)+'</span><span class="subject-count">'+count+'</span></button>';
     }).join('');
     nav.querySelectorAll('[data-subject]').forEach(button=>button.addEventListener('click',()=>{if(button.dataset.subject==='all'){setSystemMessage();data.activeSubject='all';activeFolderId=null;$('search').value='';showArchive=false;render();}else activateSubject(button.dataset.subject);}));
     const q=$('search').value.trim().toLocaleLowerCase('it'), current=activeSubject();
     const isSearch=!!q, isDashboard=data.activeSubject==='all'&&!isSearch, isSubject=!!current&&!isSearch;
     $('dashboardView').classList.toggle('hidden',!isDashboard); $('subjectView').classList.toggle('hidden',!isSubject); $('searchView').classList.toggle('hidden',!isSearch); $('subjectActions').classList.toggle('hidden',!isSubject);
+    {const key=isSearch?'search':isDashboard?'dash':'s:'+current.id+':'+(activeFolderId||''),el=isSearch?$('searchView'):isDashboard?$('dashboardView'):$('subjectView');
+      if(lastViewKey!==null&&key!==lastViewKey){if(current&&!isDashboard&&!isSearch)el.style.setProperty('--sc',current.color||'#58e7f4');else el.style.removeProperty('--sc');el.classList.remove('view-enter');void el.offsetWidth;el.classList.add('view-enter');clearTimeout(viewEnterTimer);viewEnterTimer=setTimeout(()=>el.classList.remove('view-enter'),1000);}
+      lastViewKey=key;}
     if(isSubject){
       const subjectFolders=data.folders.filter(f=>f.subjectId===current.id), items=sortedNotes().filter(n=>n.subjectId===current.id);
       let folder=activeFolderId?subjectFolders.find(f=>f.id===activeFolderId):null; if(activeFolderId&&!folder){activeFolderId=null;folder=null;}
-      $('subjectTitle').textContent=current.name; $('subjectSubtitle').textContent=subjectFolders.length+' '+(subjectFolders.length===1?'cartella':'cartelle')+' \u00B7 '+items.length+' '+(items.length===1?'file':'file');
+      $('subjectTitle').textContent=current.name;$('subjectView').style.setProperty('--sc',current.color||'#58e7f4'); $('subjectSubtitle').textContent=subjectFolders.length+' '+(subjectFolders.length===1?'cartella':'cartelle')+' \u00B7 '+items.length+' '+(items.length===1?'file':'file');
       $('folderDetail').classList.toggle('hidden',!folder); $('subjectOverview').classList.toggle('hidden',!!folder); $('addFolderBtn').classList.toggle('hidden',!!folder); $('newNoteSubjectBtn').classList.toggle('hidden',!!folder);
       if(folder){
         const folderItems=items.filter(n=>n.folderId===folder.id);
         $('folderTitle').textContent=folder.name; $('folderSubtitle').textContent=folderItems.length+' slide in questa cartella';
         $('folderNotes').innerHTML=folderItems.map(n=>noteCard(n,false)).join(''); bindNoteCards($('folderNotes')); $('folderNotesEmpty').classList.toggle('hidden',folderItems.length!==0);
       }else{
-        $('folderGrid').innerHTML=subjectFolders.map(folder=>{const count=items.filter(n=>n.folderId===folder.id).length;return '<button class="folder-card" data-folder="'+escapeHtml(folder.id)+'"><span class="folder-icon">'+svgIcon('cartella')+'</span><span class="folder-info"><span class="folder-name">'+escapeHtml(folder.name)+'</span><span class="folder-count">'+count+' slide'+(count===1?'':'')+'</span></span><span class="folder-arrow">></span></button>';}).join('');
+        $('folderGrid').innerHTML=subjectFolders.map(folder=>{const count=items.filter(n=>n.folderId===folder.id).length;return '<button class="folder-card" data-folder="'+escapeHtml(folder.id)+'"'+scStyle(folder.subjectId)+'><span class="folder-icon">'+svgIcon('cartella')+'</span><span class="folder-info"><span class="folder-name">'+escapeHtml(folder.name)+'</span><span class="folder-count">'+count+' slide'+(count===1?'':'')+'</span></span><span class="folder-arrow">></span></button>';}).join('');
         $('folderEmpty').classList.toggle('hidden',subjectFolders.length!==0); $('folderGrid').querySelectorAll('[data-folder]').forEach(button=>button.addEventListener('click',()=>{activeFolderId=button.dataset.folder;render();}));
         const loose=items.filter(n=>!n.folderId); $('subjectNotes').innerHTML=loose.map(n=>noteCard(n,false)).join(''); bindNoteCards($('subjectNotes'));
         $('subjectEmpty').classList.toggle('hidden',loose.length!==0); if(!loose.length)$('subjectEmpty').innerHTML='<strong>Qui non ci sono appunti senza cartella</strong>Crea una cartella o carica file direttamente nella materia.';
@@ -1556,7 +1615,7 @@
   function renderSubjectMap(){
     const root=$('subjectMap');if(!root)return;const subjects=data.subjects||[];if(!subjects.length){root.innerHTML='<div class="command-empty">Nessuna materia collegata.</div>';return;}
     const points=placeBeside(subjects.map((subject,index)=>{if(index<4)return{subject,col:index,row:0};if(index<6)return{subject,col:index===4?0:3,row:1};if(index<9)return{subject,col:index-6,row:2};return{subject,col:(index-9)%4,row:3+Math.floor((index-9)/4)};}),'Biologia','Biomeccanica'),rows=Math.max(3,...points.map(point=>point.row+1)),links=points.map(point=>'<line x1="500" y1="180" x2="'+(125+point.col*250)+'" y2="'+(60+point.row*120)+'"/>').join('');
-    const nodes=[...points].sort((x,y)=>x.row-y.row||x.col-y.col).map(({subject,col,row})=>{const count=data.notes.filter(note=>note.subjectId===subject.id).length;return '<button class="holo-node" type="button" data-map-subject="'+escapeHtml(subject.id)+'" style="grid-column:'+(col+1)+';grid-row:'+(row+1)+'" aria-label="Apri '+escapeHtml(subject.name)+'"><span class="holo-node-icon">'+subjectIcon(subject.name)+'</span><span class="holo-node-copy">'+escapeHtml(subject.name)+'<small>'+count+' '+(count===1?'file':'file')+'</small></span></button>';}).join('');
+    const nodes=[...points].sort((x,y)=>x.row-y.row||x.col-y.col).map(({subject,col,row})=>{const count=data.notes.filter(note=>note.subjectId===subject.id).length;return '<button class="holo-node" type="button" data-map-subject="'+escapeHtml(subject.id)+'" style="--sc:'+subject.color+';grid-column:'+(col+1)+';grid-row:'+(row+1)+'" aria-label="Apri '+escapeHtml(subject.name)+'"><span class="holo-node-icon">'+subjectIcon(subject.name)+'</span><span class="holo-node-copy">'+escapeHtml(subject.name)+'<small>'+count+' '+(count===1?'file':'file')+'</small></span></button>';}).join('');
     root.innerHTML='<svg class="holo-links" viewBox="0 0 1000 '+(rows*120)+'" preserveAspectRatio="none" aria-hidden="true">'+links+'<circle cx="500" cy="180" r="4"/></svg>'+nodes+'<div class="holo-map-core">SCIENZE MOTORIE<small>INSUBRIA \u00B7 '+subjects.length+' NODI</small></div>';
     root.querySelectorAll('[data-map-subject]').forEach(button=>button.addEventListener('click',()=>activateSubject(button.dataset.mapSubject,true)));
   }
@@ -1602,7 +1661,9 @@
     if(enabled){$('focusTitle').textContent=$('noteTitle').value.trim()||'Appunto senza titolo';$('focusContent').textContent=$('noteBody').value.trim()||'Questo appunto non contiene ancora testo.';const course=data.subjects.find(s=>s.id===$('noteSubject').value);$('focusMeta').textContent=(course?.name||'')+' \u00B7 '+$('noteKind').value;$('focusView').scrollTop=0;}
   }
   function openFolder(id=null){if(!activeSubject()){showToast('Apri prima una materia.');return;}editingFolderId=id;$('folderDialogTitle').textContent=id?'Rinomina cartella':'Nuova cartella';$('folderName').value=id?data.folders.find(f=>f.id===id)?.name||'':'';$('folderDialog').showModal();setTimeout(()=>$('folderName').focus(),40);}
-  function openSubject(id=null){editingSubjectId=id;$('subjectDialogTitle').textContent=id?'Rinomina materia':'Aggiungi materia';$('subjectName').value=id?data.subjects.find(s=>s.id===id)?.name||'':'';$('subjectDialog').showModal();setTimeout(()=>$('subjectName').focus(),40);}
+  let pickedColor='#58e7f4';
+  function renderSwatches(){const box=$('subjectColors');box.innerHTML=SUBJECT_COLORS.map(color=>'<button type="button" class="color-swatch" style="--sw:'+color+'" data-color="'+color+'" aria-label="Colore '+color+'" aria-pressed="'+(color.toLowerCase()===String(pickedColor).toLowerCase())+'"></button>').join('');box.querySelectorAll('[data-color]').forEach(button=>button.addEventListener('click',()=>{pickedColor=button.dataset.color;renderSwatches();}));}
+  function openSubject(id=null){editingSubjectId=id;$('subjectDialogTitle').textContent=id?'Rinomina materia':'Aggiungi materia';$('subjectName').value=id?data.subjects.find(s=>s.id===id)?.name||'':'';pickedColor=id?(data.subjects.find(s=>s.id===id)?.color||nextFreeColor()):nextFreeColor();renderSwatches();$('subjectDialog').showModal();setTimeout(()=>$('subjectName').focus(),40);}
   function populateFolderSelect(subjectId,preferredId=''){$('noteFolder').innerHTML='<option value="">Senza cartella</option>'+data.folders.filter(f=>f.subjectId===subjectId).map(f=>'<option value="'+escapeHtml(f.id)+'">'+escapeHtml(f.name)+'</option>').join('');$('noteFolder').value=preferredId;}
   function openNote(id=null){
     if(data.subjects.length===0&&!id){showToast('Aggiungi prima una materia.');openSubject();return;}
@@ -2009,7 +2070,7 @@
   $('folderForm').addEventListener('submit',event=>{event.preventDefault();const name=$('folderName').value.trim(),subject=activeSubject();if(!name||!subject)return;const duplicate=data.folders.some(f=>f.subjectId===subject.id&&f.name.toLocaleLowerCase('it')===name.toLocaleLowerCase('it')&&f.id!==editingFolderId);if(duplicate){showToast('Esiste gi\u00E0 una cartella con questo nome.');return;}if(editingFolderId){const folder=data.folders.find(f=>f.id===editingFolderId);if(folder)folder.name=name;}else{const folder={id:uid(),subjectId:subject.id,name,createdAt:Date.now()};data.folders.push(folder);activeFolderId=folder.id;}recordActivity(editingFolderId?'Cartella rinominata':'Cartella creata',name,subject.name);save();$('folderDialog').close();render();showToast(editingFolderId?'Cartella rinominata.':'Cartella creata.');});  $('subjectForm').addEventListener('submit',event=>{
     event.preventDefault();const name=$('subjectName').value.trim();if(!name)return;
     const duplicate=data.subjects.some(s=>s.name.toLocaleLowerCase('it')===name.toLocaleLowerCase('it')&&s.id!==editingSubjectId);if(duplicate){showToast('Esiste gi\u00E0 una materia con questo nome.');return;}
-    if(editingSubjectId){const s=data.subjects.find(s=>s.id===editingSubjectId);if(s)s.name=name;}else{const s={id:uid(),name};data.subjects.push(s);data.activeSubject=s.id;}recordActivity(editingSubjectId?'Materia rinominata':'Materia aggiunta',name);
+    if(editingSubjectId){const s=data.subjects.find(s=>s.id===editingSubjectId);if(s){s.name=name;s.color=pickedColor;}}else{const s={id:uid(),name,color:pickedColor};data.subjects.push(s);data.activeSubject=s.id;}recordActivity(editingSubjectId?'Materia rinominata':'Materia aggiunta',name);
     save();$('subjectDialog').close();render();showToast(editingSubjectId?'Materia rinominata.':'Materia aggiunta.');
   });
   document.querySelectorAll('[data-close]').forEach(button=>button.addEventListener('click',()=>$(button.dataset.close).close())); $('enterArchiveBtn').addEventListener('click',()=>$('welcomeDialog').close());
