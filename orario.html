@@ -354,7 +354,7 @@ function dim(l){return flt&&l.n!==flt?' dim':'';}
 
 /* --- dati: legge le lezioni dall'archivio dell'app --- */
 function load(){
-  var schedule={};try{var d=JSON.parse(localStorage.getItem(DATA_KEY)||'{}');schedule=d.schedule||{};}catch(e){}
+  var schedule={},SUBJ=[];try{var d=JSON.parse(localStorage.getItem(DATA_KEY)||'{}');schedule=d.schedule||{};SUBJ=Array.isArray(d.subjects)?d.subjects:[];}catch(e){}
   var byWeek={},names={},minS=99,maxE=0,weekend=false;
   Object.keys(schedule).sort().forEach(function(k){
     var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(k);if(!m)return;
@@ -370,7 +370,10 @@ function load(){
   var keys=Object.keys(byWeek).map(Number).sort(function(a,b){return a-b;});
   WEEKS=[];
   if(keys.length){for(var t=keys[0];t<=keys[keys.length-1];){var d0=new Date(t),w=byWeek[t]||{start:d0,days:[[],[],[],[],[],[],[]]};w.days.forEach(function(ls){ls.sort(function(a,b){return a.s-b.s;});});WEEKS.push(w);t=new Date(d0.getFullYear(),d0.getMonth(),d0.getDate()+7).getTime();}}
-  NAMES=Object.keys(names).sort();COL={};NAMES.forEach(function(n,i){COL[n]='--c-'+(i%PAL);});
+  NAMES=Object.keys(names).sort();COL={};
+  function fold(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();}
+  function subjColor(n){var f=fold(n),best=null;SUBJ.forEach(function(s){var g=fold(s.name);if(!g||!/^#[0-9a-f]{6}$/i.test(s.color||''))return;if(g===f||(g.length>=4&&(f.indexOf(g)===0||g.indexOf(f)===0))){if(!best||g===f)best=s;}});return best?best.color:'';}
+  NAMES.forEach(function(n,i){var v='--c-'+(i%PAL),c=subjColor(n);if(c){v='--cs-'+i;document.documentElement.style.setProperty(v,c);}COL[n]=v;});
   ND=weekend?7:5;H0=Math.min(8,Math.floor(minS===99?8:minS));H1=Math.max(19,Math.ceil(maxE||19));
   if(WEEKS.length)YEAR=WEEKS[0].start.getFullYear();
   var k=key(now);sel=0;for(var w2=0;w2<WEEKS.length;w2++){if(k>=key(date(w2,0))&&k<=key(date(w2,6))){sel=w2;break;}if(k>key(date(w2,6)))sel=w2;}
