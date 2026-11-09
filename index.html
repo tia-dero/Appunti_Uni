@@ -2757,7 +2757,18 @@
     let finalText='';
     recognizer.onresult=event=>{let text='';for(const result of event.results){text+=result[0].transcript;if(result.isFinal)finalText=text;}$('commandInput').value=text;renderCommandResults();};
     recognizer.onerror=event=>{stopListening();showToast(event.error==='not-allowed'?'Microfono non consentito: abilitalo dal lucchetto nella barra degli indirizzi.':event.error==='network'?'Serve la connessione a internet per i comandi vocali.':event.error==='no-speech'?'Non ho sentito nulla.':'Errore del riconoscimento vocale.');};
-    recognizer.onend=()=>{$('micBtn').classList.remove('listening');$('micBtn').textContent='Parla';const spoken=(finalText||$('commandInput').value).trim();if(spoken){$('commandInput').value=spoken;renderCommandResults();setTimeout(()=>$('commandResults').querySelector('.command-item')?.click(),450);}};
+    recognizer.onend=()=>{$('micBtn').classList.remove('listening');$('micBtn').textContent='Parla';const spoken=(finalText||$('commandInput').value).trim();if(spoken){
+      const anatomical=spoken.match(/(?:jarvis[ ,.!]*)?(?:mostrami|fammi vedere|visualizza|cerca|apri|seleziona|evidenzia)\\s+(?:il |lo |la |i |gli |le |un |una )?(?:muscolo |muscoli |anatomia 3d (?:di |del |della )?)?(.+)/i);
+      const target=anatomical?.[1]?.trim().replace(/[.!?]+$/,'')||'';
+      const anatomyIntent=/(?:anatomia|muscolo|bicipite|tricipite|deltoide|pettorale|quadricipite|femorale|gastrocnemio|gluteo|trapezio|tibiale|soleo|sartorio|adduttore|retto|sottospinato|sovraspinato)/i.test(spoken);
+      if(anatomical&&anatomyIntent&&target){
+        const url=new URL('anatomia-realistica.html',location.href);
+        url.searchParams.set('muscolo',target);
+        location.assign(url.href);
+        return;
+      }
+      $('commandInput').value=spoken;renderCommandResults();setTimeout(()=>$('commandResults').querySelector('.command-item')?.click(),450);
+    }};
     try{recognizer.start();}catch{stopListening();}
   }
   $('micBtn').addEventListener('click',startListening);
