@@ -1320,6 +1320,40 @@
       #bootDialog .reactor-rotor,#bootDialog .reactor-counter,#bootDialog .reactor-center,#bootDialog .stark-reactor{animation:none!important}
     }
 
+
+    /* V2: interfaccia di avvio rigorosa, luminanza ridotta e un solo nucleo */
+    #bootDialog{background:radial-gradient(circle at 50% 43%,#0b2028 0%,#07151b 39%,#040b10 100%)}
+    #bootDialog .holo-shell::before{content:"SYSTEM  /  INITIALIZATION";color:#668590;letter-spacing:.23em}
+    #bootDialog .holo-stage{width:min(258px,43vw,30vh);margin-bottom:28px}
+    #bootDialog .holo-emitter{width:80%;height:80%;background:none;box-shadow:none}
+    #bootDialog .holo-ring.r1{inset:2%;border-color:rgba(125,196,207,.17);border-top-color:rgba(125,196,207,.48);animation-duration:42s}
+    #bootDialog .holo-ring.r2{display:none}
+    #bootDialog .stark-reactor{filter:none;animation:reactorReveal .9s ease-out both}
+    #bootDialog .reactor-rotor{animation-duration:36s}
+    #bootDialog .reactor-counter{animation-duration:48s}
+    #bootDialog .reactor-center{animation:reactorBreath 5s ease-in-out infinite}
+    #bootDialog .holo-name{font-size:clamp(24px,3vw,31px);font-weight:550;letter-spacing:.23em;margin-bottom:14px}
+    #bootDialog .holo-name small{font-size:9px;color:#789ca6;margin-top:9px;letter-spacing:.24em}
+    #bootDialog .holo-interact-hint{display:none!important}
+    #bootDialog .boot-lines{font-size:10px;width:min(340px,82vw);min-height:89px;padding:10px 15px;color:#839ca5}
+    #bootDialog .boot-lines div{animation:none;opacity:1;transform:none}
+    #bootDialog .boot-barwrap{width:min(340px,82vw);margin-top:9px}
+    #bootDialog .boot-skip{border-radius:5px;margin-top:17px;font-size:10px;padding:8px 22px}
+    #bootDialog .boot-holiday{
+      display:flex;align-items:center;gap:7px;justify-content:center;
+      color:#9ab3bb;font:500 10px ui-monospace,Consolas,monospace;
+      letter-spacing:.1em;margin:0 0 14px;padding:6px 13px;
+      border:1px solid rgba(123,190,201,.14);border-radius:30px;background:rgba(10,31,40,.35)
+    }
+    #bootDialog .boot-holiday[hidden]{display:none!important}
+    #bootDialog .boot-holiday .holiday-emoji{font-size:15px;line-height:1}
+    @media(max-width:700px){#bootDialog .holo-stage{width:min(225px,58vw,30vh);margin-bottom:18px}}
+    @media(max-height:650px){
+      #bootDialog .holo-stage{width:min(145px,25vh);margin-bottom:8px}
+      #bootDialog .boot-lines{min-height:58px;padding:5px 14px}
+      #bootDialog .boot-holiday{margin-bottom:6px;padding:4px 10px}
+    }
+
 </style>
 </head>
 <body class="jarvis-ui">
@@ -1381,33 +1415,21 @@
       <i class="holo-ticks"></i><i class="holo-beam"></i><i class="holo-scan"></i>
       <div class="holo-emitter" aria-hidden="true">
         <svg class="stark-reactor" viewBox="0 0 240 240" focusable="false" aria-hidden="true">
-          <defs>
-            <radialGradient id="reactorLight"><stop offset="0" stop-color="#e9fcff"/><stop offset=".27" stop-color="#95edf5"/><stop offset=".63" stop-color="#2f9fba"/><stop offset="1" stop-color="#123743"/></radialGradient>
-            <filter id="reactorGlow" x="-75%" y="-75%" width="250%" height="250%"><feGaussianBlur stdDeviation="5"/></filter>
-          </defs>
-          <circle cx="120" cy="120" r="103" fill="none" stroke="#4ba5b9" stroke-opacity=".13" stroke-width="1"/>
-          <g class="reactor-rotor"><circle cx="120" cy="120" r="93" fill="none" stroke="#68c5d7" stroke-opacity=".52" stroke-width="2" stroke-dasharray="46 17 12 24 38 15"/>
-            <circle cx="120" cy="120" r="84" fill="none" stroke="#7ecbd8" stroke-opacity=".26" stroke-width="1" stroke-dasharray="2 7"/>
-          </g>
-          <circle cx="120" cy="120" r="70" fill="none" stroke="#8ddce5" stroke-opacity=".4" stroke-width="1"/>
-          <g class="reactor-stator" stroke="#78c5d3" stroke-width="3" stroke-opacity=".72" fill="none">
-            <path d="M120 44v19 M120 177v19 M44 120h19 M177 120h19 M66.3 66.3l13.5 13.5 M160.2 160.2l13.5 13.5 M173.7 66.3l-13.5 13.5 M79.8 160.2l-13.5 13.5"/>
-          </g>
-          <g class="reactor-counter"><circle cx="120" cy="120" r="57" fill="none" stroke="#9de6ef" stroke-opacity=".65" stroke-width="3" stroke-dasharray="59 14 33 14 8 14"/>
-            <circle cx="120" cy="120" r="46" fill="none" stroke="#beeef4" stroke-opacity=".33" stroke-width="1"/>
-          </g>
-          <circle cx="120" cy="120" r="32" fill="#72dcec" opacity=".3" filter="url(#reactorGlow)"/>
-          <g class="reactor-center"><circle cx="120" cy="120" r="28" fill="#0b2f3c" stroke="#a4e5ed" stroke-width="2"/>
-            <circle cx="120" cy="120" r="19" fill="url(#reactorLight)" opacity=".9"/>
-            <circle cx="120" cy="120" r="6" fill="#e6fbff" opacity=".9"/>
-          </g>
+          <defs><radialGradient id="reactorLight"><stop offset="0" stop-color="#e6ffff"/><stop offset=".5" stop-color="#70d7ea"/><stop offset="1" stop-color="#1a566a"/></radialGradient></defs>
+          <circle cx="120" cy="120" r="95" fill="none" stroke="#79cedc" stroke-width="1" stroke-opacity=".24"/>
+          <g class="reactor-rotor"><circle cx="120" cy="120" r="80" fill="none" stroke="#9be7ef" stroke-width="2" stroke-opacity=".63" stroke-dasharray="175 34 76 34 71 35"/></g>
+          <circle cx="120" cy="120" r="64" fill="none" stroke="#63b8c8" stroke-width="1" stroke-opacity=".28"/>
+          <g class="reactor-counter"><circle cx="120" cy="120" r="52" fill="none" stroke="#b6edf4" stroke-width="2" stroke-opacity=".62" stroke-dasharray="95 23 92 23 80 14"/></g>
+          <circle cx="120" cy="120" r="34" fill="#0b3543" stroke="#91dce8" stroke-width="1.5" stroke-opacity=".82"/>
+          <g class="reactor-center"><circle cx="120" cy="120" r="23" fill="url(#reactorLight)" opacity=".9"/><circle cx="120" cy="120" r="8" fill="#d9fbff" opacity=".92"/></g>
         </svg>
       </div>
       <i class="holo-base"></i><i class="holo-particles" id="holoParticles"></i>
       <div class="holo-orbit" id="holoOrbit"></div><i class="holo-reticle"></i><i class="holo-wave"></i><i class="holo-flash"></i>
     </div>
     <div class="holo-interact-hint"><b>MUOVI IL CURSORE</b> · CLICCA IL NUCLEO</div>
-    <div class="holo-name"><span id="holoTitle">APPUNTI</span><i class="holo-caret"></i><small id="holoSub">SCIENZE MOTORIE &#xB7; INSUBRIA</small></div>
+    <div class="holo-name"><span id="holoTitle">JARVIS</span><i class="holo-caret"></i><small id="holoSub">SISTEMA OPERATIVO</small></div>
+    <div id="bootHoliday" class="boot-holiday" hidden aria-label="Festività"></div>
     <div class="boot-lines" id="bootLines"></div>
     <div class="boot-barwrap"><div class="boot-bar"><i id="bootBar"></i></div><span id="bootPct">0%</span></div>
     <button class="boot-skip" id="bootSkip" type="button">SALTA</button>
@@ -2954,6 +2976,23 @@
     const fast=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,gap=fast?60:790;
     lines.replaceChildren();bar.style.width='0%';$('bootPct').textContent='0%';
     const today=dayKey(),lessons=(scheduleMap()[today]||[]).length,exam=upcomingExams()[0],now=new Date();
+    const fest=$('bootHoliday');
+    const month=now.getMonth()+1,day=now.getDate();
+    let seasonal=null;
+    if(month===12&&day>=1&&day<=26)seasonal=['🎄','Buone feste'];
+    else if((month===12&&day>=27)||(month===1&&day<=6))seasonal=['✨','Felice anno nuovo'];
+    else if(month===10&&day>=25&&day<=31)seasonal=['🎃','Halloween'];
+    else if(month===2&&day===14)seasonal=['💙','Buon San Valentino'];
+    else if(month===8&&day===15)seasonal=['☀️','Buon Ferragosto'];
+    else {
+      const y=now.getFullYear(),aa=y%19,bb=Math.floor(y/100),cc=y%100,dd=Math.floor(bb/4),ee=bb%4,ff=Math.floor((bb+8)/25),gg=Math.floor((bb-ff+1)/3);
+      const hh=(19*aa+bb-dd-gg+15)%30,ii=Math.floor(cc/4),kk=cc%4,ll=(32+2*ee+2*ii-hh-kk+7*0)%7;
+      const mm=Math.floor((aa+11*hh+22*ll)/451),em=Math.floor((hh+ll-7*mm+114)/31),ed=((hh+ll-7*mm+114)%31)+1;
+      if(month===em&&day>=ed-2&&day<=ed+1)seasonal=['🐣','Buona Pasqua'];
+    }
+    fest.replaceChildren();
+    if(seasonal){const icon=document.createElement('span');icon.className='holiday-emoji';icon.textContent=seasonal[0];fest.append(icon,document.createTextNode(seasonal[1]));fest.hidden=false}else fest.hidden=true;
+
     const steps=[
       ['Archivio',data.notes.length+(data.notes.length===1?' appunto':' appunti')],
       ['Materie',String(data.subjects.length)+' disponibili'],
