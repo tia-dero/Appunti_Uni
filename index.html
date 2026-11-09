@@ -1917,78 +1917,7 @@
     </form>
   </dialog>
   <dialog id="folderDialog"><form id="folderForm" method="dialog"><div class="dialog-head"><h2 id="folderDialogTitle">Nuova cartella</h2><button class="icon-btn" type="button" data-close="folderDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body"><label for="folderName">Nome della cartella<input id="folderName" maxlength="90" required placeholder="Es. Lezioni e slide del modulo"></label></div><div class="dialog-foot"><span></span><div class="foot-right"><button class="btn" type="button" data-close="folderDialog">Annulla</button><button class="btn btn-primary" type="submit">Salva cartella</button></div></div></form></dialog>
-  <dialog id="bootDialog" aria-label="Avvio del sistema JARVIS">
-  <canvas id="bootFx" aria-hidden="true"></canvas>
-  <div class="hud hud-tl" aria-hidden="true"><span id="hudTime"></span><small id="hudDate"></small></div>
-  <div class="hud hud-tr" aria-hidden="true"><span id="hudNet"></span><small id="hudCache"></small></div>
-  <div class="hud hud-bl" aria-hidden="true"><span id="hudBat"></span></div>
-  <div class="hud hud-br" aria-hidden="true"><span id="hudScreen"></span></div>
-  <div class="boot-cinema">
-    <div class="boot-scene" aria-hidden="true"><div class="boot-scene-globe"></div><div class="boot-scene-haze"></div><div class="boot-scene-grid"></div></div>
-    <header class="boot-cinema-head">
-      <div class="boot-cinema-brand"><span class="boot-cinema-brand-icon" aria-hidden="true">◈</span><span>JARVIS <small>PERSONAL ASSISTANT SYSTEM</small></span></div>
-      <div class="boot-cinema-clock"><strong id="bootClock">--:--</strong><small id="bootDate"></small></div>
-    </header>
-    <div class="boot-cinema-grid">
-      <aside class="boot-cinema-panel boot-cinema-left" aria-label="Stato dei moduli">
-        <h3><span>01</span> SYSTEM STATUS</h3>
-        <div class="boot-cinema-stat"><span class="boot-stat-icon">◉</span><span>VOICE INTERFACE<small id="bootVoiceStatus">READY</small></span><b id="bootVoiceDot" aria-hidden="true">●</b></div>
-        <div class="boot-cinema-stat"><span class="boot-stat-icon">▤</span><span>ARCHIVIO<small id="bootArchiveStatus">READY</small></span><b aria-hidden="true">●</b></div>
-        <div class="boot-cinema-stat"><span class="boot-stat-icon">▦</span><span>LEZIONI<small id="bootLessonsStatus">READY</small></span><b aria-hidden="true">●</b></div>
-        <div class="boot-cinema-stat"><span class="boot-stat-icon">✚</span><span>ANATOMIA 3D<small>MODULE READY</small></span><b aria-hidden="true">●</b></div>
-      </aside>
-      <div class="boot-cinema-center">
-        <div class="boot-cinema-core-label">HOLOGRAPHIC CORE <span>● ONLINE</span></div>
-        <div class="boot-cinema-core-wrap">
-          <div class="boot-cinema-reticle" aria-hidden="true"></div>
-    <div class="holo-stage" id="holoStage" role="button" tabindex="0" aria-label="Attiva impulso olografico JARVIS" title="Clicca o premi Invio per attivare il nucleo">
-      <i class="holo-ring r1"></i><i class="holo-ring r2"></i><i class="holo-ring r3"></i>
-      <i class="holo-ring r4"></i><i class="holo-ring r5"></i><i class="holo-ring r6"></i><i class="holo-ring r7"></i>
-      <i class="holo-ticks"></i><i class="holo-beam"></i><i class="holo-scan"></i>
-      <div class="holo-emitter jarvis-core-3d" aria-hidden="true">
-        <div class="reactor-fallback">
-          <i class="reactor-fallback-ring ring-outer"></i>
-          <i class="reactor-fallback-ring ring-mid"></i>
-          <i class="reactor-fallback-ring ring-inner"></i>
-          <i class="reactor-fallback-center"></i>
-        </div>
-      </div>
-      <i class="holo-base"></i><i class="holo-particles" id="holoParticles"></i>
-      <div class="holo-orbit" id="holoOrbit"></div><i class="holo-reticle"></i><i class="holo-wave"></i><i class="holo-flash"></i>
-    </div>
-
-          <div class="boot-cinema-platform" aria-hidden="true"><i></i><i></i><i></i></div>
-        </div>
-        <div class="holo-name boot-cinema-name"><span id="holoTitle">JARVIS</span><i class="holo-caret"></i><small id="holoSub">SYSTEM INITIALIZATION</small></div>
-        <div id="bootHoliday" class="boot-holiday" hidden aria-label="Festività"></div>
-      </div>
-      <aside class="boot-cinema-panel boot-cinema-right" aria-label="Interfaccia vocale">
-        <h3><span>02</span> VOICE CORE</h3>
-        <div class="boot-cinema-wave" id="bootVoiceWave" aria-hidden="true">
-          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-        </div>
-        <div class="boot-cinema-voice"><i aria-hidden="true"></i><span id="bootVoiceLabel">JARVIS READY</span></div>
-        <div class="boot-cinema-connection"><span>NETWORK</span><b id="bootConnection">CHECKING</b></div>
-        <div class="boot-cinema-quick">
-          <h4>ACCESSO RAPIDO</h4>
-          <div class="boot-cinema-quick-grid">
-            <button type="button" id="bootOpenArchive" title="Entra nell'archivio degli appunti"><span aria-hidden="true">▤</span>APPUNTI</button>
-            <a href="orario.html" title="Apri il tuo orario delle lezioni"><span aria-hidden="true">▦</span>ORARIO</a>
-            <a href="anatomia-realistica.html" title="Apri anatomia tridimensionale"><span aria-hidden="true">◎</span>ANATOMIA</a>
-          </div>
-        </div>
-      </aside>
-    </div>
-    <footer class="boot-cinema-foot">
-      <div class="boot-cinema-progress">
-        <span id="bootProgressLabel">INITIALIZING SYSTEM...</span>
-        <div class="boot-barwrap"><div class="boot-bar"><i id="bootBar"></i></div><span id="bootPct">0%</span></div>
-      </div>
-      <div class="boot-cinema-actions"><span>JARVIS / SCienze motorie</span><button class="boot-skip" id="bootSkip" type="button">ENTRA NELL'ARCHIVIO</button><span id="bootFooterNet">SYSTEM STARTUP</span></div>
-    </footer>
-  </div>
-  <div class="boot-lines" id="bootLines" aria-hidden="true"></div>
-</dialog>
+  
   <dialog id="welcomeDialog" aria-labelledby="welcomeTitle"><canvas id="welcomeFx" aria-hidden="true"></canvas><div class="welcome-shell"><header class="welcome-top"><div class="welcome-brand"><span class="welcome-brand-mark"><img src="logo-192.png" alt=""></span><span>APPUNTI &#xB7; INSUBRIA<small>IL TUO SPAZIO PERSONALE</small></span></div><span class="welcome-status"><i></i>SISTEMA ATTIVO &#xB7; <span id="welcomeSystemMsg">ARCHIVIO LOCALE</span><time id="welcomeClock">--:--</time></span><button class="welcome-skip" type="button" data-close="welcomeDialog">Vai all&#x2019;archivio</button></header><main class="welcome-main"><section class="welcome-copy"><div class="welcome-radar" aria-hidden="true"><span class="welcome-radar-core">SM</span></div><p class="welcome-eyebrow">Il tuo piano di oggi</p><h1 id="welcomeTitle">Buongiorno<span></span></h1><p id="welcomeDate" class="welcome-date"></p><p id="welcomeIntro" class="welcome-intro"></p></section><section class="welcome-panel" aria-label="Materie di oggi"><div class="welcome-panel-head"><h2 id="welcomePanelTitle">Le tue lezioni</h2><span id="welcomeBadge">OGGI</span></div><div id="welcomeLessons" class="welcome-lessons"></div><div id="welcomeCountdown"></div><details class="welcome-recent"><summary>Ultimi appunti <span>ACCESSO RAPIDO</span></summary><div id="welcomeRecent" class="welcome-recent-list"></div></details></section></main><footer class="welcome-footer"><span class="welcome-footer-note">Archivio locale &#xB7; i tuoi appunti restano sul dispositivo</span><div class="welcome-footer-actions"><button class="welcome-voice" type="button" id="speakBriefingBtn">Ascolta briefing</button><button class="welcome-command" type="button" id="voiceSettingsBtn">Voce</button><button class="welcome-command welcome-mute" type="button" id="voiceMuteBtn" aria-pressed="false" aria-label="Disattiva voce automatica">&#x1F50A; Voce attiva</button><button class="welcome-command" type="button" id="welcomeCommandBtn">Ctrl+K&nbsp; Comandi</button><button class="welcome-enter" type="button" id="enterArchiveBtn">Entra nei miei appunti</button></div></footer></div></dialog>
   <dialog id="voiceSettingsDialog" class="voice-settings-dialog" aria-labelledby="voiceSettingsTitle"><div class="dialog-head"><div><h2 id="voiceSettingsTitle">Configurazione vocale</h2><p class="voice-settings-subtitle">Regola la voce del briefing</p></div><button class="icon-btn" type="button" data-close="voiceSettingsDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body voice-settings-body"><label for="speechVoiceSelect">Voce disponibile<select id="speechVoiceSelect"><option value="">Italiano predefinito del dispositivo</option></select><small class="voice-settings-hint">Le voci dipendono dal browser e dal dispositivo. Per un risultato pi&#xF9; naturale, prova una voce italiana &#x201C;Natural&#x201D; o &#x201C;Enhanced&#x201D;, se disponibile.</small></label><button class="btn voice-preset" id="jarvisVoicePresetBtn" type="button">Applica preset JARVIS &#xB7; Decisa</button><label class="voice-range-label" for="speechPitch"><span>Tono <output id="speechPitchValue">0,88</output></span><input id="speechPitch" type="range" min="0.65" max="1.25" step="0.05" value="0.88"></label><label class="voice-range-label" for="speechRate"><span>Velocit&#xE0; <output id="speechRateValue">0,92&#xD7;</output></span><input id="speechRate" type="range" min="0.75" max="1.15" step="0.05" value="0.92"></label><p class="voice-settings-hint">Il preset abbassa leggermente il tono e rallenta il ritmo. La naturalezza dipende soprattutto dalla voce italiana installata nel dispositivo; il browser non pu&#xF2; riprodurre esattamente la voce del film.</p></div><div class="dialog-foot voice-settings-foot"><button class="btn" id="previewVoiceBtn" type="button">Prova la voce</button><div class="foot-right"><button class="btn" type="button" data-close="voiceSettingsDialog">Chiudi</button><button class="btn btn-primary" id="saveVoiceSettingsBtn" type="button">Salva</button></div></div></dialog>
   <dialog id="docxPreviewDialog" aria-labelledby="docxPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="docxPreviewTitle">Anteprima documento</h2><p>Anteprima locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadDocxBtn" type="button">Scarica</button><button class="icon-btn" type="button" data-close="docxPreviewDialog" aria-label="Chiudi anteprima">&#xD7;</button></div></div><div class="docx-preview-scroll"><div id="docxPreviewError" class="docx-preview-error hidden" role="status"></div><article id="docxContent" class="docx-content"></article></div></dialog>
@@ -3496,135 +3425,8 @@
   $('micBtn').addEventListener('click',startListening);
   $('commandDialog').addEventListener('close',stopListening);
 
-  /* Schermata di avvio: mostra l’ologramma a ogni nuova apertura/ricarica dell’app. */
-  function bootNeeded(){return true;}
-  function scrambleText(el,finalText,ms){
-    const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&',start=performance.now();
-    const tick=()=>{const t=Math.min(1,(performance.now()-start)/ms),fixed=Math.floor(finalText.length*t);let out='';for(let i=0;i<finalText.length;i++){const c=finalText[i];out+=(i<fixed||c===' ')?c:chars[Math.floor(Math.random()*chars.length)];}el.textContent=out;if(t<1)requestAnimationFrame(tick);else el.textContent=finalText;};
-    tick();
-  }
-  /* pioggia di codice sullo sfondo dell'intro */
-  function startBootRain(canvas){
-    const ctx=canvas.getContext('2d');if(!ctx)return()=>{};
-    const dpr=Math.min(2,window.devicePixelRatio||1);canvas.width=canvas.clientWidth*dpr;canvas.height=canvas.clientHeight*dpr;ctx.scale(dpr,dpr);
-    const size=15,cols=Math.ceil(canvas.clientWidth/size),drops=Array.from({length:cols},()=>Math.random()*-30),glyphs='01ABCDEF0123456789<>/+=';
-    let raf=0,last=0,stopped=false;ctx.font=size+'px ui-monospace,Consolas,monospace';
-    const frame=time=>{if(stopped)return;raf=requestAnimationFrame(frame);if(time-last<45)return;last=time;
-      ctx.fillStyle='rgba(2,7,10,.16)';ctx.fillRect(0,0,canvas.clientWidth,canvas.clientHeight);
-      for(let i=0;i<cols;i++){const y=drops[i]*size;if(y>0){ctx.fillStyle=Math.random()<.06?'#e8fdff':'#1fd1ff';ctx.fillText(glyphs[Math.floor(Math.random()*glyphs.length)],i*size,y);}
-        drops[i]+=.55+((i*7)%5)*.12;if(y>canvas.clientHeight&&Math.random()>.975)drops[i]=Math.random()*-12;}};
-    raf=requestAnimationFrame(frame);
-    return()=>{stopped=true;cancelAnimationFrame(raf);ctx.clearRect(0,0,canvas.width,canvas.height);};
-  }
-  function fillBootHud(timers){
-    const pad=n=>String(n).padStart(2,'0'),tick=()=>{const d=new Date();$('hudTime').textContent=pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());};
-    tick();const timer=setInterval(tick,500);timers.push({__interval:timer});
-    $('hudDate').textContent=new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();
-    $('hudNet').textContent=navigator.onLine?'RETE ONLINE':'RETE OFFLINE';
-    $('hudCache').textContent=navigator.serviceWorker&&navigator.serviceWorker.controller?'USO OFFLINE PRONTO':'MODALIT\u00C0 BROWSER';
-    $('hudScreen').textContent=window.innerWidth+' x '+window.innerHeight;
-    $('hudBat').textContent='ENERGIA --';
-    if(navigator.getBattery)navigator.getBattery().then(b=>{$('hudBat').textContent='ENERGIA '+Math.round(b.level*100)+'%'+(b.charging?' +':'');}).catch(()=>{});
-  }
-  function runBoot(done){
-    const dlg=$('bootDialog'),lines=$('bootLines'),bar=$('bootBar');let finished=false,timers=[];
-    const fast=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,gap=fast?60:790;
-    lines.replaceChildren();bar.style.width='0%';$('bootPct').textContent='0%';
-    const bootNow=new Date();
-    $('bootClock').textContent=bootNow.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
-    $('bootDate').textContent=bootNow.toLocaleDateString('it-IT',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
-    $('bootArchiveStatus').textContent=data.notes.length+' APPUNTI';
-    $('bootLessonsStatus').textContent=(scheduleMap()[dayKey()]||[]).length+' OGGI';
-    $('bootConnection').textContent=navigator.onLine?'CONNECTED':'OFFLINE';
-    $('bootConnection').style.color=navigator.onLine?'#77e2b4':'#e9b381';
-    $('bootFooterNet').textContent=navigator.onLine?'ONLINE':'OFFLINE';
-    $('bootVoiceStatus').textContent=isVoiceMuted()?'DISATTIVATA':'READY';
-    $('bootVoiceLabel').textContent=isVoiceMuted()?'VOICE MUTED':'JARVIS READY';
-
-    const today=dayKey(),lessons=(scheduleMap()[today]||[]).length,exam=upcomingExams()[0],now=new Date();
-    const fest=$('bootHoliday');
-    const month=now.getMonth()+1,day=now.getDate();
-    let seasonal=null;
-    if(month===12&&day>=1&&day<=26)seasonal=['🎄','Buone feste'];
-    else if((month===12&&day>=27)||(month===1&&day<=6))seasonal=['✨','Felice anno nuovo'];
-    else if(month===10&&day>=25&&day<=31)seasonal=['🎃','Halloween'];
-    else if(month===2&&day===14)seasonal=['💙','Buon San Valentino'];
-    else if(month===8&&day===15)seasonal=['☀️','Buon Ferragosto'];
-    else {
-      const y=now.getFullYear(),aa=y%19,bb=Math.floor(y/100),cc=y%100,dd=Math.floor(bb/4),ee=bb%4,ff=Math.floor((bb+8)/25),gg=Math.floor((bb-ff+1)/3);
-      const hh=(19*aa+bb-dd-gg+15)%30,ii=Math.floor(cc/4),kk=cc%4,ll=(32+2*ee+2*ii-hh-kk+7*0)%7;
-      const mm=Math.floor((aa+11*hh+22*ll)/451),em=Math.floor((hh+ll-7*mm+114)/31),ed=((hh+ll-7*mm+114)%31)+1;
-      if(month===em&&day>=ed-2&&day<=ed+1)seasonal=['🐣','Buona Pasqua'];
-    }
-    fest.replaceChildren();
-    if(seasonal){const icon=document.createElement('span');icon.className='holiday-emoji';icon.textContent=seasonal[0];fest.append(icon,document.createTextNode(seasonal[1]));fest.hidden=false}else fest.hidden=true;
-
-    const steps=[
-      ['Archivio',data.notes.length+(data.notes.length===1?' appunto':' appunti')],
-      ['Materie',String(data.subjects.length)+' disponibili'],
-      ['Rete',navigator.onLine?'CONNESSA':'OFFLINE'],
-      ['JARVIS','OPERATIVO']
-    ];
-    /* etichette dati che girano attorno agli anelli */
-    const tags=[['ORA',now.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})],['DATA',now.toLocaleDateString('it-IT',{day:'2-digit',month:'short'}).toUpperCase()],['APPUNTI',String(data.notes.length)],[exam?'ESAME':'LEZIONI',exam?(daysUntil(exam.date)===0?'OGGI':daysUntil(exam.date)+' G'):String(lessons)]];
-    const orbit=$('holoOrbit');orbit.replaceChildren();
-    [].forEach((tag,i)=>{const angle=(i*90+45)*Math.PI/180,el=document.createElement('div');el.className='holo-tag';el.style.left=(50+50*Math.cos(angle))+'%';el.style.top=(50+50*Math.sin(angle))+'%';el.innerHTML='<span><b>'+escapeHtml(tag[0])+'</b>'+escapeHtml(tag[1])+'</span>';orbit.append(el);});
-    /* particelle che salgono dalla base */
-    const part=$('holoParticles');part.replaceChildren();
-    for(let i=0;i<0;i++){const el=document.createElement('i');el.style.setProperty('--x',(Math.random()*100)+'%');el.style.setProperty('--s',(2+Math.random()*3)+'px');el.style.setProperty('--d',(2+Math.random()*2.2)+'s');el.style.setProperty('--w',(-Math.random()*3)+'s');el.style.setProperty('--dx',((Math.random()-.5)*50)+'px');part.append(el);}
-    /* titolo digitato */
-    const title=$('holoTitle'),sub=$('holoSub'),caret=document.querySelector('.holo-caret'),word='JARVIS';
-    sub.classList.remove('show');caret.classList.remove('done');
-    if(fast){title.textContent=word;caret.classList.add('done');sub.classList.add('show');}
-    else{title.textContent='';[...word].forEach((letter,i)=>timers.push(setTimeout(()=>{title.textContent=word.slice(0,i+1);},200+i*90)));timers.push(setTimeout(()=>sub.classList.add('show'),200+word.length*90+80));timers.push(setTimeout(()=>caret.classList.add('done'),200+word.length*90+900));}
-    dlg.classList.remove('boot-out');
-    let stopRain=()=>{};
-    const close=()=>{stopRain();cleanupHolo();if(dlg.open)dlg.close();dlg.classList.remove('boot-out');if(typeof done==='function')done();};
-    let bootVoiceStarted=false,bootVoiceUtterance=null,bootVoiceFallback=0,bootVoiceWatchdog=0;
-    const finish=(instant,fromVoice=false)=>{if(finished)return;finished=true;dlg.classList.remove('boot-speaking');reactorController?.setVoiceActive(false);timers.forEach(t=>{if(t&&t.__interval)clearInterval(t.__interval);else clearTimeout(t);});clearTimeout(bootVoiceFallback);clearTimeout(bootVoiceWatchdog);if(!fromVoice&&window.speechSynthesis){try{window.speechSynthesis.cancel();}catch{}}if(instant===true||fast){close();return;}dlg.classList.add('boot-out');setTimeout(close,720);};
-    $('bootSkip').onclick=()=>finish(true);
-    $('bootOpenArchive').onclick=()=>finish(true);dlg.addEventListener('cancel',event=>{event.preventDefault();finish(true);},{once:true});
-    dlg.showModal();$('bootSkip').focus();
-    /* La voce accompagna l'ologramma: quando termina, la schermata si chiude da sola. */
-    if(!fast&&!isVoiceMuted()&&window.speechSynthesis&&window.SpeechSynthesisUtterance){
-      try{
-        const synth=window.speechSynthesis;
-        bootVoiceUtterance=speechUtterance(buildWelcomeSpeech());
-        bootVoiceUtterance.onstart=()=>{bootVoiceStarted=true;$('bootVoiceLabel').textContent='JARVIS STA PARLANDO';$('bootVoiceStatus').textContent='SPEAKING';dlg.classList.add('boot-speaking');reactorController?.setVoiceActive(true);clearTimeout(bootVoiceFallback);bootVoiceWatchdog=setTimeout(()=>finish(false),30000);};
-        bootVoiceUtterance.onend=()=>{dlg.classList.remove('boot-speaking');reactorController?.setVoiceActive(false);finish(false,true);};
-        bootVoiceUtterance.onerror=()=>{dlg.classList.remove('boot-speaking');reactorController?.setVoiceActive(false);if(!finished)bootVoiceFallback=setTimeout(()=>finish(false),900);};
-        synth.cancel();
-        synth.speak(bootVoiceUtterance);
-        /* Se il browser blocca l'avvio automatico, non lasciare l'ologramma aperto all'infinito. */
-        bootVoiceFallback=setTimeout(()=>{if(!bootVoiceStarted)finish(false);},7200);
-      }catch(error){bootVoiceFallback=setTimeout(()=>finish(false),7000);}
-    }else{
-      bootVoiceFallback=setTimeout(()=>finish(false),fast?350:7040);
-    }
-    /* Il nucleo risponde al mouse, al touch e alla tastiera senza interferire con SALTA. */
-    const stage=$('holoStage');let boostTimer=0,reactorController=null,reactorDisposed=false;
-    /* Progressive enhancement: real WebGL 3D, keep the existing CSS rotor if loading fails. */
-    import('./boot-reactor.js').then(module=>{
-      if(reactorDisposed||!dlg.open)return;
-      try{reactorController=module.startBootReactor(stage,{reducedMotion:fast});reactorController.setVoiceActive(bootVoiceStarted&&!finished);}
-      catch(error){console.warn('JARVIS WebGL non disponibile: utilizzo il nucleo CSS.',error);}
-    }).catch(error=>console.warn('JARVIS offline: nucleo CSS alternativo attivo.',error));
-    const resetTilt=()=>{stage.style.setProperty('--tilt-x','0deg');stage.style.setProperty('--tilt-y','0deg');reactorController?.resetPointer();};
-    const moveHolo=event=>{
-      if(fast)return;
-      const rect=stage.getBoundingClientRect(),x=(event.clientX-rect.left)/rect.width-.5,y=(event.clientY-rect.top)/rect.height-.5;
-      if(reactorController){reactorController.pointer(x,y);stage.style.setProperty('--tilt-x','0deg');stage.style.setProperty('--tilt-y','0deg');}
-      else{stage.style.setProperty('--tilt-x',(x*18).toFixed(2)+'deg');stage.style.setProperty('--tilt-y',(-y*18).toFixed(2)+'deg');}
-    };
-    const pulseHolo=()=>{reactorController?.pulse();stage.classList.remove('holo-boost');void stage.offsetWidth;stage.classList.add('holo-boost');clearTimeout(boostTimer);boostTimer=setTimeout(()=>stage.classList.remove('holo-boost'),1450);};
-    const keyHolo=event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();pulseHolo();}};
-    dlg.addEventListener('pointermove',moveHolo);dlg.addEventListener('pointerleave',resetTilt);stage.addEventListener('click',pulseHolo);stage.addEventListener('keydown',keyHolo);
-    const cleanupHolo=()=>{reactorDisposed=true;dlg.classList.remove('boot-speaking');reactorController?.setVoiceActive(false);reactorController?.stop();reactorController=null;dlg.removeEventListener('pointermove',moveHolo);dlg.removeEventListener('pointerleave',resetTilt);stage.removeEventListener('click',pulseHolo);stage.removeEventListener('keydown',keyHolo);clearTimeout(boostTimer);resetTilt();stage.classList.remove('holo-boost');};
-    fillBootHud(timers);
-    /* Restyling minimale: niente pioggia digitale né glitch, per un avvio più sobrio. */
-    steps.forEach((step,index)=>timers.push(setTimeout(()=>{const row=document.createElement('div'),label=document.createElement('span'),text=step[0]+': '+step[1];row.innerHTML='<b>OK</b>';row.append(label);lines.append(row);if(fast)label.textContent=text;else scrambleText(label,text,300);const pct=Math.round((index+1)/steps.length*100);bar.style.width=pct+'%';$('bootPct').textContent=pct+'%';$('bootProgressLabel').textContent=pct===100?'SYSTEM READY':'INITIALIZING SYSTEM...';},gap*(index+1))));
-    /* La chiusura è gestita dalla fine della voce; in modalità silenziosa resta il timer di fallback. */
-  }
+  /* Schermata olografica azzerata: nessun avvio 3D o dialogo extra.
+     Manteniamo il saluto della schermata di benvenuto già esistente. */
 
   /* Finestra con l'orario (pagina orario.html letta dall'archivio) */
   function openOrario(){const frame=$('orarioFrame');frame.src='about:blank';$('orarioDialog').showModal();setTimeout(()=>{frame.src='orario.html';},30);}
@@ -3650,7 +3452,7 @@
   if(rientroAnatomia){
     const url=new URL(location.href); url.searchParams.delete('rientro'); history.replaceState(null, '', url.pathname + url.search + url.hash);
   }else{
-    $('welcomeDialog').showModal(); startWelcomeFx(); if(bootNeeded())runBoot(); else setTimeout(speakWelcomeGreeting,700);
+    $('welcomeDialog').showModal(); startWelcomeFx(); setTimeout(speakWelcomeGreeting,700);
   }
 
   /* ===== Sfondo vivo (particelle), si spegne da solo sui PC lenti ===== */
