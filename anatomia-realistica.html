@@ -32,6 +32,30 @@ input[type=range]{width:100%;accent-color:var(--cyan)}
 #details .row{margin-top:13px}.small{font-size:11px;color:#85a7b1}
 #attribution{margin:12px 16px 22px;font-size:11px;color:#7da6b1}#attribution a{color:#8bdfeb}
 @media(max-width:860px){main{grid-template-columns:1fr}#viewport{height:69vh;min-height:470px}aside{max-height:none}header .tag{display:none}}
+
+/* STARK LABORATORY — light-touch HUD restyle, preserves all anatomy controls. */
+:root{--bg:#050e14;--cyan:#91e8f1;--line:rgba(96,164,182,.24);--fg:#e2f2f6;--muted:#85a6af}
+body{background:radial-gradient(ellipse 55% 46% at 47% 8%,#0d2b39 0%,#07151f 50%,#050e14 100%)}
+header{background:rgba(6,17,25,.92);border-bottom:1px solid rgba(112,188,204,.21);padding:15px 23px}
+header strong{font-size:10px;letter-spacing:.20em;color:#7fc5d2}
+header b{font-weight:550;letter-spacing:.035em;font-size:19px}
+header .tag{color:#729da8;font:600 10px ui-monospace,Consolas,monospace;letter-spacing:.12em}
+header a{background:#0d222c;border-color:#34515f}
+main{gap:16px;padding:17px}
+#viewport{border:1px solid rgba(111,204,222,.28);border-radius:12px;background:radial-gradient(ellipse at 50% 40%,#0e3441 0%,#061823 65%,#040e15 100%);box-shadow:inset 0 0 70px #04131b99}
+#viewport::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;opacity:.20;background:linear-gradient(#87ddeb0c 1px,transparent 1px),linear-gradient(90deg,#87ddeb0c 1px,transparent 1px);background-size:42px 42px}
+#hud{z-index:2;color:#85d8e6;font-size:10px;letter-spacing:.16em;line-height:1.8}
+#hud::before{content:"";display:inline-block;width:6px;height:6px;background:#87d5e2;border-radius:50%;margin-right:8px;box-shadow:0 0 7px #83dfef88}
+#toolbar{z-index:3;border:1px solid rgba(109,185,203,.24);border-radius:8px;background:rgba(4,17,25,.86);backdrop-filter:blur(12px)}
+.panel{border:1px solid rgba(94,170,189,.24);border-radius:9px;background:linear-gradient(135deg,rgba(13,37,49,.78),rgba(8,24,33,.69));box-shadow:inset 0 1px #bbf9ff08}
+.panel h2{font-size:10px;font-weight:650;letter-spacing:.17em;color:#8edee8}
+#jarvisPanel{border-color:rgba(127,215,230,.36);background:linear-gradient(145deg,rgba(15,49,63,.85),rgba(7,25,35,.86))}
+button{border-radius:6px;background:#102933;border-color:rgba(116,189,203,.26);color:#c2e5eb}
+button:hover,button.active{background:#1a4350;border-color:#8bdee9;color:#f4ffff}
+input[type=search]{border-radius:6px;background:rgba(4,17,24,.84);border-color:rgba(124,197,209,.28)}
+#details h3{font-weight:570;letter-spacing:-.018em}
+@media(max-width:860px){main{padding:10px;gap:10px}#viewport{min-height:450px}header{padding:12px}}
+
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/"}}</script>
 </head><body>
