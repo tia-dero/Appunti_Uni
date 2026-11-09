@@ -37,7 +37,8 @@ input[type=range]{width:100%;accent-color:var(--cyan)}
 </head><body>
 <header><a href="index.html?rientro=anatomia">← JARVIS</a><div><strong>ARCHIVIO ANATOMICO INTERATTIVO</strong><b>ANATOMIA 3D • REALISTICA</b></div><span class="tag">634 STRUTTURE ANATOMICHE</span></header>
 <main><section id="viewport" aria-label="Atlante anatomico 3D"><div id="hud">◈ ATLANTE ANATOMICO JARVIS<br><span id="counter">CARICAMENTO IN CORSO</span></div><div id="load"><strong>INIZIALIZZAZIONE ATLANTE</strong><p id="loading">Caricamento modello anatomico dettagliato…</p></div><div id="toolbar"><button id="front">Anteriore</button><button id="rear">Posteriore</button><button id="reset">Reset</button><button id="zoomIn">＋</button><button id="zoomOut">－</button><button id="show">Mostra tutti</button></div></section>
-<aside><section class="panel"><h2>STRATI ANATOMICI</h2><div class="row"><button data-mode="both" class="active">Tutte</button><button data-mode="muscles">Muscoli</button><button data-mode="bones">Ossa</button><button data-mode="cartilage">Cartilagini</button><button data-mode="eyes">Occhi</button><button data-mode="teeth">Denti</button></div><label for="depth">Visibilità dei muscoli superficiali: <output id="depthLabel">100%</output></label><input id="depth" type="range" min="0" max="100" value="100"><p class="small">A 0% osservi i muscoli profondi e le altre strutture selezionate.</p></section>
+<aside><section class="panel" id="jarvisPanel"><h2>◈ JARVIS · ASSISTENTE ANATOMICO</h2><p class="small">Quale muscolo, osso o altra struttura vuoi osservare?</p><form id="jarvisAnatomyForm"><input type="search" id="jarvisQuery" placeholder="Es. bicipite brachiale destro, femore sinistro…" autocomplete="off" aria-label="Struttura anatomica da cercare"><div class="row" style="margin-top:9px"><button type="submit" id="jarvisShow">◎ Evidenzia</button><button type="button" id="jarvisIsolate">◉ Isola</button><button type="button" id="jarvisSpeak">🎙 Parla</button></div></form><div class="row" style="margin-top:8px"><button type="button" id="jarvisLocate">↻ Ruota verso</button><button type="button" id="jarvisContext">↶ Corpo intero</button></div><p id="jarvisStatus" role="status" aria-live="polite" class="small">Pronto: digita o pronuncia il nome della struttura.</p></section>
+<section class="panel"><h2>STRATI ANATOMICI</h2><div class="row"><button data-mode="both" class="active">Tutte</button><button data-mode="muscles">Muscoli</button><button data-mode="bones">Ossa</button><button data-mode="cartilage">Cartilagini</button><button data-mode="eyes">Occhi</button><button data-mode="teeth">Denti</button></div><label for="depth">Visibilità dei muscoli superficiali: <output id="depthLabel">100%</output></label><input id="depth" type="range" min="0" max="100" value="100"><p class="small">A 0% osservi i muscoli profondi e le altre strutture selezionate.</p></section>
 <section class="panel"><h2>STRUTTURA SELEZIONATA</h2><div id="details"><p>Seleziona un muscolo o un osso cliccando sul modello oppure cerca una struttura nell'elenco.</p></div></section>
 <section class="panel"><h2>RICERCA ANATOMICA</h2><input id="search" type="search" placeholder="Cerca: deltoide, bicipite, femore…" aria-label="Cerca una struttura"><div id="results"></div></section>
 <section class="panel"><h2>CONTROLLI</h2><p class="small">Trascina per ruotare · Rotella per zoom · Clic per selezionare · Clic destro e trascina per spostare. Il modello è didattico, non clinico.</p><a class="small" href="anatomia.html">Torna al precedente modello procedurale</a></section></aside></main>
@@ -124,6 +125,79 @@ function apriMuscoloRichiesto(){
  if(!bounds.isEmpty()){const center=bounds.getCenter(new THREE.Vector3()),size=bounds.getSize(new THREE.Vector3()).length();controls.target.copy(center);camera.position.copy(center).add(new THREE.Vector3(0,Math.max(.09,size*.35),Math.max(.65,size*2.5)));controls.update()}
  $('search').value=label(o).split(' • ')[0];search();
 }
+
+/* Assistente interno: riconosce muscoli, ossa, denti, cartilagini e occhi in italiano. */
+let anatomiaCaricata=false, cameraMove=null, voiceRecognition=null;
+function statusAnatomia(t){$('jarvisStatus').textContent=t}
+function nomeRicerca(raw){return normalizzaRicerca(raw).replace(/\b(che|dove|si|trova|fammi|vedere|visualizza|cerca|seleziona|evidenzia|isola|isolami|ruota|verso|osso|ossa|muscoli|dente|denti|occhio|occhi|cartilagine|struttura|mostrami|mostra|di|da|il|lo|la|gli|le|un|una)\b/g,' ').replace(/\s+/g,' ').trim()}
+function cercaStruttura(raw){
+ const phrase=normalizzaRicerca(raw), wantedSide=/\b(destro|destra|right)\b/.test(phrase)?'right':/\b(sinistro|sinistra|left)\b/.test(phrase)?'left':null;
+ const query=nomeRicerca(raw).replace(/\b(destro|destra|sinistro|sinistra|right|left)\b/g,' ').trim();
+ if(!query)return null;
+ const alias={quadricipite:'retto femorale',polpaccio:'gastrocnemio',bicipite:'bicipite brachiale',scapola:'scapola',omero:'omero',femore:'femore'};
+ const candidates=[query,alias[query]].filter(Boolean);
+ let best=null, scoreMax=0;
+ for(const o of objects){
+  const it=normalizzaRicerca(label(o)),en=normalizzaRicerca(o.userData.name||o.name), side=String(o.userData.side||'').toLowerCase();
+  const sideIsWrong=!!wantedSide&&side!==wantedSide&&!(o.userData.name||'').toLowerCase().includes(wantedSide);
+  if(sideIsWrong)continue;
+  let score=0;
+  for(const t of candidates){
+   score=Math.max(score,it.startsWith(t)?120:0,it.includes(t)?100:0,en.startsWith(t)?95:0,en.includes(t)?80:0);
+  }
+  if(score>scoreMax){best=o;scoreMax=score}
+ }
+ return best;
+}
+function animaCamera(targetPosition,targetLook,duration=760){
+ if(cameraMove)cameraMove.cancelled=true;
+ const startPos=camera.position.clone(),startLook=controls.target.clone(),endPos=targetPosition.clone(),endLook=targetLook.clone();
+ const motion={cancelled:false};cameraMove=motion;const t0=performance.now();
+ function tick(now){if(motion.cancelled)return;const p=Math.min(1,(now-t0)/duration),ease=p*p*(3-2*p);
+  camera.position.copy(startPos).lerp(endPos,ease);controls.target.copy(startLook).lerp(endLook,ease);controls.update();
+  if(p<1)requestAnimationFrame(tick);else cameraMove=null;
+ }requestAnimationFrame(tick);
+}
+function inquadraStruttura(o){
+ if(!o)return;
+ const b=new THREE.Box3().setFromObject(o);if(b.isEmpty())return;
+ const center=b.getCenter(new THREE.Vector3()), size=b.getSize(new THREE.Vector3());
+ const height=Math.max(size.y,.09),fov=camera.fov*Math.PI/180;
+ const dist=Math.max(.42,Math.max(height,size.x*1.25,size.z*1.25)/(2*Math.tan(fov/2))*1.7);
+ const side=String(o.userData.side||'').toLowerCase();
+ // Il corpo è rivolto verso +Z; sulla struttura laterale usa un angolo a tre quarti.
+ const direction=side==='right'?new THREE.Vector3(-.68,.09,1):side==='left'?new THREE.Vector3(.68,.09,1):new THREE.Vector3(0,.10,1);
+ direction.normalize();
+ animaCamera(center.clone().add(direction.multiplyScalar(dist)),center);
+}
+function apriAssistente(isola=false,command=null){
+ if(!anatomiaCaricata){statusAnatomia('Il modello 3D è ancora in caricamento.');return}
+ const text=(command??$('jarvisQuery').value).trim();if(!text){statusAnatomia('Scrivi o pronuncia il nome di un muscolo o di un osso.');return}
+ const selectedObject=cercaStruttura(text);
+ if(!selectedObject){statusAnatomia('Non trovo «'+text+'». Prova un nome più specifico.');return}
+ $('jarvisQuery').value=label(selectedObject);
+ // Evidenzia = struttura nel corpo. Isola = solo struttura selezionata.
+ if(isola){objects.forEach(o=>o.visible=o===selectedObject)}
+ else{mode='both';document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode==='both'));
+   outer=100;$('depth').value=100;$('depthLabel').textContent='100%';updateVisibility()}
+ select(selectedObject);inquadraStruttura(selectedObject);
+ statusAnatomia((isola?'Struttura isolata: ':'Struttura evidenziata: ')+label(selectedObject)+'. Puoi trascinare per ruotare liberamente.');
+}
+$('jarvisAnatomyForm').addEventListener('submit',e=>{e.preventDefault();apriAssistente(false)});
+$('jarvisIsolate').onclick=()=>apriAssistente(true);
+$('jarvisLocate').onclick=()=>{if(selected){inquadraStruttura(selected);statusAnatomia('Vista orientata su '+label(selected))}else apriAssistente(false)};
+$('jarvisContext').onclick=()=>{if(!anatomiaCaricata)return;mode='both';outer=100;$('depth').value=100;$('depthLabel').textContent='100%';document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode==='both'));updateVisibility();select(null);animaCamera(new THREE.Vector3(0,1,3.8),new THREE.Vector3(0,.95,0));statusAnatomia('Corpo completo ripristinato.')};
+$('jarvisSpeak').onclick=()=>{
+ const API=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!API){statusAnatomia('Il riconoscimento vocale non è disponibile in questo browser. Usa la ricerca scritta.');return}
+ if(voiceRecognition){voiceRecognition.stop();return}
+ const rec=new API();voiceRecognition=rec;rec.lang='it-IT';rec.interimResults=false;rec.maxAlternatives=1;
+ $('jarvisSpeak').textContent='■ Ferma';statusAnatomia('Ti ascolto: dimmi quale struttura vuoi osservare.');
+ rec.onresult=e=>{const spoken=e.results[0][0].transcript;$('jarvisQuery').value=spoken;apriAssistente(/\b(isola|isolami|solo)\b/i.test(spoken),spoken)};
+ rec.onerror=e=>statusAnatomia(e.error==='not-allowed'?'Autorizza il microfono dalle impostazioni del browser.':'Riconoscimento vocale non riuscito: '+e.error);
+ rec.onend=()=>{voiceRecognition=null;$('jarvisSpeak').textContent='🎙 Parla'};
+ try{rec.start()}catch{voiceRecognition=null;$('jarvisSpeak').textContent='🎙 Parla';statusAnatomia('Non riesco ad avviare il microfono.')}
+};
 function fit(){const w=viewport.clientWidth,h=viewport.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)}
 new ResizeObserver(fit).observe(viewport);
 $('front').onclick=()=>{camera.position.set(0,1.05,3.7);controls.target.set(0,.95,0);controls.update()};
@@ -138,6 +212,6 @@ $('search').oninput=search;
 renderer.domElement.addEventListener('pointerdown',e=>{startX=e.clientX;startY=e.clientY;dragging=false});
 renderer.domElement.addEventListener('pointerup',e=>{if(Math.hypot(e.clientX-startX,e.clientY-startY)>5)return;const rect=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1);picker.setFromCamera(pointer,camera);const hits=picker.intersectObjects(objects.filter(o=>o.visible),false);if(hits.length)select(hits[0].object)});
 const loader=new GLTFLoader();
-loader.load('https://raw.githubusercontent.com/Charleeh/ecorche/main/model/ecorche.glb',gltf=>{root=gltf.scene;scene.add(root);root.traverse(o=>{if(!o.isMesh)return;objects.push(o);if(o.material){o.material=o.material.clone();o.material.side=THREE.DoubleSide;o.material.transparent=false;o.material.depthWrite=true;originalMaterials.set(o,o.material)}});$('load').remove();search();updateVisibility();apriMuscoloRichiesto()},xhr=>{if(xhr.total)$('loading').textContent='Download modello: '+Math.round(xhr.loaded/xhr.total*100)+'%'},err=>{$('loading').textContent='Impossibile caricare il modello. Verifica la connessione e ricarica la pagina. '+String(err.message||'')});
+loader.load('https://raw.githubusercontent.com/Charleeh/ecorche/main/model/ecorche.glb',gltf=>{root=gltf.scene;scene.add(root);root.traverse(o=>{if(!o.isMesh)return;objects.push(o);if(o.material){o.material=o.material.clone();o.material.side=THREE.DoubleSide;o.material.transparent=false;o.material.depthWrite=true;originalMaterials.set(o,o.material)}});$('load').remove();anatomiaCaricata=true;search();updateVisibility();apriMuscoloRichiesto();const requested=new URLSearchParams(location.search).get('muscolo');if(requested){$('jarvisQuery').value=requested;apriAssistente(false,requested)}},xhr=>{if(xhr.total)$('loading').textContent='Download modello: '+Math.round(xhr.loaded/xhr.total*100)+'%'},err=>{$('loading').textContent='Impossibile caricare il modello. Verifica la connessione e ricarica la pagina. '+String(err.message||'')});
 function render(){requestAnimationFrame(render);controls.update();renderer.render(scene,camera)}fit();render();
 </script></body></html>
