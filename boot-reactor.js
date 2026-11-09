@@ -116,7 +116,7 @@ export function startBootReactor(stage,{reducedMotion=false}={}){
     const voiceTarget=voiceActive?(0.45+0.30*voiceWave):0;
     uniforms.uTime.value=t;
     uniforms.uVoice.value+=(voiceTarget-uniforms.uVoice.value)*.075;
-    uniforms.uPulse.value+=(boost>0?0.9:0-uniforms.uPulse.value)*.09;
+    uniforms.uPulse.value+=((boost>0?0.9:0)-uniforms.uPulse.value)*.09;
     if(!reducedMotion){
       orb.rotation.y=t*.075;
       orb.rotation.z=Math.sin(t*.21)*.085;
