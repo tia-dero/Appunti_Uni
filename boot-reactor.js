@@ -24,99 +24,77 @@ export function startBootReactor(stage,{reducedMotion=false}={}){
   camera=new THREE.PerspectiveCamera(38,1,.1,30);
   camera.position.set(0,0,7.7);
   const rig=new THREE.Group();scene.add(rig);
-  const metal=mat(new THREE.MeshStandardMaterial({color:0x284a5c,metalness:.78,roughness:.28,side:THREE.DoubleSide}));
-  const litMetal=mat(new THREE.MeshStandardMaterial({color:0x53899c,metalness:.7,roughness:.25,side:THREE.DoubleSide}));
-  const accent=mat(new THREE.MeshBasicMaterial({color:0x75dffa,transparent:true,opacity:.86,depthWrite:false}));
-  const faint=mat(new THREE.MeshBasicMaterial({color:0x5dc3e8,transparent:true,opacity:.34,depthWrite:false}));
-  const bright=mat(new THREE.MeshBasicMaterial({color:0xbdf6ff,transparent:true,opacity:.94,depthWrite:false}));
-  const lens=mat(new THREE.MeshPhysicalMaterial({color:0x236b89,metalness:.35,roughness:.13,transmission:.10,thickness:1.1,clearcoat:1,clearcoatRoughness:.12,emissive:0x146785,emissiveIntensity:.28}));
-  const glow=mat(new THREE.MeshBasicMaterial({color:0x55c9f0,transparent:true,opacity:.11,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.BackSide}));
-  const pivot=(rx,ry,rz)=>{const o=new THREE.Group();o.rotation.set(rx,ry,rz);rig.add(o);return o};
-  const add=(parent,geo,material)=>{const o=new THREE.Mesh(geo,material);parent.add(o);return o};
-  const ring=(parent,r,t,material)=>add(parent,geom(new THREE.TorusGeometry(r,t,14,128)),material);
-  const gA=pivot(.65,.16,.16),gB=pivot(-.44,1.13,-.19),gC=pivot(1.17,-.38,.38);
-  ring(gA,1.84,.073,metal);ring(gA,1.84,.018,accent);
-  ring(gB,1.58,.055,litMetal);ring(gB,1.58,.014,accent);
-  ring(gC,1.29,.052,metal);ring(gC,1.29,.014,faint);
-  // Circular detailing along separate gyro planes.
-  const dotGeo=geom(new THREE.SphereGeometry(.065,12,9));
-  for(let i=0;i<12;i++){
-    const a=i*Math.PI/6;
-    const dot=add(gA,dotGeo,i%3===0?bright:litMetal);
-    dot.position.set(Math.cos(a)*1.84,Math.sin(a)*1.84,0);
-  }
-  for(let i=0;i<8;i++){
-    const a=i*Math.PI/4;
-    const dot=add(gB,dotGeo,i%2===0?accent:metal);
-    dot.position.set(Math.cos(a)*1.58,Math.sin(a)*1.58,0);
-    dot.scale.setScalar(.76);
-  }
-  // Transparent spherical intelligence field inspired by the selected JARVIS concept.
-  // Actual 3D meridians, latitude orbits and a segmented luminous equator.
-  const sphereRig=new THREE.Group();rig.add(sphereRig);
-  const sphereOuter=mat(new THREE.MeshPhysicalMaterial({
-    color:0x166e92,metalness:.2,roughness:.18,transparent:true,opacity:.12,
-    side:THREE.DoubleSide,depthWrite:false,clearcoat:1,clearcoatRoughness:.1,
-    emissive:0x08789a,emissiveIntensity:.22
+  // Energy-only 3D sphere: translucent flowing cyan plasma, no mechanical plates or eye-like iris.
+  const orb=new THREE.Group();rig.add(orb);
+  const uniforms={uTime:{value:0},uVoice:{value:0},uPulse:{value:0}};
+  const plasma=mat(new THREE.ShaderMaterial({
+    uniforms,transparent:true,depthWrite:false,side:THREE.FrontSide,
+    vertexShader:`
+      varying vec3 vNormal; varying vec3 vPosition;
+      void main(){
+        vNormal=normalize(normalMatrix*normal);
+        vec4 eye=modelViewMatrix*vec4(position,1.0);
+        vPosition=position;
+        gl_Position=projectionMatrix*eye;
+      }`,
+    fragmentShader:`
+      precision mediump float;
+      varying vec3 vNormal; varying vec3 vPosition;
+      uniform float uTime,uVoice,uPulse;
+      void main(){
+        vec3 n=normalize(vNormal);
+        float edge=pow(1.0-max(n.z,0.0),2.2);
+        float swirl=sin(vPosition.y*8.0+sin(vPosition.x*4.0+uTime*.22)*2.5+uTime*.39);
+        float filaments=sin(vPosition.x*15.0-vPosition.z*9.0+uTime*.6+swirl*2.0);
+        float field=smoothstep(.15,.92,swirl*.36+filaments*.23+.52);
+        vec3 base=mix(vec3(.018,.085,.145),vec3(.10,.40,.55),field);
+        vec3 hue=mix(base,vec3(.48,.91,1.0),edge*.65);
+        float energy=(.06+.19*field+.30*edge)*(1.0+.22*uVoice+.25*uPulse);
+        gl_FragColor=vec4(hue*1.24,energy);
+      }`
   }));
-  const latitudeMaterial=mat(new THREE.LineBasicMaterial({color:0x54bbdf,transparent:true,opacity:.28,depthWrite:false}));
-  const meridianMaterial=mat(new THREE.LineBasicMaterial({color:0x8adaee,transparent:true,opacity:.20,depthWrite:false}));
-  const shell=add(sphereRig,geom(new THREE.SphereGeometry(1.34,56,36)),sphereOuter);
-  shell.renderOrder=1;
-  const parallel=(radius,y,material)=>{
-    const positions=[],segments=100;
-    for(let i=0;i<=segments;i++){const a=i*Math.PI*2/segments;positions.push(Math.cos(a)*radius,y,Math.sin(a)*radius);}
-    const geometry=geom(new THREE.BufferGeometry());geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
-    sphereRig.add(new THREE.Line(geometry,material));
-  };
-  for(let n=-4;n<=4;n++){
-    const phi=n*Math.PI/11;
-    parallel(Math.cos(phi)*1.355,Math.sin(phi)*1.355,latitudeMaterial);
+  const sphere=add(orb,geom(new THREE.SphereGeometry(1.36,72,52)),plasma);
+  const mist=mat(new THREE.ShaderMaterial({
+    uniforms,transparent:true,depthWrite:false,side:THREE.BackSide,blending:THREE.AdditiveBlending,
+    vertexShader:`
+      varying vec3 vNorm;
+      void main(){vNorm=normalize(normalMatrix*normal);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
+    fragmentShader:`
+      precision mediump float;
+      varying vec3 vNorm;uniform float uTime,uVoice,uPulse;
+      void main(){
+        float f=pow(1.0-abs(normalize(vNorm).z),2.7);
+        float breathe=.82+.10*sin(uTime*.9)+uVoice*.16+uPulse*.22;
+        gl_FragColor=vec4(.12,.60,.87,f*.34*breathe);
+      }`
+  }));
+  add(orb,geom(new THREE.SphereGeometry(1.43,64,40)),mist);
+  const inner=mat(new THREE.MeshBasicMaterial({color:0x5bcce9,transparent:true,opacity:.10,depthWrite:false,blending:THREE.AdditiveBlending}));
+  const center=add(orb,geom(new THREE.SphereGeometry(.61,48,32)),inner);
+  const heart=mat(new THREE.MeshBasicMaterial({color:0xc2faff,transparent:true,opacity:.35,depthWrite:false,blending:THREE.AdditiveBlending}));
+  add(orb,geom(new THREE.SphereGeometry(.24,32,24)),heart);
+  // Very thin energy trails; just two to preserve the calm, mysterious look.
+  const lineMat=mat(new THREE.LineBasicMaterial({color:0x7bdff5,transparent:true,opacity:.26,depthWrite:false}));
+  const trail=new THREE.Group();rig.add(trail);
+  for(const [rx,ry,radius] of [[.57,.13,1.66],[-.42,.82,1.55]]){
+    const pts=[];
+    for(let i=0;i<=140;i++){const angle=i*Math.PI*2/140;pts.push(Math.cos(angle)*radius,Math.sin(angle)*radius,0);}
+    const geo=geom(new THREE.BufferGeometry());
+    geo.setAttribute('position',new THREE.Float32BufferAttribute(pts,3));
+    const orbit=new THREE.Group();orbit.rotation.set(rx,ry,0);orbit.add(new THREE.Line(geo,lineMat));trail.add(orbit);
   }
-  for(let n=0;n<12;n++){
-    const meridian=new THREE.Group();meridian.rotation.y=n*Math.PI/12;sphereRig.add(meridian);
-    const g=geom(new THREE.BufferGeometry()),pts=[];
-    for(let i=0;i<=84;i++){
-      const p=i*Math.PI*2/84;pts.push(Math.cos(p)*1.36,Math.sin(p)*1.36,0);
-    }
-    g.setAttribute('position',new THREE.Float32BufferAttribute(pts,3));
-    meridian.add(new THREE.Line(g,meridianMaterial));
+  // Sparse suspended particles, not a dense HUD grid.
+  const count=85,positions=new Float32Array(count*3);
+  for(let i=0;i<count;i++){
+    const a=i*2.3999632297, z=1-2*(i+.5)/count, q=Math.sqrt(1-z*z),radius=1.55+(i%7)*.042;
+    positions[i*3]=Math.cos(a)*q*radius;
+    positions[i*3+1]=z*radius;
+    positions[i*3+2]=Math.sin(a)*q*radius;
   }
-  const surfaceMarkers=new THREE.Group();sphereRig.add(surfaceMarkers);
-  const markerGeo=geom(new THREE.BoxGeometry(.12,.045,.055));
-  for(let i=0;i<24;i++){
-    const a=i*Math.PI/12;
-    const marker=add(surfaceMarkers,markerGeo,i%4===0?bright:accent);
-    marker.position.set(Math.cos(a)*1.39,0,Math.sin(a)*1.39);
-    marker.rotation.y=-a;
-  }
-  const orbitBand=pivot(.18,.4,-.15);
-  ring(orbitBand,1.43,.015,accent);
-  const innerSphere=add(sphereRig,geom(new THREE.SphereGeometry(.97,36,24)),
-    mat(new THREE.MeshBasicMaterial({color:0x1b7193,transparent:true,opacity:.045,depthWrite:false,side:THREE.BackSide})));
-  innerSphere.renderOrder=0;
-  const housing=add(rig,geom(new THREE.SphereGeometry(1.03,48,32)),metal);
-  housing.scale.z=.64;
-  const innerRing=ring(rig,.96,.033,litMetal);innerRing.position.z=.49;
-  const aperture=add(rig,geom(new THREE.CylinderGeometry(.83,.83,.1,96)),metal);
-  aperture.rotation.x=Math.PI/2;aperture.position.z=.56;
-  const lensSphere=add(rig,geom(new THREE.SphereGeometry(.72,48,32)),lens);lensSphere.position.z=.66;lensSphere.scale.z=.66;
-  const iris=ring(rig,.55,.022,accent);iris.position.z=1.01;
-  for(let i=0;i<10;i++){
-    const a=i*Math.PI/5;
-    const tooth=add(rig,geom(new THREE.BoxGeometry(.075,.22,.045)),i%2?metal:litMetal);
-    tooth.position.set(Math.cos(a)*.66,Math.sin(a)*.66,1.05);
-    tooth.rotation.z=a-Math.PI/2;
-  }
-  const apertureGlow=add(rig,geom(new THREE.SphereGeometry(.46,32,24)),glow);
-  apertureGlow.position.z=1.11;apertureGlow.scale.set(1.3,1.3,.32);
-  const energy=add(rig,geom(new THREE.SphereGeometry(.22,32,24)),bright);energy.position.z=1.13;
-  const halo=ring(rig,2.12,.009,faint);halo.rotation.x=.12;
-  scene.add(new THREE.AmbientLight(0x7aafc9,.8));
-  const key=new THREE.PointLight(0xb1efff,45,12,2);key.position.set(-2.8,3,4);scene.add(key);
-  const side=new THREE.PointLight(0x236aaf,30,11,2);side.position.set(3,-2,-3);scene.add(side);
-  const centerLight=new THREE.PointLight(0x48ccfc,8,5,2);centerLight.position.set(0,0,1.4);rig.add(centerLight);
-
+  const dotsGeo=geom(new THREE.BufferGeometry());dotsGeo.setAttribute('position',new THREE.BufferAttribute(positions,3));
+  const dotsMat=mat(new THREE.PointsMaterial({size:.025,color:0x9bdeed,transparent:true,opacity:.42,depthWrite:false}));
+  const dots=new THREE.Points(dotsGeo,dotsMat);orb.add(dots);
+  scene.add(new THREE.AmbientLight(0x96d6ed,.4));
   stage.append(canvas);
   stage.classList.add('boot-webgl-ready');
   const resize=()=>{
@@ -134,24 +112,21 @@ export function startBootReactor(stage,{reducedMotion=false}={}){
     raf=requestAnimationFrame(animate);
     const dt=Math.min(clock.getDelta(),.06);elapsed+=dt;const t=elapsed;
     if(boost>0)boost=Math.max(0,boost-dt);
-    const velocity=reducedMotion?0:1+(boost>0?2.25:0)+(voiceActive?.24:0);
+    const voiceWave=voiceActive?(0.5+0.5*Math.sin(t*7.0)):0;
+    const voiceTarget=voiceActive?(0.45+0.30*voiceWave):0;
+    uniforms.uTime.value=t;
+    uniforms.uVoice.value+=(voiceTarget-uniforms.uVoice.value)*.075;
+    uniforms.uPulse.value+=(boost>0?0.9:0-uniforms.uPulse.value)*.09;
     if(!reducedMotion){
-      gA.rotation.z+=.0028*velocity;
-      gB.rotation.z-=.0037*velocity;
-      gC.rotation.z+=.0019*velocity;
-      sphereRig.rotation.y+=.0014*velocity;
-      sphereRig.rotation.z=Math.sin(t*.21)*.10;
-      rig.rotation.y+=(Math.sin(t*.27)*.26+dragX-rig.rotation.y)*.035;
-      rig.rotation.x+=(Math.cos(t*.31)*.14+dragY-rig.rotation.x)*.035;
-      rig.position.y=Math.sin(t*.85)*.045;
-      // Voice animation: low-amplitude, non-strobing energy response while JARVIS speaks.
-      const voiceWave=voiceActive?(Math.sin(t*8.2)*.5+.5):0;
-      const brightness=.25+.22*(.5+.5*Math.sin(t*2.4));
-      lens.emissiveIntensity=brightness+(boost>0?.38:0)+(voiceActive?.24+.26*voiceWave:0);
-      energy.scale.setScalar(voiceActive?1+.13*voiceWave:1);
-      centerLight.intensity=8+(boost>0?6:0)+(voiceActive?5+6*voiceWave:0);
-      iris.scale.setScalar(voiceActive?1+.025*voiceWave:1);
-      sphereOuter.opacity=voiceActive?.16+.025*voiceWave:.12;
+      orb.rotation.y=t*.075;
+      orb.rotation.z=Math.sin(t*.21)*.085;
+      trail.rotation.z=t*.065;
+      trail.rotation.x=Math.sin(t*.24)*.20;
+      rig.rotation.y+=(Math.sin(t*.28)*.13+dragX-rig.rotation.y)*.035;
+      rig.rotation.x+=(Math.cos(t*.23)*.09+dragY-rig.rotation.x)*.035;
+      rig.position.y=Math.sin(t*.70)*.052;
+      center.scale.setScalar(1+.045*Math.sin(t*1.4)+.035*voiceWave);
+      heart.opacity=.32+.045*Math.sin(t*1.5)+.07*voiceWave;
     }
     if(!document.hidden)renderer.render(scene,camera);
   };
@@ -159,8 +134,8 @@ export function startBootReactor(stage,{reducedMotion=false}={}){
   return {
     pointer(x,y){dragX=THREE.MathUtils.clamp(x*1.1,-.55,.55);dragY=THREE.MathUtils.clamp(y*.8,-.45,.45)},
     resetPointer(){dragX=0;dragY=0},
-    pulse(){boost=1.3},
-    setVoiceActive(active){voiceActive=!!active;if(reducedMotion){lens.emissiveIntensity=voiceActive?.7:.28;renderer.render(scene,camera)}},
+    pulse(){boost=1.3;if(reducedMotion){uniforms.uPulse.value=.7;renderer.render(scene,camera)}},
+    setVoiceActive(active){voiceActive=!!active;if(reducedMotion){uniforms.uVoice.value=voiceActive?.5:0;renderer.render(scene,camera)}},
     stop(){
       if(dead)return;
       dead=true;cancelAnimationFrame(raf);
