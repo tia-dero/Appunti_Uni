@@ -102,18 +102,18 @@ const focus=document.createElement('button');focus.textContent='Inquadra';focus.
 actions.append(iso,hide,focus);d.append(actions);for(const b of $('results').children)b.classList.toggle('active',b.dataset.name===selectedName)}
 function search(){const q=$('search').value.trim().toLowerCase();filtered=objects.filter(o=>!q||label(o).toLowerCase().includes(q)||(o.userData.name||'').toLowerCase().includes(q)).slice(0,100);$('results').replaceChildren();for(const o of filtered){const b=document.createElement('button');b.className='result';b.dataset.name=label(o);b.textContent=label(o);b.onclick=()=>select(o);$('results').append(b)}}
 /* Comando ricevuto dalla voce JARVIS, per esempio: muscolo=bicipite brachiale destro. */
-function normalizzaRicerca(t){return String(t||'').toLocaleLowerCase('it').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/\\b(jarvis|il|lo|la|muscolo|mostrami|mostra|del|della|di)\\b/g,' ').replace(/[^a-z0-9 ]/g,' ').replace(/\\s+/g,' ').trim()}
+function normalizzaRicerca(t){return String(t||'').toLocaleLowerCase('it').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\b(jarvis|il|lo|la|muscolo|mostrami|mostra|del|della|di)\b/g,' ').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim()}
 function apriMuscoloRichiesto(){
  const req=new URLSearchParams(location.search).get('muscolo');if(!req)return;
- const normalized=normalizzaRicerca(req),wantedSide=/\\b(destro|destra|right)\\b/.test(normalized)?'right':/\\b(sinistro|sinistra|left)\\b/.test(normalized)?'left':null;
- const base=normalized.replace(/\\b(destro|destra|sinistro|sinistra|right|left)\\b/g,'').trim();
+ const normalized=normalizzaRicerca(req),wantedSide=/\b(destro|destra|right)\b/.test(normalized)?'right':/\b(sinistro|sinistra|left)\b/.test(normalized)?'left':null;
+ const base=normalized.replace(/\b(destro|destra|sinistro|sinistra|right|left)\b/g,'').trim();
  if(!base)return;
  const alias={'quadricipite':'retto femorale','polpaccio':'gastrocnemio','bicipite':'bicipite brachiale'};
  const terms=[base,alias[base]].filter(Boolean);
  const candidates=objects.filter(o=>categoria(o)==='muscles').map(o=>{
   const italian=normalizzaRicerca(label(o)),english=normalizzaRicerca(o.userData.name||o.name);
   const match=terms.reduce((best,t)=>Math.max(best,italian.startsWith(t)?120:0,italian.includes(t)?95:0,english.includes(t)?70:0),0);
-  const rightSide=!wantedSide||o.userData.side===wantedSide||new RegExp(wantedSide==='right'?'\\\\bright\\\\b':'\\\\bleft\\\\b','i').test(o.userData.name||'');
+  const rightSide=!wantedSide||o.userData.side===wantedSide||new RegExp(wantedSide==='right'?'\\\bright\\\b':'\\\bleft\\\b','i').test(o.userData.name||'');
   return {o,score:match+(rightSide?30:-70)};
  }).filter(x=>x.score>=70).sort((a,b)=>b.score-a.score);
  if(!candidates.length){$('search').value=base;search();$('details').textContent='Muscolo non trovato: '+req+'. Prova a cercarlo nell’elenco.';return}
