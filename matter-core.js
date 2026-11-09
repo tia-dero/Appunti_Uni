@@ -16,7 +16,7 @@ export function startMatterCore(mount,{reducedMotion=false}={}){
   }catch(error){canvas.remove();throw error}
   const scene=new THREE.Scene();
   const camera=new THREE.PerspectiveCamera(42,1,.1,30);
-  camera.position.set(0,0,6.35);
+  camera.position.set(0,0,5.85);
   const group=new THREE.Group();
   scene.add(group);
   const mobile=window.matchMedia('(max-width:680px)').matches;
