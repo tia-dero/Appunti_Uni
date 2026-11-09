@@ -101,6 +101,28 @@ const hide=document.createElement('button');hide.textContent='Nascondi';hide.onc
 const focus=document.createElement('button');focus.textContent='Inquadra';focus.onclick=()=>{const b=new THREE.Box3().setFromObject(o);if(b.isEmpty())return;const c=b.getCenter(new THREE.Vector3()),size=b.getSize(new THREE.Vector3()).length();controls.target.copy(c);camera.position.copy(c.clone().add(new THREE.Vector3(0,size*.4,Math.max(.13,size*1.8))));controls.update()};
 actions.append(iso,hide,focus);d.append(actions);for(const b of $('results').children)b.classList.toggle('active',b.dataset.name===selectedName)}
 function search(){const q=$('search').value.trim().toLowerCase();filtered=objects.filter(o=>!q||label(o).toLowerCase().includes(q)||(o.userData.name||'').toLowerCase().includes(q)).slice(0,100);$('results').replaceChildren();for(const o of filtered){const b=document.createElement('button');b.className='result';b.dataset.name=label(o);b.textContent=label(o);b.onclick=()=>select(o);$('results').append(b)}}
+/* Comando ricevuto dalla voce JARVIS, per esempio: muscolo=bicipite brachiale destro. */
+function normalizzaRicerca(t){return String(t||'').toLocaleLowerCase('it').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/\\b(jarvis|il|lo|la|muscolo|mostrami|mostra|del|della|di)\\b/g,' ').replace(/[^a-z0-9 ]/g,' ').replace(/\\s+/g,' ').trim()}
+function apriMuscoloRichiesto(){
+ const req=new URLSearchParams(location.search).get('muscolo');if(!req)return;
+ const normalized=normalizzaRicerca(req),wantedSide=/\\b(destro|destra|right)\\b/.test(normalized)?'right':/\\b(sinistro|sinistra|left)\\b/.test(normalized)?'left':null;
+ const base=normalized.replace(/\\b(destro|destra|sinistro|sinistra|right|left)\\b/g,'').trim();
+ if(!base)return;
+ const alias={'quadricipite':'retto femorale','polpaccio':'gastrocnemio','bicipite':'bicipite brachiale'};
+ const terms=[base,alias[base]].filter(Boolean);
+ const candidates=objects.filter(o=>categoria(o)==='muscles').map(o=>{
+  const italian=normalizzaRicerca(label(o)),english=normalizzaRicerca(o.userData.name||o.name);
+  const match=terms.reduce((best,t)=>Math.max(best,italian.startsWith(t)?120:0,italian.includes(t)?95:0,english.includes(t)?70:0),0);
+  const rightSide=!wantedSide||o.userData.side===wantedSide||new RegExp(wantedSide==='right'?'\\\\bright\\\\b':'\\\\bleft\\\\b','i').test(o.userData.name||'');
+  return {o,score:match+(rightSide?30:-70)};
+ }).filter(x=>x.score>=70).sort((a,b)=>b.score-a.score);
+ if(!candidates.length){$('search').value=base;search();$('details').textContent='Muscolo non trovato: '+req+'. Prova a cercarlo nell’elenco.';return}
+ mode='muscles';document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode==='muscles'));outer=100;$('depth').value=100;$('depthLabel').textContent='100%';updateVisibility();
+ const o=candidates[0].o;select(o);
+ const bounds=new THREE.Box3().setFromObject(o);
+ if(!bounds.isEmpty()){const center=bounds.getCenter(new THREE.Vector3()),size=bounds.getSize(new THREE.Vector3()).length();controls.target.copy(center);camera.position.copy(center).add(new THREE.Vector3(0,Math.max(.09,size*.35),Math.max(.65,size*2.5)));controls.update()}
+ $('search').value=label(o).split(' • ')[0];search();
+}
 function fit(){const w=viewport.clientWidth,h=viewport.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)}
 new ResizeObserver(fit).observe(viewport);
 $('front').onclick=()=>{camera.position.set(0,1.05,3.7);controls.target.set(0,.95,0);controls.update()};
@@ -115,6 +137,6 @@ $('search').oninput=search;
 renderer.domElement.addEventListener('pointerdown',e=>{startX=e.clientX;startY=e.clientY;dragging=false});
 renderer.domElement.addEventListener('pointerup',e=>{if(Math.hypot(e.clientX-startX,e.clientY-startY)>5)return;const rect=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1);picker.setFromCamera(pointer,camera);const hits=picker.intersectObjects(objects.filter(o=>o.visible),false);if(hits.length)select(hits[0].object)});
 const loader=new GLTFLoader();
-loader.load('https://raw.githubusercontent.com/Charleeh/ecorche/main/model/ecorche.glb',gltf=>{root=gltf.scene;scene.add(root);root.traverse(o=>{if(!o.isMesh)return;objects.push(o);if(o.material){o.material=o.material.clone();o.material.side=THREE.DoubleSide;o.material.transparent=false;o.material.depthWrite=true;originalMaterials.set(o,o.material)}});$('load').remove();search();updateVisibility()},xhr=>{if(xhr.total)$('loading').textContent='Download modello: '+Math.round(xhr.loaded/xhr.total*100)+'%'},err=>{$('loading').textContent='Impossibile caricare il modello. Verifica la connessione e ricarica la pagina. '+String(err.message||'')});
+loader.load('https://raw.githubusercontent.com/Charleeh/ecorche/main/model/ecorche.glb',gltf=>{root=gltf.scene;scene.add(root);root.traverse(o=>{if(!o.isMesh)return;objects.push(o);if(o.material){o.material=o.material.clone();o.material.side=THREE.DoubleSide;o.material.transparent=false;o.material.depthWrite=true;originalMaterials.set(o,o.material)}});$('load').remove();search();updateVisibility();apriMuscoloRichiesto()},xhr=>{if(xhr.total)$('loading').textContent='Download modello: '+Math.round(xhr.loaded/xhr.total*100)+'%'},err=>{$('loading').textContent='Impossibile caricare il modello. Verifica la connessione e ricarica la pagina. '+String(err.message||'')});
 function render(){requestAnimationFrame(render);controls.update();renderer.render(scene,camera)}fit();render();
 </script></body></html>
