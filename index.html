@@ -1755,6 +1755,30 @@
   #bootDialog .energy-orb,#bootDialog .energy-orb-haze,#bootDialog .energy-orb-filaments,#bootDialog .energy-orb-light{animation:none!important}
 }
 
+
+/* AURORA 3D: visual fallback matches the energy-stream style when WebGL is unavailable. */
+#bootDialog .energy-orb-shell{
+  background:radial-gradient(circle at 44% 37%,#b8ffff30 0%,#218ab859 24%,#082f5270 56%,#031524e0 79%,#04101ad9 100%);
+  box-shadow:inset 12px 17px 23px #a9eafb1a,inset -19px -23px 29px #020e1ad1,
+  0 0 0 1px #89d9ed80,0 0 20px #48bee94a,0 0 48px #3783cc22;
+}
+#bootDialog .energy-orb-filaments{
+  inset:4%;opacity:.74;background:
+    conic-gradient(from 18deg at 42% 49%,transparent 0 13%,#5ed9eb71 17%,transparent 23% 37%,#7394fa4d 44%,transparent 51% 66%,#96f9f485 72%,transparent 78% 100%);
+  -webkit-mask:radial-gradient(ellipse at 52% 49%,transparent 0 20%,#000 35% 73%,transparent 86%);
+  mask:radial-gradient(ellipse at 52% 49%,transparent 0 20%,#000 35% 73%,transparent 86%);
+  filter:blur(4px);animation:energyOrbDrift 24s linear infinite;
+}
+#bootDialog .energy-orb-light{
+  inset:24%;background:radial-gradient(circle,#e3ffff9c 0%,#81dfff76 19%,#2c9bcf40 45%,transparent 79%);
+  filter:blur(13px);animation:energyOrbBreathe 4.5s ease-in-out infinite;
+}
+#bootDialog .energy-orb-haze{
+  inset:-19%;background:radial-gradient(circle,#59d4fb21 0%,#338cb721 34%,transparent 72%);
+  filter:blur(24px);
+}
+#bootDialog.boot-speaking .energy-orb-light{animation-duration:2.1s}
+
 </style>
 </head>
 <body class="jarvis-ui">
