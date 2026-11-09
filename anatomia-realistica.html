@@ -200,6 +200,86 @@ $('jarvisSpeak').onclick=()=>{
  rec.onend=()=>{voiceRecognition=null;$('jarvisSpeak').textContent='🎙 Parla'};
  try{rec.start()}catch{voiceRecognition=null;$('jarvisSpeak').textContent='🎙 Parla';statusAnatomia('Non riesco ad avviare il microfono.')}
 };
+
+/* Modelli aggiuntivi Z-Anatomy / BodyParts3D (uso non commerciale). */
+const extraModels={visceral:null,cardiovascular:null};
+const dracoDecoder=new DRACOLoader();
+dracoDecoder.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
+const extraGLTFLoader=new GLTFLoader();extraGLTFLoader.setDRACOLoader(dracoDecoder);
+const namesIT={
+'liver':'Fegato','stomach':'Stomaco','kidney':'Rene','pancreas':'Pancreas','urinary bladder':'Vescica urinaria','gallbladder':'Cistifellea',
+'duodenum':'Duodeno','jejunum':'Digiuno','ascending colon':'Colon ascendente','descending colon':'Colon discendente','transverse colon':'Colon trasverso','sigmoid colon':'Colon sigmoideo',
+'left ventricle':'Ventricolo sinistro','right ventricle':'Ventricolo destro','left atrium':'Atrio sinistro','right atrium':'Atrio destro',
+'abdominal aorta':'Aorta addominale','thoracic aorta':'Aorta toracica','aortic arch':'Arco aortico','ascending aorta':'Aorta ascendente',
+'oesophagus':'Esofago','trachea':'Trachea','prostate':'Prostata','spleen':'Milza',
+'inferior lobe of left lung':'Lobo inferiore del polmone sinistro','inferior lobe of right lung':'Lobo inferiore del polmone destro',
+'superior lobe of left lung':'Lobo superiore del polmone sinistro','superior lobe of right lung':'Lobo superiore del polmone destro',
+'middle lobe of right lung':'Lobo medio del polmone destro'
+};
+function italianExtra(name){
+ const base=String(name).replace(/\.[lr]$/i,'');
+ const side=/\.l$/i.test(name)?' • lato sinistro':/\.r$/i.test(name)?' • lato destro':'';
+ let translation=namesIT[base.toLowerCase()];
+ if(!translation){
+  translation=base;
+  for(const [en,it] of [['artery','arteria'],['veins','vene'],['vein','vena'],['left','sinistro'],['right','destro'],['pulmonary','polmonare'],['renal','renale'],['common','comune'],['external','esterna'],['internal','interna'],['superior','superiore'],['inferior','inferiore'],['anterior','anteriore'],['posterior','posteriore']])
+   translation=translation.replace(new RegExp('\\b'+en+'\\b','gi'),it);
+ }
+ return translation+side;
+}
+function registerAdditional(model,system){
+ let count=0;model.traverse(o=>{
+  if(!o.isMesh)return;let n=o,part='';
+  while(n&&!part){part=n.userData?.za_name||'';n=n.parent}
+  part=part||o.name||'Struttura anatomica';o.userData.name=italianExtra(part);o.userData.englishName=part;
+  o.userData.extraSystem=system;
+  o.userData.side=/\.l$/i.test(part)?'left':/\.r$/i.test(part)?'right':'midline';
+  const str=part.toLowerCase();
+  o.userData.tissue=system==='visceral'?'organ':/artery|aorta|arterial|pulmonary trunk/.test(str)?'artery':/vein|vena cava|venous|azygos/.test(str)?'vein':'heart';
+  if(o.material){o.material=o.material.clone();o.material.side=THREE.DoubleSide;
+   if(o.userData.tissue==='artery')o.material.color.set(0xd9565b);
+   if(o.userData.tissue==='vein')o.material.color.set(0x568fe0);
+   originalMaterials.set(o,o.material)}
+  objects.push(o);count++;
+ });return count;
+}
+function alignAdditional(){
+ if(!extraModels.cardiovascular||!root)return;
+ const ref=new THREE.Box3().setFromObject(root),cardio=new THREE.Box3().setFromObject(extraModels.cardiovascular);
+ const h=cardio.getSize(new THREE.Vector3()).y,refH=ref.getSize(new THREE.Vector3()).y;
+ if(!h||!refH)return;
+ const scale=refH/h,origin=cardio.getCenter(new THREE.Vector3()),dest=ref.getCenter(new THREE.Vector3());
+ for(const model of Object.values(extraModels)){
+  if(!model)continue;model.scale.setScalar(scale);model.position.copy(dest).sub(origin.clone().multiplyScalar(scale));
+ }
+}
+function setSystemMode(system){
+ mode=system==='visceral'?'organs':'circulatory';
+ document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
+ select(null);updateVisibility();
+}
+function loadAdditional(system,activate=true){
+ if(extraModels[system]){if(activate)setSystemMode(system);return Promise.resolve();}
+ const btn=$(system==='visceral'?'loadOrgans':'loadVessels');btn.disabled=true;
+ $('systemsStatus').textContent='Caricamento '+(system==='visceral'?'organi':'sistema cardiovascolare')+'…';
+ return new Promise((resolve,reject)=>extraGLTFLoader.load(
+  'https://raw.githubusercontent.com/nqwrc/3d-anatomy/master/public/models/'+system+'.glb',
+  gltf=>{
+   const model=gltf.scene;scene.add(model);extraModels[system]=model;
+   const count=registerAdditional(model,system);
+   if(extraModels.cardiovascular)alignAdditional();
+   else if(root){const ref=new THREE.Box3().setFromObject(root),box=new THREE.Box3().setFromObject(model);
+    model.position.copy(ref.getCenter(new THREE.Vector3())).sub(box.getCenter(new THREE.Vector3()));}
+   btn.textContent=system==='visceral'?'✓ Organi caricati':'✓ Circolatorio caricato';
+   $('systemsStatus').textContent=count+' elementi caricati. Puoi cercarli e isolarli.';
+   if(activate)setSystemMode(system);else updateVisibility();search();resolve();
+  },
+  xhr=>{if(xhr.total)$('systemsStatus').textContent='Caricamento '+Math.round(100*xhr.loaded/xhr.total)+'%'},
+  err=>{btn.disabled=false;$('systemsStatus').textContent='Errore caricamento. Controlla la connessione e riprova.';reject(err)}
+ ));
+}
+$('loadOrgans').onclick=()=>loadAdditional('visceral').catch(()=>{});
+$('loadVessels').onclick=()=>loadAdditional('cardiovascular').catch(()=>{});
 function fit(){const w=viewport.clientWidth,h=viewport.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)}
 new ResizeObserver(fit).observe(viewport);
 $('front').onclick=()=>{camera.position.set(0,1.05,3.7);controls.target.set(0,.95,0);controls.update()};
