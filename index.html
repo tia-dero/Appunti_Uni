@@ -1195,6 +1195,106 @@
 .anatomy-nav:hover{border-color:#73eefb;background:#37c9ef27;color:#e4fcff}
 .anatomy-nav span:nth-child(2){flex:1}
 @media(max-width:700px){.anatomy-nav{display:inline-flex;margin:7px 5px 0 0;padding:8px 11px}}
+
+    /* JARVIS BOOT / STARK MINIMAL — restyling sobrio, conserva logo, voce e interazione */
+    #bootDialog {
+      background:radial-gradient(ellipse 46% 48% at 50% 43%,#0e2730 0%,#08161c 48%,#050d12 100%);
+      color:#e5f2f3;
+    }
+    #bootDialog::before,#bootDialog::after,#bootFx,.hud,.holo-orbit,.holo-particles,
+    .holo-beam,.holo-base,.holo-scan,.holo-reticle,.holo-ticks,.holo-flash,
+    .holo-ring.r3,.holo-ring.r4,.holo-ring.r5,.holo-ring.r6,.holo-ring.r7,
+    .core-crosshair,.core-glass,.holo-stage::after,.holo-caret {
+      display:none !important;
+    }
+    #bootDialog .holo-shell {
+      position:relative;display:flex;align-items:center;justify-content:center;
+      gap:0;padding:clamp(20px,4vw,48px);font-family:inherit;
+    }
+    #bootDialog .holo-shell::before {
+      content:"JARVIS  /  SYSTEM STARTUP";position:absolute;top:clamp(24px,5vh,52px);left:50%;
+      transform:translateX(-50%);white-space:nowrap;color:#7599a2;
+      font:600 10px ui-monospace,Consolas,monospace;letter-spacing:.28em;
+    }
+    #bootDialog .holo-stage {
+      width:min(292px,50vw,34vh);aspect-ratio:1;margin:0 0 clamp(22px,4vh,42px);
+      perspective:none;isolation:isolate;cursor:pointer;
+      transform:none !important;filter:none !important;transition:none !important;
+    }
+    #bootDialog .holo-ring {pointer-events:none;filter:none !important;}
+    #bootDialog .holo-ring.r1 {
+      display:block;inset:1%;border:1px solid rgba(112,201,218,.29);
+      border-top-color:#80d8e4;border-right-color:rgba(112,201,218,.56);
+      border-bottom-color:rgba(112,201,218,.18);border-left-color:rgba(112,201,218,.14);
+      box-shadow:none;animation:bootspin 22s linear infinite;
+    }
+    #bootDialog .holo-ring.r2 {
+      display:block;inset:12%;border:1px solid rgba(107,178,193,.23);
+      border-bottom-color:rgba(128,216,228,.6);border-style:solid;
+      box-shadow:none;animation:bootspin 32s linear infinite reverse;
+    }
+    #bootDialog .holo-ring::before {display:none !important;}
+    #bootDialog .holo-emitter {
+      width:58%;aspect-ratio:1;transform:none;animation:none !important;
+      border:1px solid rgba(115,199,213,.12);border-radius:50%;
+      background:radial-gradient(circle,rgba(58,119,137,.12),rgba(6,23,31,.4) 68%,transparent);
+      box-shadow:0 0 55px rgba(29,126,153,.09),inset 0 0 28px rgba(50,145,167,.05);
+    }
+    #bootDialog .holo-logo {
+      display:block;width:67%;height:67%;object-fit:contain;border-radius:14%;
+      mix-blend-mode:normal;filter:drop-shadow(0 0 12px rgba(100,201,218,.24));
+      animation:starkLogoIn 1.1s ease-out both !important;
+    }
+    @keyframes starkLogoIn {from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+    #bootDialog .holo-interact-hint {
+      margin:0 0 12px;color:#5d828e;font-size:10px;letter-spacing:.18em;
+      font-weight:500;
+    }
+    #bootDialog .holo-interact-hint b{font-weight:600;color:#83b1bb}
+    #bootDialog .holo-name{
+      margin:0 0 clamp(18px,3vh,28px);padding:0;color:#edf8f9;text-shadow:none;
+      font:650 clamp(24px,3.6vw,36px) system-ui,Segoe UI,sans-serif;letter-spacing:.2em;
+    }
+    #bootDialog .holo-name small {
+      margin-top:8px;font:500 10px ui-monospace,Consolas,monospace;letter-spacing:.19em;
+      color:#80a5ae;text-shadow:none;
+    }
+    #bootDialog .boot-lines {
+      width:min(400px,84vw);min-height:112px;margin:0;padding:12px 16px;
+      border-top:1px solid rgba(129,195,207,.12);
+      color:#92acb4;font:500 11px/1.85 ui-monospace,Consolas,monospace;
+    }
+    #bootDialog .boot-lines div b{color:#78c9c8;margin-right:12px;font-size:10px}
+    #bootDialog .boot-barwrap {
+      width:min(400px,84vw);margin-top:5px;color:#7ea6ae;
+      font:600 10px ui-monospace,Consolas,monospace;letter-spacing:.05em;
+    }
+    #bootDialog .boot-bar{height:2px;background:rgba(123,187,199,.12);box-shadow:none}
+    #bootDialog .boot-bar i{background:#78cbd8;box-shadow:none}
+    #bootDialog .boot-skip{
+      margin-top:20px;border:1px solid rgba(129,195,207,.22);
+      padding:9px 25px;color:#9ec4cc;background:rgba(14,40,49,.3);
+      letter-spacing:.15em;font:600 11px ui-monospace,Consolas,monospace;
+    }
+    #bootDialog .boot-skip:hover{background:#18323d;border-color:#77bbc8}
+    #bootDialog.boot-out .holo-shell{animation:starkBootOut .65s ease-in forwards}
+    @keyframes starkBootOut{to{opacity:0;transform:scale(.98);filter:blur(4px)}}
+    @media(max-width:700px){
+      #bootDialog .holo-stage{width:min(250px,62vw,35vh);margin-bottom:20px}
+      #bootDialog .holo-interact-hint{font-size:9px}
+      #bootDialog .boot-lines{min-height:100px}
+      #bootDialog .holo-shell::before{font-size:9px;letter-spacing:.17em}
+    }
+    @media(max-height:650px){
+      #bootDialog .holo-stage{width:min(170px,32vh);margin-bottom:10px}
+      #bootDialog .holo-name{margin-bottom:8px;font-size:21px}
+      #bootDialog .boot-lines{min-height:68px;padding:5px 12px;line-height:1.35}
+      #bootDialog .boot-skip{margin-top:7px}
+    }
+    @media(prefers-reduced-motion:reduce){
+      #bootDialog .holo-ring.r1,#bootDialog .holo-ring.r2,#bootDialog .holo-logo{animation:none !important}
+    }
+
 </style>
 </head>
 <body class="jarvis-ui">
@@ -2810,23 +2910,20 @@
     lines.replaceChildren();bar.style.width='0%';$('bootPct').textContent='0%';
     const today=dayKey(),lessons=(scheduleMap()[today]||[]).length,exam=upcomingExams()[0],now=new Date();
     const steps=[
-      ['Nucleo quantico','ATTIVO'],
-      ['Archivio locale',data.notes.length+(data.notes.length===1?' appunto':' appunti')],
-      ['Moduli accademici',String(data.subjects.length)],
-      ['Agenda odierna',lessons?String(lessons)+' lezioni':'nessuna lezione'],
-      ['Prossimo esame',exam?(daysUntil(exam.date)===0?'oggi':'tra '+daysUntil(exam.date)+' giorni'):'nessuno in programma'],
-      ['Connessione',navigator.onLine?'ONLINE':'OFFLINE'],
-      ['Interfaccia','OPERATIVA']
+      ['Archivio',data.notes.length+(data.notes.length===1?' appunto':' appunti')],
+      ['Materie',String(data.subjects.length)+' disponibili'],
+      ['Rete',navigator.onLine?'CONNESSA':'OFFLINE'],
+      ['JARVIS','OPERATIVO']
     ];
     /* etichette dati che girano attorno agli anelli */
     const tags=[['ORA',now.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})],['DATA',now.toLocaleDateString('it-IT',{day:'2-digit',month:'short'}).toUpperCase()],['APPUNTI',String(data.notes.length)],[exam?'ESAME':'LEZIONI',exam?(daysUntil(exam.date)===0?'OGGI':daysUntil(exam.date)+' G'):String(lessons)]];
     const orbit=$('holoOrbit');orbit.replaceChildren();
-    tags.forEach((tag,i)=>{const angle=(i*90+45)*Math.PI/180,el=document.createElement('div');el.className='holo-tag';el.style.left=(50+50*Math.cos(angle))+'%';el.style.top=(50+50*Math.sin(angle))+'%';el.innerHTML='<span><b>'+escapeHtml(tag[0])+'</b>'+escapeHtml(tag[1])+'</span>';orbit.append(el);});
+    [].forEach((tag,i)=>{const angle=(i*90+45)*Math.PI/180,el=document.createElement('div');el.className='holo-tag';el.style.left=(50+50*Math.cos(angle))+'%';el.style.top=(50+50*Math.sin(angle))+'%';el.innerHTML='<span><b>'+escapeHtml(tag[0])+'</b>'+escapeHtml(tag[1])+'</span>';orbit.append(el);});
     /* particelle che salgono dalla base */
     const part=$('holoParticles');part.replaceChildren();
-    for(let i=0;i<(fast?0:18);i++){const el=document.createElement('i');el.style.setProperty('--x',(Math.random()*100)+'%');el.style.setProperty('--s',(2+Math.random()*3)+'px');el.style.setProperty('--d',(2+Math.random()*2.2)+'s');el.style.setProperty('--w',(-Math.random()*3)+'s');el.style.setProperty('--dx',((Math.random()-.5)*50)+'px');part.append(el);}
+    for(let i=0;i<0;i++){const el=document.createElement('i');el.style.setProperty('--x',(Math.random()*100)+'%');el.style.setProperty('--s',(2+Math.random()*3)+'px');el.style.setProperty('--d',(2+Math.random()*2.2)+'s');el.style.setProperty('--w',(-Math.random()*3)+'s');el.style.setProperty('--dx',((Math.random()-.5)*50)+'px');part.append(el);}
     /* titolo digitato */
-    const title=$('holoTitle'),sub=$('holoSub'),caret=document.querySelector('.holo-caret'),word='APPUNTI';
+    const title=$('holoTitle'),sub=$('holoSub'),caret=document.querySelector('.holo-caret'),word='JARVIS';
     sub.classList.remove('show');caret.classList.remove('done');
     if(fast){title.textContent=word;caret.classList.add('done');sub.classList.add('show');}
     else{title.textContent='';[...word].forEach((letter,i)=>timers.push(setTimeout(()=>{title.textContent=word.slice(0,i+1);},200+i*90)));timers.push(setTimeout(()=>sub.classList.add('show'),200+word.length*90+80));timers.push(setTimeout(()=>caret.classList.add('done'),200+word.length*90+900));}
@@ -2862,9 +2959,7 @@
     dlg.addEventListener('pointermove',moveHolo);dlg.addEventListener('pointerleave',resetTilt);stage.addEventListener('click',pulseHolo);stage.addEventListener('keydown',keyHolo);
     const cleanupHolo=()=>{dlg.removeEventListener('pointermove',moveHolo);dlg.removeEventListener('pointerleave',resetTilt);stage.removeEventListener('click',pulseHolo);stage.removeEventListener('keydown',keyHolo);clearTimeout(boostTimer);resetTilt();stage.classList.remove('holo-boost');};
     fillBootHud(timers);
-    if(!fast){stopRain=startBootRain($('bootFx'));
-      const stage=document.querySelector('.holo-stage'),name=document.querySelector('.holo-name');
-      timers.push(setTimeout(()=>{stage.classList.add('glitch');name.classList.add('glitch');timers.push(setTimeout(()=>{stage.classList.remove('glitch');name.classList.remove('glitch');},460));},gap*4+60));}
+    /* Restyling minimale: niente pioggia digitale né glitch, per un avvio più sobrio. */
     steps.forEach((step,index)=>timers.push(setTimeout(()=>{const row=document.createElement('div'),label=document.createElement('span'),text=step[0]+': '+step[1];row.innerHTML='<b>OK</b>';row.append(label);lines.append(row);if(fast)label.textContent=text;else scrambleText(label,text,300);const pct=Math.round((index+1)/steps.length*100);bar.style.width=pct+'%';$('bootPct').textContent=pct+'%';},gap*(index+1))));
     /* La chiusura è gestita dalla fine della voce; in modalità silenziosa resta il timer di fallback. */
   }
