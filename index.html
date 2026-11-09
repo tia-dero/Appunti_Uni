@@ -1868,6 +1868,40 @@
  #bootDialog .reactor-fallback-ring,#bootDialog .reactor-fallback-center{animation:none!important}
 }
 
+
+/* 3D organic matter core: fresh standalone startup, no blast/explosion animations */
+#matterBoot{width:100vw;max-width:none;height:100dvh;max-height:none;inset:0;margin:0;padding:0;border:0;overflow:hidden;
+ background:radial-gradient(ellipse 46% 57% at 50% 43%,#102c40,#071925 58%,#030c14);color:#e3f7fb}
+#matterBoot::backdrop{background:#030c14}
+#matterBoot .matter-boot-content{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+ padding:22px;font-family:Inter,system-ui,Segoe UI,sans-serif;text-align:center}
+#matterBoot .matter-kicker{font:600 11px ui-monospace,Consolas,monospace;letter-spacing:.2em;color:#92b9c7;margin:0 0 15px}
+#matterBoot .matter-kicker span{color:#8ce6f5;font-size:9px;margin-right:7px}
+#matterBoot .matter-stage{position:relative;width:min(455px,72vw,50vh);aspect-ratio:1;display:grid;place-items:center;isolation:isolate}
+#matterBoot .matter-stage::before{content:"";position:absolute;inset:-10%;z-index:-1;pointer-events:none;
+ background:radial-gradient(circle,#49c9ed20,#2b85af12 35%,transparent 69%);filter:blur(24px)}
+#matterBoot .matter-fallback{position:absolute;inset:19%;border-radius:50%;background:
+ radial-gradient(circle at 35% 28%,#d1ffff73,#65def2a0 19%,#1f91b66e 40%,#072d509c 70%,#031522 100%);
+ box-shadow:inset 17px 14px 29px #c9ffff1c,inset -22px -25px 35px #020c18aa,0 0 40px #38bce93a;
+ animation:matterCalmBreathe 5s ease-in-out infinite}
+#matterBoot .matter-stage.matter-ready .matter-fallback{opacity:0}
+#matterBoot .matter-webgl{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
+#matterBoot h2{margin:0;color:#eaf9fc;letter-spacing:.27em;padding-left:.27em;font-weight:550;font-size:clamp(27px,3.6vw,39px)}
+#matterBoot .matter-status{min-height:20px;margin:13px 0 35px;color:#8ec4cf;letter-spacing:.18em;
+ font:500 10px ui-monospace,Consolas,monospace}
+#matterBoot .matter-footer{display:flex;align-items:center;justify-content:space-between;gap:30px;width:min(690px,95%);
+ border-top:1px solid #83d5e529;padding-top:17px;color:#729eaa;font:500 10px ui-monospace,Consolas,monospace;letter-spacing:.12em}
+#matterBoot .matter-footer button{background:#102b37;color:#c9f4fb;border:1px solid #78d6e16b;
+ border-radius:7px;padding:11px 16px;font:600 11px ui-monospace,Consolas,monospace;cursor:pointer}
+#matterBoot .matter-footer button:hover{background:#1b4958;border-color:#a5eef6}
+#matterBoot.matter-exit .matter-boot-content{animation:matterFade .5s ease-in forwards}
+#matterBoot.matter-speaking .matter-fallback{animation-duration:3s}
+@keyframes matterCalmBreathe{50%{transform:scale(1.035);filter:brightness(1.08)}}
+@keyframes matterFade{to{opacity:0}}
+@media(max-width:620px){#matterBoot .matter-stage{width:min(92vw,390px,46vh)}
+ #matterBoot .matter-footer{flex-direction:column;gap:14px}#matterBoot .matter-status{margin-bottom:20px}}
+@media(prefers-reduced-motion:reduce){#matterBoot .matter-fallback,#matterBoot.matter-exit .matter-boot-content{animation:none!important}}
+
 </style>
 </head>
 <body class="jarvis-ui">
@@ -1918,7 +1952,18 @@
   </dialog>
   <dialog id="folderDialog"><form id="folderForm" method="dialog"><div class="dialog-head"><h2 id="folderDialogTitle">Nuova cartella</h2><button class="icon-btn" type="button" data-close="folderDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body"><label for="folderName">Nome della cartella<input id="folderName" maxlength="90" required placeholder="Es. Lezioni e slide del modulo"></label></div><div class="dialog-foot"><span></span><div class="foot-right"><button class="btn" type="button" data-close="folderDialog">Annulla</button><button class="btn btn-primary" type="submit">Salva cartella</button></div></div></form></dialog>
   
-  <dialog id="welcomeDialog" aria-labelledby="welcomeTitle"><canvas id="welcomeFx" aria-hidden="true"></canvas><div class="welcome-shell"><header class="welcome-top"><div class="welcome-brand"><span class="welcome-brand-mark"><img src="logo-192.png" alt=""></span><span>APPUNTI &#xB7; INSUBRIA<small>IL TUO SPAZIO PERSONALE</small></span></div><span class="welcome-status"><i></i>SISTEMA ATTIVO &#xB7; <span id="welcomeSystemMsg">ARCHIVIO LOCALE</span><time id="welcomeClock">--:--</time></span><button class="welcome-skip" type="button" data-close="welcomeDialog">Vai all&#x2019;archivio</button></header><main class="welcome-main"><section class="welcome-copy"><div class="welcome-radar" aria-hidden="true"><span class="welcome-radar-core">SM</span></div><p class="welcome-eyebrow">Il tuo piano di oggi</p><h1 id="welcomeTitle">Buongiorno<span></span></h1><p id="welcomeDate" class="welcome-date"></p><p id="welcomeIntro" class="welcome-intro"></p></section><section class="welcome-panel" aria-label="Materie di oggi"><div class="welcome-panel-head"><h2 id="welcomePanelTitle">Le tue lezioni</h2><span id="welcomeBadge">OGGI</span></div><div id="welcomeLessons" class="welcome-lessons"></div><div id="welcomeCountdown"></div><details class="welcome-recent"><summary>Ultimi appunti <span>ACCESSO RAPIDO</span></summary><div id="welcomeRecent" class="welcome-recent-list"></div></details></section></main><footer class="welcome-footer"><span class="welcome-footer-note">Archivio locale &#xB7; i tuoi appunti restano sul dispositivo</span><div class="welcome-footer-actions"><button class="welcome-voice" type="button" id="speakBriefingBtn">Ascolta briefing</button><button class="welcome-command" type="button" id="voiceSettingsBtn">Voce</button><button class="welcome-command welcome-mute" type="button" id="voiceMuteBtn" aria-pressed="false" aria-label="Disattiva voce automatica">&#x1F50A; Voce attiva</button><button class="welcome-command" type="button" id="welcomeCommandBtn">Ctrl+K&nbsp; Comandi</button><button class="welcome-enter" type="button" id="enterArchiveBtn">Entra nei miei appunti</button></div></footer></div></dialog>
+  <dialog id="matterBoot" aria-label="Avvio JARVIS">
+  <div class="matter-boot-content">
+    <p class="matter-kicker"><span aria-hidden="true">●</span> JARVIS / CORE SYSTEM</p>
+    <div class="matter-stage" id="matterStage" aria-label="Nucleo di materia tridimensionale">
+      <div class="matter-fallback" aria-hidden="true"></div>
+    </div>
+    <h2>JARVIS</h2>
+    <p id="matterStatus" class="matter-status" aria-live="polite">SISTEMA IN AVVIO</p>
+    <div class="matter-footer"><span>SCIENZE MOTORIE · INSUBRIA</span><button type="button" id="matterSkip">ENTRA NELL'APP</button></div>
+  </div>
+</dialog>
+<dialog id="welcomeDialog" aria-labelledby="welcomeTitle"><canvas id="welcomeFx" aria-hidden="true"></canvas><div class="welcome-shell"><header class="welcome-top"><div class="welcome-brand"><span class="welcome-brand-mark"><img src="logo-192.png" alt=""></span><span>APPUNTI &#xB7; INSUBRIA<small>IL TUO SPAZIO PERSONALE</small></span></div><span class="welcome-status"><i></i>SISTEMA ATTIVO &#xB7; <span id="welcomeSystemMsg">ARCHIVIO LOCALE</span><time id="welcomeClock">--:--</time></span><button class="welcome-skip" type="button" data-close="welcomeDialog">Vai all&#x2019;archivio</button></header><main class="welcome-main"><section class="welcome-copy"><div class="welcome-radar" aria-hidden="true"><span class="welcome-radar-core">SM</span></div><p class="welcome-eyebrow">Il tuo piano di oggi</p><h1 id="welcomeTitle">Buongiorno<span></span></h1><p id="welcomeDate" class="welcome-date"></p><p id="welcomeIntro" class="welcome-intro"></p></section><section class="welcome-panel" aria-label="Materie di oggi"><div class="welcome-panel-head"><h2 id="welcomePanelTitle">Le tue lezioni</h2><span id="welcomeBadge">OGGI</span></div><div id="welcomeLessons" class="welcome-lessons"></div><div id="welcomeCountdown"></div><details class="welcome-recent"><summary>Ultimi appunti <span>ACCESSO RAPIDO</span></summary><div id="welcomeRecent" class="welcome-recent-list"></div></details></section></main><footer class="welcome-footer"><span class="welcome-footer-note">Archivio locale &#xB7; i tuoi appunti restano sul dispositivo</span><div class="welcome-footer-actions"><button class="welcome-voice" type="button" id="speakBriefingBtn">Ascolta briefing</button><button class="welcome-command" type="button" id="voiceSettingsBtn">Voce</button><button class="welcome-command welcome-mute" type="button" id="voiceMuteBtn" aria-pressed="false" aria-label="Disattiva voce automatica">&#x1F50A; Voce attiva</button><button class="welcome-command" type="button" id="welcomeCommandBtn">Ctrl+K&nbsp; Comandi</button><button class="welcome-enter" type="button" id="enterArchiveBtn">Entra nei miei appunti</button></div></footer></div></dialog>
   <dialog id="voiceSettingsDialog" class="voice-settings-dialog" aria-labelledby="voiceSettingsTitle"><div class="dialog-head"><div><h2 id="voiceSettingsTitle">Configurazione vocale</h2><p class="voice-settings-subtitle">Regola la voce del briefing</p></div><button class="icon-btn" type="button" data-close="voiceSettingsDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body voice-settings-body"><label for="speechVoiceSelect">Voce disponibile<select id="speechVoiceSelect"><option value="">Italiano predefinito del dispositivo</option></select><small class="voice-settings-hint">Le voci dipendono dal browser e dal dispositivo. Per un risultato pi&#xF9; naturale, prova una voce italiana &#x201C;Natural&#x201D; o &#x201C;Enhanced&#x201D;, se disponibile.</small></label><button class="btn voice-preset" id="jarvisVoicePresetBtn" type="button">Applica preset JARVIS &#xB7; Decisa</button><label class="voice-range-label" for="speechPitch"><span>Tono <output id="speechPitchValue">0,88</output></span><input id="speechPitch" type="range" min="0.65" max="1.25" step="0.05" value="0.88"></label><label class="voice-range-label" for="speechRate"><span>Velocit&#xE0; <output id="speechRateValue">0,92&#xD7;</output></span><input id="speechRate" type="range" min="0.75" max="1.15" step="0.05" value="0.92"></label><p class="voice-settings-hint">Il preset abbassa leggermente il tono e rallenta il ritmo. La naturalezza dipende soprattutto dalla voce italiana installata nel dispositivo; il browser non pu&#xF2; riprodurre esattamente la voce del film.</p></div><div class="dialog-foot voice-settings-foot"><button class="btn" id="previewVoiceBtn" type="button">Prova la voce</button><div class="foot-right"><button class="btn" type="button" data-close="voiceSettingsDialog">Chiudi</button><button class="btn btn-primary" id="saveVoiceSettingsBtn" type="button">Salva</button></div></div></dialog>
   <dialog id="docxPreviewDialog" aria-labelledby="docxPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="docxPreviewTitle">Anteprima documento</h2><p>Anteprima locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadDocxBtn" type="button">Scarica</button><button class="icon-btn" type="button" data-close="docxPreviewDialog" aria-label="Chiudi anteprima">&#xD7;</button></div></div><div class="docx-preview-scroll"><div id="docxPreviewError" class="docx-preview-error hidden" role="status"></div><article id="docxContent" class="docx-content"></article></div></dialog>
   <dialog id="videoPreviewDialog" aria-labelledby="videoPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="videoPreviewTitle">Video lezione</h2><p>Riproduzione locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadVideoBtn" type="button">Scarica</button><button class="icon-btn" type="button" data-close="videoPreviewDialog" aria-label="Chiudi video">&#xD7;</button></div></div><div class="video-stage"><div id="videoPreviewError" class="docx-preview-error hidden" role="status"></div><video id="videoPlayer" controls playsinline preload="metadata"></video></div></dialog>
@@ -3428,6 +3473,56 @@
   /* Schermata olografica azzerata: nessun avvio 3D o dialogo extra.
      Manteniamo il saluto della schermata di benvenuto già esistente. */
 
+  /* Avvio dal nuovo nucleo organico: nessuna esplosione, solo reazione delicata al parlato. */
+  function runMatterIntro(){
+    const dlg=$('matterBoot'),stage=$('matterStage'),status=$('matterStatus');
+    const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
+    let finished=false,core=null,speechStarted=false,waitTimer=0,watchdog=0,exitTimer=0;
+    const openWelcome=()=>{$('welcomeDialog').showModal();startWelcomeFx();};
+    const cleanup=()=>{
+      clearTimeout(waitTimer);clearTimeout(watchdog);clearTimeout(exitTimer);
+      core?.dispose();core=null;
+      dlg.classList.remove('matter-speaking','matter-exit');
+      if(dlg.open)dlg.close();
+    };
+    const finish=(immediate=false,fromVoice=false)=>{
+      if(finished)return;
+      finished=true;
+      if(!fromVoice&&window.speechSynthesis){try{window.speechSynthesis.cancel()}catch{}}
+      clearTimeout(waitTimer);clearTimeout(watchdog);
+      core?.setSpeaking(false);
+      if(immediate||reduced){cleanup();openWelcome();return}
+      dlg.classList.add('matter-exit');
+      exitTimer=setTimeout(()=>{cleanup();openWelcome()},520);
+    };
+    dlg.showModal();
+    $('matterSkip').onclick=()=>finish(true);
+    dlg.addEventListener('cancel',event=>{event.preventDefault();finish(true)},{once:true});
+    import('./matter-core.js').then(module=>{
+      if(finished||!dlg.open)return;
+      try{core=module.startMatterCore(stage,{reducedMotion:reduced});stage.classList.add('matter-ready');core.setSpeaking(speechStarted)}
+      catch(e){console.warn('JARVIS: nucleo CSS alternativo',e)}
+    }).catch(e=>console.warn('JARVIS: rendering 3D non disponibile',e));
+    if(!reduced&&!isVoiceMuted()&&window.speechSynthesis&&window.SpeechSynthesisUtterance){
+      try{
+        const synth=window.speechSynthesis,voice=speechUtterance(buildWelcomeSpeech());
+        voice.onstart=()=>{
+          if(finished)return;
+          speechStarted=true;status.textContent='JARVIS STA PARLANDO';dlg.classList.add('matter-speaking');
+          core?.setSpeaking(true);clearTimeout(waitTimer);
+          watchdog=setTimeout(()=>finish(false),30000);
+        };
+        voice.onend=()=>finish(false,true);
+        voice.onerror=()=>{if(!finished){status.textContent='SISTEMA PRONTO';waitTimer=setTimeout(()=>finish(false),900)}};
+        synth.cancel();synth.speak(voice);
+        waitTimer=setTimeout(()=>{if(!speechStarted&&!finished)finish(false)},7000);
+      }catch(e){waitTimer=setTimeout(()=>finish(false),4500)}
+    }else{
+      status.textContent='SISTEMA PRONTO';
+      waitTimer=setTimeout(()=>finish(false),reduced?350:3000);
+    }
+  }
+
   /* Finestra con l'orario (pagina orario.html letta dall'archivio) */
   function openOrario(){const frame=$('orarioFrame');frame.src='about:blank';$('orarioDialog').showModal();setTimeout(()=>{frame.src='orario.html';},30);}
   $('orarioBtn').addEventListener('click',openOrario);
@@ -3452,7 +3547,7 @@
   if(rientroAnatomia){
     const url=new URL(location.href); url.searchParams.delete('rientro'); history.replaceState(null, '', url.pathname + url.search + url.hash);
   }else{
-    $('welcomeDialog').showModal(); startWelcomeFx(); setTimeout(speakWelcomeGreeting,700);
+    runMatterIntro();
   }
 
   /* ===== Sfondo vivo (particelle), si spegne da solo sui PC lenti ===== */
