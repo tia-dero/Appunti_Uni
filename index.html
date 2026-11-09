@@ -2876,7 +2876,14 @@
     }).catch(()=>{});
   }
 
-  setSystemMessage(); render(); renderWelcome(); scheduleClock(); $('welcomeDialog').showModal(); startWelcomeFx(); if(bootNeeded())runBoot(); else setTimeout(speakWelcomeGreeting,700);
+  setSystemMessage(); render(); renderWelcome(); scheduleClock();
+  /* Rientro da Anatomia 3D: torna subito all'archivio materie, senza intro o dialogo di benvenuto. */
+  const rientroAnatomia = new URLSearchParams(location.search).get('rientro') === 'anatomia';
+  if(rientroAnatomia){
+    const url=new URL(location.href); url.searchParams.delete('rientro'); history.replaceState(null, '', url.pathname + url.search + url.hash);
+  }else{
+    $('welcomeDialog').showModal(); startWelcomeFx(); if(bootNeeded())runBoot(); else setTimeout(speakWelcomeGreeting,700);
+  }
 
   /* ===== Sfondo vivo (particelle), si spegne da solo sui PC lenti ===== */
   (function startLiveBackground(){
