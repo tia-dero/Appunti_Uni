@@ -65,28 +65,37 @@ export function startMatterCore(mount,{reducedMotion=false}={}){
         vec3 p=position;
         float radius=length(p);
         float phi=atan(p.z,p.x);
-        float drift=uTime*(.29+.43*aSeed.x);
-        // Particles orbit smoothly at distinct speeds, without flying apart.
-        phi+=drift+sin(uTime*.56+p.y*4.8+aSeed.y*6.283)*(.16+.13*uVoice);
+        // Layered helical currents: particles travel in separate gently twisting streams.
+        // Every position is recalculated from its original point, avoiding cumulative drift.
+        float band=sin(p.y*5.6+atan(p.z,p.x)*2.0+uTime*.9);
+        float spiralMix=smoothstep(.35,.91,band*.5+.5);
+        float streamSpeed=mix(.23,.69,aSeed.x)+.12*spiralMix;
+        float twist=sin(uTime*.44+p.y*5.8+aSeed.y*6.283)*(.10+.07*uVoice);
+        phi+=uTime*streamSpeed+twist;
         float rXZ=length(p.xz);
         p.x=rXZ*cos(phi);
         p.z=rXZ*sin(phi);
-        float wave=sin(phi*5.0+p.y*7.0+uTime*1.28+aSeed.z*6.283);
-        float ripple=sin(p.y*11.0-phi*3.0+uTime*1.85+aSeed.y*6.283);
-        float voiceShape=uVoice*(.115*wave+.075*ripple);
-        p+=normalize(p+vec3(.0001))*(.045*wave+.027*ripple+voiceShape+uPulse*.035*ripple);
-        p.y+=sin(phi*3.0+uTime*1.10+aSeed.x*7.0)*(.055+.060*uVoice);
-        // A second soft current adds visible circulation, but particles remain bound.
-        p.x+=sin(uTime*.83+p.y*4.0+aSeed.z*6.283)*(.032+.035*uVoice);
+        // Brighter, faster bands cross the surface as flowing energy, not rigid rings.
+        float helix=sin(phi*3.0+p.y*9.0-uTime*2.4+aSeed.z*2.3);
+        float helixMask=smoothstep(.69,.97,.5+.5*helix);
+        float wave=sin(phi*5.0+p.y*7.0+uTime*1.55+aSeed.z*6.283);
+        float ripple=sin(p.y*11.0-phi*3.0+uTime*2.05+aSeed.y*6.283);
+        // The voice only raises surface ripples and brightness; the cloud never bursts.
+        float voiceShape=uVoice*(.125*wave+.085*ripple);
+        float radial=.028*wave+.025*ripple+.045*helixMask+voiceShape+uPulse*.030*ripple;
+        p+=normalize(p+vec3(.0001))*radial;
+        p.y+=sin(phi*3.0+uTime*1.20+aSeed.x*7.0)*(.052+.075*uVoice);
+        p.x+=sin(uTime*1.0+p.y*4.0+aSeed.z*6.283)*(.031+.045*uVoice);
         vec4 view=modelViewMatrix*vec4(p,1.0);
         gl_Position=projectionMatrix*view;
         float distanceScale=6.3/max(2.0,-view.z);
-        float twinkle=.78+.22*sin(uTime*1.2+aSeed.y*16.0);
+        float twinkle=.77+.23*sin(uTime*1.55+aSeed.y*16.0);
         float size=mix(1.0,2.25,pow(aSeed.x,4.0))*uDensity*distanceScale;
-        gl_PointSize=clamp(size*(1.0+.23*uVoice+.12*uPulse)*twinkle,1.0,5.0);
+        gl_PointSize=clamp(size*(1.0+.30*uVoice+.12*uPulse+.18*helixMask)*twinkle,1.0,5.0);
         float core=1.0-smoothstep(.12,1.55,radius);
-        vTint=mix(vec3(.05,.48,.78),vec3(.70,.96,1.0),core*.50+aSeed.y*.30);
-        vAlpha=(.28+.52*core)*(.72+.28*aSeed.z)*(1.0+.26*uVoice);
+        float ribbonLight=.31*helixMask*(.55+.45*spiralMix);
+        vTint=mix(vec3(.05,.48,.78),vec3(.70,.96,1.0),clamp(core*.50+aSeed.y*.23+ribbonLight,0.0,1.0));
+        vAlpha=(.28+.52*core+.16*ribbonLight)*(.72+.28*aSeed.z)*(1.0+.35*uVoice);
       }`,
     fragmentShader:`
       precision mediump float;
@@ -139,8 +148,9 @@ export function startMatterCore(mount,{reducedMotion=false}={}){
     frame=requestAnimationFrame(animate);
     const delta=Math.min(clock.getDelta(),.06);
     elapsed+=delta;
-    const target=speaking?.40+.28*(.5+.5*Math.sin(elapsed*6.5))+.08*Math.sin(elapsed*10.2):0;
-    voiceLevel+=(Math.max(0,target)-voiceLevel)*Math.min(1,delta*5.5);
+    // The browser speech API doesn't expose voice amplitude: soft synthetic cadence.
+    const target=speaking?.48+.27*(.5+.5*Math.sin(elapsed*6.7))+.07*Math.sin(elapsed*11.0):0;
+    voiceLevel+=(Math.max(0,target)-voiceLevel)*Math.min(1,delta*(speaking?7.0:4.0));
     pulse=Math.max(0,pulse-delta*.65);
     uniforms.uTime.value=elapsed;
     uniforms.uVoice.value=voiceLevel;
@@ -151,8 +161,8 @@ export function startMatterCore(mount,{reducedMotion=false}={}){
       group.rotation.z=Math.sin(elapsed*.23)*.095;
       group.position.y=Math.sin(elapsed*.90)*.045;
     }
-    light.scale.setScalar(2.1+.18*voiceLevel);
-    glowMaterial.opacity=.30+.18*voiceLevel;
+    light.scale.setScalar(2.1+.28*voiceLevel);
+    glowMaterial.opacity=.30+.26*voiceLevel;
     if(!document.hidden)renderer.render(scene,camera);
   };
   if(!reducedMotion)animate();
