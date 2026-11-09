@@ -84,11 +84,11 @@ export function startBootReactor(stage,{reducedMotion=false}={}){
   };
   resize();
   resizeObserver=new ResizeObserver(resize);resizeObserver.observe(stage);
-  const clock=new THREE.Clock();
+  const clock=new THREE.Clock();let elapsed=0;
   const animate=()=>{
     if(dead)return;
     raf=requestAnimationFrame(animate);
-    const t=clock.getElapsedTime(),dt=Math.min(clock.getDelta(),.06);
+    const dt=Math.min(clock.getDelta(),.06);elapsed+=dt;const t=elapsed;
     if(boost>0)boost=Math.max(0,boost-dt);
     const velocity=reducedMotion?0:1+(boost>0?2.25:0);
     if(!reducedMotion){
