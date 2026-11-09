@@ -1902,6 +1902,56 @@
  #matterBoot .matter-footer{flex-direction:column;gap:14px}#matterBoot .matter-status{margin-bottom:20px}}
 @media(prefers-reduced-motion:reduce){#matterBoot .matter-fallback,#matterBoot.matter-exit .matter-boot-content{animation:none!important}}
 
+
+/* Larger particle core with unobtrusive orbital instruments — no explosive animation. */
+#matterBoot .matter-scene{display:grid;grid-template-columns:minmax(125px,1fr) minmax(0,560px) minmax(125px,1fr);
+ align-items:center;width:min(1080px,98%);gap:clamp(9px,2vw,26px);position:relative}
+#matterBoot .matter-stage{width:min(560px,60vh,100%);height:auto;aspect-ratio:1;margin-inline:auto}
+#matterBoot .matter-aura{position:absolute;inset:4%;border-radius:50%;
+ background:radial-gradient(circle,transparent 45%,rgba(50,165,200,.05) 56%,transparent 71%);
+ box-shadow:0 0 95px #33b8ec13;pointer-events:none}
+#matterBoot .matter-orbit{position:absolute;inset:7%;border-radius:50%;pointer-events:none;
+ border:1px solid rgba(82,194,222,.19);transform-style:preserve-3d}
+#matterBoot .matter-orbit-a{inset:5%;border-top:1px solid rgba(101,222,243,.62);
+ border-bottom:1px solid rgba(101,222,243,.07);transform:rotate(-28deg) rotateX(69deg);
+ animation:matterOrbitA 17s linear infinite}
+#matterBoot .matter-orbit-b{inset:10%;border-left:1px solid rgba(110,220,244,.42);
+ border-right:1px solid rgba(110,220,244,.11);transform:rotate(52deg) rotateY(66deg);
+ animation:matterOrbitB 25s linear infinite}
+#matterBoot .matter-orbit-c{inset:1%;border:1px dashed rgba(101,196,218,.20);
+ animation:matterOrbitC 100s linear infinite}
+#matterBoot .matter-scan-mark{position:absolute;inset:-3%;border-radius:50%;
+ background:repeating-conic-gradient(from -9deg,rgba(118,217,236,.20) 0deg .55deg,transparent .75deg 15deg);
+ -webkit-mask:radial-gradient(circle,transparent 0 92%,#000 92.4% 93%,transparent 93.5%);
+ mask:radial-gradient(circle,transparent 0 92%,#000 92.4% 93%,transparent 93.5%);
+ pointer-events:none;opacity:.8}
+#matterBoot .matter-side{display:flex;flex-direction:column;gap:9px;max-width:180px;
+ color:#91c3cf;text-align:left;font:500 10px ui-monospace,Consolas,monospace;letter-spacing:.10em}
+#matterBoot .matter-side-right{justify-self:end;text-align:right;align-items:flex-end}
+#matterBoot .matter-side-left{justify-self:start;text-align:left;align-items:flex-start}
+#matterBoot .matter-side small{color:#648e9e;letter-spacing:.17em;font-size:9px}
+#matterBoot .matter-side strong{color:#b9eef5;font-size:13px;font-weight:600;letter-spacing:.15em}
+#matterBoot .matter-side span{color:#77a6b5;font-size:9px;letter-spacing:.14em}
+#matterBoot .matter-side i{display:block;width:min(130px,100%);height:1px;
+ background:linear-gradient(90deg,#4fbdd59a,transparent)}
+#matterBoot .matter-side-right i{background:linear-gradient(270deg,#4fbdd59a,transparent)}
+#matterBoot.matter-speaking .matter-orbit-a{border-top-color:#9cf4ff}
+#matterBoot .matter-stage.matter-ready .matter-fallback{opacity:0;pointer-events:none}
+@keyframes matterOrbitA{from{transform:rotate(-28deg) rotateX(69deg)}to{transform:rotate(332deg) rotateX(69deg)}}
+@keyframes matterOrbitB{from{transform:rotate(52deg) rotateY(66deg)}to{transform:rotate(-308deg) rotateY(66deg)}}
+@keyframes matterOrbitC{to{transform:rotate(360deg)}}
+@media(max-width:780px){
+ #matterBoot .matter-scene{grid-template-columns:1fr;width:100%;gap:0}
+ #matterBoot .matter-stage{grid-row:1;width:min(92vw,520px,55vh)}
+ #matterBoot .matter-side{display:none}
+}
+@media(max-height:720px) and (min-width:781px){
+ #matterBoot .matter-stage{width:min(480px,49vh,100%)}
+}
+@media(prefers-reduced-motion:reduce){
+ #matterBoot .matter-orbit{animation:none!important}
+}
+
 </style>
 </head>
 <body class="jarvis-ui">
@@ -1955,8 +2005,17 @@
   <dialog id="matterBoot" aria-label="Avvio JARVIS">
   <div class="matter-boot-content">
     <p class="matter-kicker"><span aria-hidden="true">●</span> JARVIS / CORE SYSTEM</p>
-    <div class="matter-stage" id="matterStage" aria-label="Nucleo di materia tridimensionale">
-      <div class="matter-fallback" aria-hidden="true"></div>
+    <div class="matter-scene">
+      <div class="matter-side matter-side-left" aria-hidden="true"><small>PARTICLE FIELD</small><strong>CORE / 01</strong><i></i><span>MATTER STREAM</span></div>
+      <div class="matter-stage" id="matterStage" aria-label="Nucleo di materia tridimensionale">
+        <div class="matter-aura" aria-hidden="true"></div>
+        <div class="matter-orbit matter-orbit-a" aria-hidden="true"></div>
+        <div class="matter-orbit matter-orbit-b" aria-hidden="true"></div>
+        <div class="matter-orbit matter-orbit-c" aria-hidden="true"></div>
+        <div class="matter-scan-mark" aria-hidden="true"></div>
+        <div class="matter-fallback" aria-hidden="true"></div>
+      </div>
+      <div class="matter-side matter-side-right" aria-hidden="true"><small>JARVIS SYSTEM</small><strong>AI / ONLINE</strong><i></i><span>VOICE REACTIVE</span></div>
     </div>
     <h2>JARVIS</h2>
     <p id="matterStatus" class="matter-status" aria-live="polite">SISTEMA IN AVVIO</p>
