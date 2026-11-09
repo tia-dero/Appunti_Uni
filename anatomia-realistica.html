@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#06131a"><title>Anatomia 3D Realistica | JARVIS HUD</title>
+<style>
+:root{color-scheme:dark;--bg:#051018;--cyan:#5ceafa;--line:#285262;--fg:#e6f6fb;--muted:#92b7c0}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 45% 0,#0c3545,#051018 65%);color:var(--fg);font:14px/1.5 system-ui,Segoe UI,sans-serif}
+button,input,select{font:inherit}button{cursor:pointer;border:1px solid #396779;border-radius:8px;padding:9px 12px;background:#102d39;color:#bfeefa}
+button:hover,button.active{background:#164556;border-color:#63e8fc;color:white}button:focus-visible,input:focus-visible{outline:2px solid var(--cyan)}
+header{display:flex;align-items:center;gap:15px;padding:14px 22px;border-bottom:1px solid var(--line);background:#071923}
+header strong{display:block;color:var(--cyan);letter-spacing:.16em;font-size:11px}header b{font-size:20px;letter-spacing:-.04em}
+header a{border:1px solid var(--line);padding:8px 10px;border-radius:7px;color:var(--cyan);text-decoration:none}
+header .tag{margin-left:auto;color:#72bcbd;font-size:11px;letter-spacing:.12em}
+main{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:13px;padding:15px;max-width:1780px;margin:auto}
+#viewport{height:calc(100dvh - 107px);min-height:500px;position:relative;border:1px solid #286071;border-radius:15px;overflow:hidden;background:radial-gradient(circle at 52% 43%,#124254 0,#071923 65%)}
+#viewport canvas{display:block;width:100%;height:100%;touch-action:none}
+#hud{position:absolute;left:16px;top:13px;pointer-events:none;font-size:11px;letter-spacing:.15em;color:var(--cyan)}
+#load{position:absolute;inset:0;display:grid;place-content:center;text-align:center;background:#06131be8;z-index:2;padding:25px}
+#load strong{font-size:19px;color:var(--cyan);letter-spacing:.12em}
+#load p{max-width:420px;color:#a0bfca;font-size:13px}
+#toolbar{position:absolute;left:12px;right:12px;bottom:12px;display:flex;flex-wrap:wrap;gap:6px;padding:8px;border:1px solid #356274;border-radius:10px;background:#061923dd;backdrop-filter:blur(10px)}
+aside{display:flex;flex-direction:column;gap:12px;max-height:calc(100dvh - 107px);overflow:auto}
+.panel{border:1px solid var(--line);border-radius:12px;background:#0c222ce6;padding:15px}
+.panel h2{font-size:12px;letter-spacing:.13em;color:var(--cyan);margin:0 0 12px}
+.row{display:flex;flex-wrap:wrap;gap:6px}.row button{flex:1;font-size:12px}
+label{color:#adc9d0;font-size:12px;display:block;margin:12px 0 5px}
+input[type=search]{background:#051923;border:1px solid #376578;border-radius:8px;color:white;padding:10px;width:100%}
+input[type=range]{width:100%;accent-color:var(--cyan)}
+#results{max-height:260px;overflow:auto;margin-top:8px;display:grid;gap:4px}
+.result{text-align:left;font-size:12px;padding:8px 10px}
+#details h3{margin:0 0 6px;font-size:20px;line-height:1.2}#details p{font-size:12px;color:var(--muted);margin:5px 0 10px}
+#details dl{font-size:12px;margin:0}#details dt{color:var(--cyan);font-weight:700;margin-top:7px}#details dd{margin:2px 0;color:#b5d4dc}
+#details .row{margin-top:13px}.small{font-size:11px;color:#85a7b1}
+#attribution{margin:12px 16px 22px;font-size:11px;color:#7da6b1}#attribution a{color:#8bdfeb}
+@media(max-width:860px){main{grid-template-columns:1fr}#viewport{height:69vh;min-height:470px}aside{max-height:none}header .tag{display:none}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/"}}</script>
+</head><body>
+<header><a href="index.html">← JARVIS</a><div><strong>BIOMECHANICAL DATABASE</strong><b>ANATOMIA 3D • REALISTICA</b></div><span class="tag">634 MESH • SELECTABLE ANATOMY</span></header>
+<main><section id="viewport" aria-label="Atlante anatomico 3D"><div id="hud">◈ JARVIS ANATOMY ENGINE<br><span id="counter">CARICAMENTO IN CORSO</span></div><div id="load"><strong>INITIALIZING ANATOMY</strong><p id="loading">Caricamento modello anatomico dettagliato…</p></div><div id="toolbar"><button id="front">Anteriore</button><button id="rear">Posteriore</button><button id="reset">Reset</button><button id="zoomIn">＋</button><button id="zoomOut">－</button><button id="show">Mostra tutti</button></div></section>
+<aside><section class="panel"><h2>STRATI ANATOMICI</h2><div class="row"><button data-mode="both" class="active">Tutti</button><button data-mode="muscles">Muscoli</button><button data-mode="skeleton">Ossa</button></div><label for="depth">Visibilità dei muscoli superficiali: <output id="depthLabel">100%</output></label><input id="depth" type="range" min="0" max="100" value="100"><p class="small">A 0% osservi i muscoli profondi e, se attivato, lo scheletro.</p></section>
+<section class="panel"><h2>STRUTTURA SELEZIONATA</h2><div id="details"><p>Seleziona un muscolo o un osso cliccando sul modello oppure cerca una struttura nell'elenco.</p></div></section>
+<section class="panel"><h2>RICERCA ANATOMICA</h2><input id="search" type="search" placeholder="Cerca: deltoid, biceps, femur…" aria-label="Cerca una struttura"><div id="results"></div></section>
+<section class="panel"><h2>CONTROLLI</h2><p class="small">Trascina per ruotare · Rotella per zoom · Clic per selezionare · Clic destro e trascina per spostare. Il modello è didattico, non clinico.</p><a class="small" href="anatomia.html">Torna al precedente modello procedurale</a></section></aside></main>
+<p id="attribution">Modello Écorché, <a href="https://github.com/Charleeh/ecorche" target="_blank" rel="noopener">CC BY-SA 4.0</a>, derivato da BodyParts3D e Z-Anatomy di Gauthier Kervyn. Geometrie anatomiche esterne caricate da GitHub all'avvio; il visualizzatore resta integrato in JARVIS. Three.js è distribuito sotto licenza MIT.</p>
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+const $=id=>document.getElementById(id), viewport=$('viewport');
+const scene=new THREE.Scene(), camera=new THREE.PerspectiveCamera(38,1,.01,50);
+camera.position.set(0,1,3.8);
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.outputColorSpace=THREE.SRGBColorSpace;
+viewport.prepend(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xe9fcff,0x142b42,2.0));
+const light=new THREE.DirectionalLight(0xffffff,2.7);light.position.set(2,4,5);scene.add(light);
+const fill=new THREE.DirectionalLight(0x72dfff,.9);fill.position.set(-3,2,-3);scene.add(fill);
+const controls=new OrbitControls(camera,renderer.domElement);
+controls.target.set(0,.95,0);controls.enableDamping=true;controls.minDistance=.65;controls.maxDistance=9;controls.update();
+const picker=new THREE.Raycaster(),pointer=new THREE.Vector2();
+const objects=[], originalMaterials=new Map(), accent=new THREE.MeshStandardMaterial({color:0x56f5ff,emissive:0x107688,emissiveIntensity:.35,metalness:.16,roughness:.55});
+let root=null,selected=null,mode='both',outer=100, dragging=false,startX=0,startY=0, filtered=[], selectedName='';
+const translations={'deltoid':'Deltoide','biceps brachii':'Bicipite brachiale','triceps brachii':'Tricipite brachiale','pectoralis major':'Grande pettorale','pectoralis minor':'Piccolo pettorale','trapezius':'Trapezio','latissimus dorsi':'Grande dorsale','rectus abdominis':'Retto dell’addome','gluteus maximus':'Grande gluteo','gluteus medius':'Medio gluteo','gastrocnemius':'Gastrocnemio','soleus':'Soleo','sartorius':'Sartorio','rectus femoris':'Retto femorale','vastus lateralis':'Vasto laterale','vastus medialis':'Vasto mediale','tibialis anterior':'Tibiale anteriore','biceps femoris':'Bicipite femorale','supraspinatus':'Sovraspinato','infraspinatus':'Sottospinato','subscapularis':'Sottoscapolare','femur':'Femore','tibia':'Tibia','fibula':'Perone','humerus':'Omero','radius':'Radio','ulna':'Ulna','scapula':'Scapola','clavicle':'Clavicola','sternum':'Sterno'};
+function label(o){const n=o.userData.name||o.name;let raw=n.replace(/_/g,' ').replace(/\s*\(\d+\)$/,'');const side=/^left /i.test(raw)?'sinistro':/^right /i.test(raw)?'destro':'';raw=raw.replace(/^(left|right) /i,'');return (translations[raw.toLowerCase()]||raw)+(side?' • '+side:'')}
+function layer(o){return String(o.userData.layer||'').toLowerCase()}
+function updateVisibility(){for(const o of objects){const l=layer(o),isBone=l==='skeleton',isSuper=l.includes('superficial');o.visible=(mode==='both'||mode==='skeleton'&&isBone||mode==='muscles'&&!isBone)&&(!isSuper||outer>0);if(o.material?.transparent&&o!==selected){o.material.opacity=isSuper?Math.max(.04,outer/100):1}}$('counter').textContent=objects.filter(x=>x.visible).length+' STRUTTURE VISIBILI'}
+function select(o){if(selected&&originalMaterials.has(selected)){selected.material=originalMaterials.get(selected)}selected=o;selectedName=o?label(o):'';if(!o){$('details').innerHTML='<p>Nessuna struttura selezionata.</p>';return}originalMaterials.set(o,o.material);o.material=accent;const d=$('details');d.replaceChildren();
+const h=document.createElement('h3');h.textContent=selectedName;d.append(h);
+const p=document.createElement('p');p.textContent='Nome originale: '+(o.userData.name||o.name);d.append(p);
+const dl=document.createElement('dl');
+for(const [k,v] of [['Livello',layer(o)||'Non specificato'],['Lato',o.userData.side||'—'],['Codice FMA',o.userData.fma||'—'],['Origine del modello',o.userData.source||'Écorché']]){const dt=document.createElement('dt');dt.textContent=k;const dd=document.createElement('dd');dd.textContent=v;dl.append(dt,dd)}d.append(dl);
+const actions=document.createElement('div');actions.className='row';
+const iso=document.createElement('button');iso.textContent='Isola';iso.onclick=()=>{objects.forEach(x=>x.visible=x===o)};
+const hide=document.createElement('button');hide.textContent='Nascondi';hide.onclick=()=>{o.visible=false;select(null)};
+const focus=document.createElement('button');focus.textContent='Inquadra';focus.onclick=()=>{const b=new THREE.Box3().setFromObject(o);if(b.isEmpty())return;const c=b.getCenter(new THREE.Vector3()),size=b.getSize(new THREE.Vector3()).length();controls.target.copy(c);camera.position.copy(c.clone().add(new THREE.Vector3(0,size*.4,Math.max(.13,size*1.8))));controls.update()};
+actions.append(iso,hide,focus);d.append(actions);for(const b of $('results').children)b.classList.toggle('active',b.dataset.name===selectedName)}
+function search(){const q=$('search').value.trim().toLowerCase();filtered=objects.filter(o=>!q||label(o).toLowerCase().includes(q)||(o.userData.name||'').toLowerCase().includes(q)).slice(0,100);$('results').replaceChildren();for(const o of filtered){const b=document.createElement('button');b.className='result';b.dataset.name=label(o);b.textContent=label(o);b.onclick=()=>select(o);$('results').append(b)}}
+function fit(){const w=viewport.clientWidth,h=viewport.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)}
+new ResizeObserver(fit).observe(viewport);
+$('front').onclick=()=>{camera.position.set(0,1.05,3.7);controls.target.set(0,.95,0);controls.update()};
+$('rear').onclick=()=>{camera.position.set(0,1.05,-3.7);controls.target.set(0,.95,0);controls.update()};
+$('reset').onclick=()=>{select(null);controls.target.set(0,.95,0);camera.position.set(0,1,3.8);controls.update();updateVisibility()};
+$('zoomIn').onclick=()=>{camera.position.lerp(controls.target,.18);controls.update()};
+$('zoomOut').onclick=()=>{camera.position.sub(controls.target).multiplyScalar(1.2).add(controls.target);controls.update()};
+$('show').onclick=()=>{select(null);updateVisibility()};
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('active',x===b));select(null);updateVisibility()});
+$('depth').oninput=e=>{outer=Number(e.target.value);$('depthLabel').textContent=outer+'%';updateVisibility()};
+$('search').oninput=search;
+renderer.domElement.addEventListener('pointerdown',e=>{startX=e.clientX;startY=e.clientY;dragging=false});
+renderer.domElement.addEventListener('pointerup',e=>{if(Math.hypot(e.clientX-startX,e.clientY-startY)>5)return;const rect=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1);picker.setFromCamera(pointer,camera);const hits=picker.intersectObjects(objects.filter(o=>o.visible),false);if(hits.length)select(hits[0].object)});
+const loader=new GLTFLoader();
+loader.load('https://raw.githubusercontent.com/Charleeh/ecorche/main/model/ecorche.glb',gltf=>{root=gltf.scene;scene.add(root);root.traverse(o=>{if(!o.isMesh)return;objects.push(o);if(o.material){o.material=o.material.clone();o.material.side=THREE.DoubleSide;o.material.transparent=true;o.material.depthWrite=true;originalMaterials.set(o,o.material)}});$('load').remove();search();updateVisibility()},xhr=>{if(xhr.total)$('loading').textContent='Download modello: '+Math.round(xhr.loaded/xhr.total*100)+'%'},err=>{$('loading').textContent='Impossibile caricare il modello. Verifica la connessione e ricarica la pagina. '+String(err.message||'')});
+function render(){requestAnimationFrame(render);controls.update();renderer.render(scene,camera)}fit();render();
+</script></body></html>
