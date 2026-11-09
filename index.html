@@ -1952,6 +1952,61 @@
  #matterBoot .matter-orbit{animation:none!important}
 }
 
+
+/* Particle core XL: more visual presence with a refined identity area below. */
+#matterBoot .matter-boot-content{padding:clamp(12px,1.8vh,22px) 18px;justify-content:center}
+#matterBoot .matter-kicker{margin:0 0 2px;font-size:10px}
+#matterBoot .matter-scene{
+ grid-template-columns:minmax(95px,1fr) minmax(0,660px) minmax(95px,1fr);
+ width:min(1270px,99%);gap:clamp(4px,1vw,18px);
+}
+#matterBoot .matter-stage{width:min(660px,67vh,100%);max-width:100%;height:auto}
+#matterBoot .matter-fallback{inset:19%}
+#matterBoot .matter-identity{display:flex;flex-direction:column;align-items:center;gap:8px;width:min(600px,94%);margin-top:-6px}
+#matterBoot .matter-identity-rule{width:min(490px,90%);display:flex;align-items:center;justify-content:center;gap:12px;
+ color:#6699a8;font:600 9px ui-monospace,Consolas,monospace;letter-spacing:.24em}
+#matterBoot .matter-identity-rule i{display:block;flex:1;height:1px;
+ background:linear-gradient(90deg,transparent,#5ac6dc66)}
+#matterBoot .matter-identity-rule i:last-child{background:linear-gradient(90deg,#5ac6dc66,transparent)}
+#matterBoot .matter-identity h2{margin:0!important;padding-left:.29em;font-weight:560;
+ color:#e5faff;font-size:clamp(34px,4.3vw,55px);line-height:1.13;letter-spacing:.29em;
+ text-shadow:0 0 25px rgba(92,213,245,.24)}
+#matterBoot .matter-identity-sub{margin:0;font:500 10px ui-monospace,Consolas,monospace;
+ letter-spacing:.21em;color:#79aeba}
+#matterBoot .matter-identity-sub span{color:#63c8dc;margin:0 6px}
+#matterBoot .matter-status-track{display:flex;align-items:center;justify-content:center;gap:11px;
+ min-width:min(340px,100%);margin:7px 0 10px;padding:10px 16px;border:1px solid #67bcda36;
+ border-radius:4px;background:linear-gradient(90deg,transparent,#0c2e3f99,transparent)}
+#matterBoot .matter-status-track .matter-status{margin:0!important;min-height:0!important;
+ color:#b1e0e8;font:600 10px ui-monospace,Consolas,monospace;letter-spacing:.15em}
+#matterBoot .matter-status-led{width:7px;height:7px;border-radius:50%;background:#6cd6c2;
+ box-shadow:0 0 10px #69ead58c;flex:none}
+#matterBoot .matter-status-bars{display:flex;align-items:center;gap:3px;height:16px;margin-left:7px}
+#matterBoot .matter-status-bars i{display:block;width:2px;height:5px;border-radius:3px;background:#6fcfe4;opacity:.56}
+#matterBoot .matter-status-bars i:nth-child(2){height:11px}
+#matterBoot .matter-status-bars i:nth-child(3){height:8px}
+#matterBoot .matter-status-bars i:nth-child(4){height:14px}
+#matterBoot .matter-status-bars i:nth-child(5){height:6px}
+#matterBoot.matter-speaking .matter-status-bars i{animation:matterVoiceBars .65s ease-in-out infinite alternate}
+#matterBoot.matter-speaking .matter-status-bars i:nth-child(2n){animation-delay:-.35s}
+@keyframes matterVoiceBars{from{transform:scaleY(.55);opacity:.55}to{transform:scaleY(1.3);opacity:1}}
+#matterBoot .matter-footer{margin-top:10px;padding-top:12px}
+@media(max-width:780px){
+ #matterBoot .matter-scene{grid-template-columns:1fr;width:100%}
+ #matterBoot .matter-stage{width:min(98vw,630px,61vh)}
+ #matterBoot .matter-identity{margin-top:-2px;gap:7px}
+ #matterBoot .matter-identity h2{font-size:clamp(29px,7vw,43px)}
+ #matterBoot .matter-identity-rule{letter-spacing:.10em;font-size:8px}
+ #matterBoot .matter-identity-sub{font-size:8px;letter-spacing:.08em}
+}
+@media(max-height:720px) and (min-width:781px){
+ #matterBoot .matter-stage{width:min(575px,57vh)}
+ #matterBoot .matter-identity{gap:4px}
+ #matterBoot .matter-identity h2{font-size:34px}
+ #matterBoot .matter-status-track{margin:3px 0}
+}
+@media(prefers-reduced-motion:reduce){#matterBoot .matter-status-bars i{animation:none!important}}
+
 </style>
 </head>
 <body class="jarvis-ui">
@@ -2017,8 +2072,16 @@
       </div>
       <div class="matter-side matter-side-right" aria-hidden="true"><small>JARVIS SYSTEM</small><strong>AI / ONLINE</strong><i></i><span>VOICE REACTIVE</span></div>
     </div>
-    <h2>JARVIS</h2>
-    <p id="matterStatus" class="matter-status" aria-live="polite">SISTEMA IN AVVIO</p>
+    <div class="matter-identity">
+      <div class="matter-identity-rule" aria-hidden="true"><i></i><span>PERSONAL INTELLIGENCE SYSTEM</span><i></i></div>
+      <h2>JARVIS</h2>
+      <p class="matter-identity-sub">INTERFACCIA NEURALE <span aria-hidden="true">·</span> NUCLEO PARTICELLARE</p>
+      <div class="matter-status-track" role="status" aria-live="polite">
+        <span class="matter-status-led" aria-hidden="true"></span>
+        <span id="matterStatus" class="matter-status">SISTEMA IN AVVIO</span>
+        <span class="matter-status-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+      </div>
+    </div>
     <div class="matter-footer"><span>SCIENZE MOTORIE · INSUBRIA</span><button type="button" id="matterSkip">ENTRA NELL'APP</button></div>
   </div>
 </dialog>
