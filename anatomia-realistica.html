@@ -136,7 +136,7 @@ function cercaStruttura(raw){
  const phrase=normalizzaRicerca(raw), wantedSide=/\b(destro|destra|right)\b/.test(phrase)?'right':/\b(sinistro|sinistra|left)\b/.test(phrase)?'left':null;
  const query=nomeRicerca(raw).replace(/\b(destro|destra|sinistro|sinistra|right|left)\b/g,' ').trim();
  if(!query)return null;
- const alias={quadricipite:'retto femorale',polpaccio:'gastrocnemio',bicipite:'bicipite brachiale',scapola:'scapola',omero:'omero',femore:'femore'};
+ const alias={quadricipite:'retto femorale',polpaccio:'gastrocnemio',bicipite:'bicipite brachiale',scapola:'scapola',omero:'omero',femore:'femore',cuore:'ventricolo sinistro',polmoni:'lobo superiore del polmone',rene:'rene',reni:'rene',arterie:'arteria',vene:'vena'};
  const candidates=[query,alias[query]].filter(Boolean);
  let best=null, scoreMax=0;
  for(const o of objects){
@@ -172,15 +172,15 @@ function inquadraStruttura(o){
  direction.normalize();
  animaCamera(center.clone().add(direction.multiplyScalar(dist)),center);
 }
-function apriAssistente(isola=false,command=null){
+async function apriAssistente(isola=false,command=null){
  if(!anatomiaCaricata){statusAnatomia('Il modello 3D è ancora in caricamento.');return}
  const text=(command??$('jarvisQuery').value).trim();if(!text){statusAnatomia('Scrivi o pronuncia il nome di un muscolo o di un osso.');return}
- const selectedObject=cercaStruttura(text);
+ const selectedObject=await cercaModelliAggiuntivi(text);
  if(!selectedObject){statusAnatomia('Non trovo «'+text+'». Prova un nome più specifico.');return}
  $('jarvisQuery').value=label(selectedObject);
  // Evidenzia = struttura nel corpo. Isola = solo struttura selezionata.
  if(isola){objects.forEach(o=>o.visible=o===selectedObject)}
- else{mode='both';document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode==='both'));
+ else{mode='all';document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode==='all'));
    outer=100;$('depth').value=100;$('depthLabel').textContent='100%';updateVisibility()}
  select(selectedObject);inquadraStruttura(selectedObject);
  statusAnatomia((isola?'Struttura isolata: ':'Struttura evidenziata: ')+label(selectedObject)+'. Puoi trascinare per ruotare liberamente.');
@@ -280,6 +280,17 @@ function loadAdditional(system,activate=true){
 }
 $('loadOrgans').onclick=()=>loadAdditional('visceral').catch(()=>{});
 $('loadVessels').onclick=()=>loadAdditional('cardiovascular').catch(()=>{});
+
+async function cercaModelliAggiuntivi(input){
+ const q=normalizzaRicerca(input);
+ const organs=/cuore|polmon|fegato|stomaco|ren[ei]|pancreas|vescica|intestin|colon|duodeno|esofago|milza|trachea|tiroide|cistifellea/;
+ const blood=/arteria|arterie|vena|vene|aorta|vas[oi]|cardiovascolar|circolator|carotide/;
+ try{
+  if(organs.test(q)&&!extraModels.visceral)await loadAdditional('visceral',false);
+  if((blood.test(q)||/cuore/.test(q))&&!extraModels.cardiovascular)await loadAdditional('cardiovascular',false);
+ }catch(e){statusAnatomia('Impossibile caricare uno dei modelli: '+String(e.message||e))}
+ return cercaStruttura(input);
+}
 function fit(){const w=viewport.clientWidth,h=viewport.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)}
 new ResizeObserver(fit).observe(viewport);
 $('front').onclick=()=>{camera.position.set(0,1.05,3.7);controls.target.set(0,.95,0);controls.update()};
@@ -288,7 +299,7 @@ $('reset').onclick=()=>{select(null);controls.target.set(0,.95,0);camera.positio
 $('zoomIn').onclick=()=>{camera.position.lerp(controls.target,.18);controls.update()};
 $('zoomOut').onclick=()=>{camera.position.sub(controls.target).multiplyScalar(1.2).add(controls.target);controls.update()};
 $('show').onclick=()=>{select(null);updateVisibility()};
-document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('active',x===b));select(null);updateVisibility()});
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=async()=>{if(['organs','arteries','veins','circulatory','all'].includes(b.dataset.mode)){if(['organs','all'].includes(b.dataset.mode)&&!extraModels.visceral)await loadAdditional('visceral',false).catch(()=>{});if(['arteries','veins','circulatory','all'].includes(b.dataset.mode)&&!extraModels.cardiovascular)await loadAdditional('cardiovascular',false).catch(()=>{});}mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('active',x===b));select(null);updateVisibility()});
 $('depth').oninput=e=>{outer=Number(e.target.value);$('depthLabel').textContent=outer+'%';updateVisibility()};
 $('search').oninput=search;
 renderer.domElement.addEventListener('pointerdown',e=>{startX=e.clientX;startY=e.clientY;dragging=false});
