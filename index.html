@@ -1655,6 +1655,71 @@
  #bootDialog .boot-cinema-reticle,#bootDialog.boot-speaking .boot-cinema-wave i,#bootDialog.boot-out .boot-cinema{animation:none!important}
 }
 
+
+/* Spherical HUD concept refinement — native app palette, typography and functional shortcuts. */
+#bootDialog .boot-cinema{
+ --cinema-cyan:#58e7f4;--cinema-red:#ff7774;
+ background:
+   radial-gradient(ellipse 43% 52% at 51% 47%,rgba(23,113,153,.14),transparent 78%),
+   linear-gradient(180deg,rgba(5,13,21,.1),rgba(3,11,19,.3));
+}
+#bootDialog .boot-cinema-brand{letter-spacing:.19em}
+#bootDialog .boot-cinema-brand-icon{color:#72c9d9}
+#bootDialog .boot-cinema-brand small{letter-spacing:.11em}
+#bootDialog .boot-cinema-head{border-bottom:1px solid rgba(94,181,200,.16)!important}
+#bootDialog .boot-cinema-panel{
+ border-color:rgba(74,155,178,.33);
+ background:linear-gradient(145deg,rgba(12,39,52,.65),rgba(7,22,32,.7));
+ backdrop-filter:blur(12px);
+}
+#bootDialog .boot-cinema-panel h3{color:#9adbe6}
+#bootDialog .boot-cinema-panel h3 span{color:#ff7774}
+#bootDialog .boot-cinema-core-wrap{height:clamp(320px,47vh,580px)}
+#bootDialog .holo-stage{width:min(90%,465px,49vh)}
+#bootDialog .boot-cinema-core-label{letter-spacing:.15em}
+#bootDialog .boot-cinema-core-label span{color:#76d5b0}
+#bootDialog .boot-cinema-reticle{
+ width:min(100%,545px);
+ border:1px solid rgba(71,194,220,.20);
+ box-shadow:0 0 0 24px rgba(36,117,153,.02),0 0 0 54px rgba(36,117,153,.015);
+}
+#bootDialog .boot-cinema-platform{width:90%;bottom:-1%}
+#bootDialog .boot-cinema-name{margin:1px 0 0!important}
+#bootDialog .boot-cinema-name small{color:#79b3c1}
+#bootDialog .boot-cinema-right{align-self:center}
+#bootDialog .boot-cinema-quick{margin-top:16px;border-top:1px solid rgba(98,196,224,.16);padding-top:12px}
+#bootDialog .boot-cinema-quick h4{font:600 10px ui-monospace,Consolas,monospace;letter-spacing:.15em;color:#8ed9e4;margin:0 0 10px}
+#bootDialog .boot-cinema-quick-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+#bootDialog .boot-cinema-quick-grid a,#bootDialog .boot-cinema-quick-grid button{
+ display:flex;min-width:0;min-height:66px;flex-direction:column;gap:7px;
+ align-items:center;justify-content:center;text-decoration:none;
+ padding:7px 3px;border:1px solid rgba(76,165,189,.34);border-radius:6px;
+ background:rgba(9,37,49,.6);color:#aedce7;cursor:pointer;
+ font:600 9px ui-monospace,Consolas,monospace;letter-spacing:.04em;
+}
+#bootDialog .boot-cinema-quick-grid a:hover,#bootDialog .boot-cinema-quick-grid button:hover,
+#bootDialog .boot-cinema-quick-grid a:focus-visible,#bootDialog .boot-cinema-quick-grid button:focus-visible{
+ background:rgba(21,77,94,.78);border-color:#77dcea;color:#fff;outline:none;
+}
+#bootDialog .boot-cinema-quick-grid span{font-size:23px;color:#79d2e5;line-height:1}
+#bootDialog .boot-cinema-foot{border-top:0}
+#bootDialog .boot-cinema-progress .boot-bar i{background:linear-gradient(90deg,#237c9e,#76dcf0)}
+#bootDialog .boot-cinema-actions .boot-skip{border-radius:7px}
+#bootDialog .boot-cinema-panel::after{border-color:#59bad1}
+#bootDialog .boot-cinema-panel::before{border-color:#ff777488}
+@media(max-width:940px){
+ #bootDialog .boot-cinema-core-wrap{height:clamp(260px,38vh,410px)}
+ #bootDialog .holo-stage{width:min(85%,345px,39vh)}
+ #bootDialog .boot-cinema-quick-grid{gap:4px}
+ #bootDialog .boot-cinema-quick-grid a,#bootDialog .boot-cinema-quick-grid button{font-size:8px;min-height:58px}
+}
+@media(max-width:680px){
+ #bootDialog .boot-cinema-core-wrap{height:min(40vh,350px)}
+ #bootDialog .holo-stage{width:min(78vw,320px,36vh)}
+ #bootDialog .boot-cinema-quick-grid a,#bootDialog .boot-cinema-quick-grid button{min-height:55px;font-size:7px}
+ #bootDialog .boot-cinema-quick-grid span{font-size:18px}
+}
+
 </style>
 </head>
 <body class="jarvis-ui">
@@ -1759,6 +1824,14 @@
         </div>
         <div class="boot-cinema-voice"><i aria-hidden="true"></i><span id="bootVoiceLabel">JARVIS READY</span></div>
         <div class="boot-cinema-connection"><span>NETWORK</span><b id="bootConnection">CHECKING</b></div>
+        <div class="boot-cinema-quick">
+          <h4>ACCESSO RAPIDO</h4>
+          <div class="boot-cinema-quick-grid">
+            <button type="button" id="bootOpenArchive" title="Entra nell'archivio degli appunti"><span aria-hidden="true">▤</span>APPUNTI</button>
+            <a href="orario.html" title="Apri il tuo orario delle lezioni"><span aria-hidden="true">▦</span>ORARIO</a>
+            <a href="anatomia-realistica.html" title="Apri anatomia tridimensionale"><span aria-hidden="true">◎</span>ANATOMIA</a>
+          </div>
+        </div>
       </aside>
     </div>
     <footer class="boot-cinema-foot">
@@ -3364,7 +3437,8 @@
     const close=()=>{stopRain();cleanupHolo();if(dlg.open)dlg.close();dlg.classList.remove('boot-out');if(typeof done==='function')done();};
     let bootVoiceStarted=false,bootVoiceUtterance=null,bootVoiceFallback=0,bootVoiceWatchdog=0;
     const finish=(instant,fromVoice=false)=>{if(finished)return;finished=true;dlg.classList.remove('boot-speaking');reactorController?.setVoiceActive(false);timers.forEach(t=>{if(t&&t.__interval)clearInterval(t.__interval);else clearTimeout(t);});clearTimeout(bootVoiceFallback);clearTimeout(bootVoiceWatchdog);if(!fromVoice&&window.speechSynthesis){try{window.speechSynthesis.cancel();}catch{}}if(instant===true||fast){close();return;}dlg.classList.add('boot-out');setTimeout(close,720);};
-    $('bootSkip').onclick=()=>finish(true);dlg.addEventListener('cancel',event=>{event.preventDefault();finish(true);},{once:true});
+    $('bootSkip').onclick=()=>finish(true);
+    $('bootOpenArchive').onclick=()=>finish(true);dlg.addEventListener('cancel',event=>{event.preventDefault();finish(true);},{once:true});
     dlg.showModal();$('bootSkip').focus();
     /* La voce accompagna l'ologramma: quando termina, la schermata si chiude da sola. */
     if(!fast&&!isVoiceMuted()&&window.speechSynthesis&&window.SpeechSynthesisUtterance){
