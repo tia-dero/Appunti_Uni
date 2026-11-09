@@ -1479,6 +1479,21 @@
       #bootDialog .core-volume{transform:rotateY(-16deg) rotateX(11deg)}
     }
 
+
+    /* Three.js reactor: show true 3D canvas when graphics are ready; CSS version is the fallback. */
+    #bootDialog #holoStage .boot-core-canvas{
+      position:absolute;inset:0;width:100%;height:100%;display:block;
+      z-index:8;background:transparent;pointer-events:none;
+      opacity:0;animation:bootWebglIn .55s ease-out forwards;
+      filter:drop-shadow(0 0 16px rgba(77,193,224,.13));
+    }
+    #bootDialog #holoStage.boot-webgl-ready .jarvis-core-3d{
+      visibility:hidden !important;animation-play-state:paused !important;
+    }
+    #bootDialog #holoStage.boot-webgl-ready .holo-ring.r1{opacity:.15}
+    @keyframes bootWebglIn{to{opacity:1}}
+    @media(prefers-reduced-motion:reduce){#bootDialog #holoStage .boot-core-canvas{animation:none;opacity:1}}
+
 </style>
 </head>
 <body class="jarvis-ui">
@@ -3161,13 +3176,24 @@
       bootVoiceFallback=setTimeout(()=>finish(false),fast?350:7040);
     }
     /* Il nucleo risponde al mouse, al touch e alla tastiera senza interferire con SALTA. */
-    const stage=$('holoStage');let boostTimer=0;
-    const resetTilt=()=>{stage.style.setProperty('--tilt-x','0deg');stage.style.setProperty('--tilt-y','0deg');};
-    const moveHolo=event=>{if(fast)return;const rect=stage.getBoundingClientRect(),x=(event.clientX-rect.left)/rect.width-.5,y=(event.clientY-rect.top)/rect.height-.5;stage.style.setProperty('--tilt-x',(x*18).toFixed(2)+'deg');stage.style.setProperty('--tilt-y',(-y*18).toFixed(2)+'deg');};
-    const pulseHolo=()=>{stage.classList.remove('holo-boost');void stage.offsetWidth;stage.classList.add('holo-boost');clearTimeout(boostTimer);boostTimer=setTimeout(()=>stage.classList.remove('holo-boost'),1450);};
+    const stage=$('holoStage');let boostTimer=0,reactorController=null,reactorDisposed=false;
+    /* Progressive enhancement: real WebGL 3D, keep the existing CSS rotor if loading fails. */
+    import('./boot-reactor.js').then(module=>{
+      if(reactorDisposed||!dlg.open)return;
+      try{reactorController=module.startBootReactor(stage,{reducedMotion:fast});}
+      catch(error){console.warn('JARVIS WebGL non disponibile: utilizzo il nucleo CSS.',error);}
+    }).catch(error=>console.warn('JARVIS offline: nucleo CSS alternativo attivo.',error));
+    const resetTilt=()=>{stage.style.setProperty('--tilt-x','0deg');stage.style.setProperty('--tilt-y','0deg');reactorController?.resetPointer();};
+    const moveHolo=event=>{
+      if(fast)return;
+      const rect=stage.getBoundingClientRect(),x=(event.clientX-rect.left)/rect.width-.5,y=(event.clientY-rect.top)/rect.height-.5;
+      if(reactorController){reactorController.pointer(x,y);stage.style.setProperty('--tilt-x','0deg');stage.style.setProperty('--tilt-y','0deg');}
+      else{stage.style.setProperty('--tilt-x',(x*18).toFixed(2)+'deg');stage.style.setProperty('--tilt-y',(-y*18).toFixed(2)+'deg');}
+    };
+    const pulseHolo=()=>{reactorController?.pulse();stage.classList.remove('holo-boost');void stage.offsetWidth;stage.classList.add('holo-boost');clearTimeout(boostTimer);boostTimer=setTimeout(()=>stage.classList.remove('holo-boost'),1450);};
     const keyHolo=event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();pulseHolo();}};
     dlg.addEventListener('pointermove',moveHolo);dlg.addEventListener('pointerleave',resetTilt);stage.addEventListener('click',pulseHolo);stage.addEventListener('keydown',keyHolo);
-    const cleanupHolo=()=>{dlg.removeEventListener('pointermove',moveHolo);dlg.removeEventListener('pointerleave',resetTilt);stage.removeEventListener('click',pulseHolo);stage.removeEventListener('keydown',keyHolo);clearTimeout(boostTimer);resetTilt();stage.classList.remove('holo-boost');};
+    const cleanupHolo=()=>{reactorDisposed=true;reactorController?.stop();reactorController=null;dlg.removeEventListener('pointermove',moveHolo);dlg.removeEventListener('pointerleave',resetTilt);stage.removeEventListener('click',pulseHolo);stage.removeEventListener('keydown',keyHolo);clearTimeout(boostTimer);resetTilt();stage.classList.remove('holo-boost');};
     fillBootHud(timers);
     /* Restyling minimale: niente pioggia digitale né glitch, per un avvio più sobrio. */
     steps.forEach((step,index)=>timers.push(setTimeout(()=>{const row=document.createElement('div'),label=document.createElement('span'),text=step[0]+': '+step[1];row.innerHTML='<b>OK</b>';row.append(label);lines.append(row);if(fast)label.textContent=text;else scrambleText(label,text,300);const pct=Math.round((index+1)/steps.length*100);bar.style.width=pct+'%';$('bootPct').textContent=pct+'%';},gap*(index+1))));
