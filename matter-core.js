@@ -1,85 +1,179 @@
-/* New from-scratch material core. Only instantiated while the intro is visible. */
+/* JARVIS / PARTICLE MATTER CORE
+ * A compact living nucleus made from GPU particles; no explosion or rigid shell.
+ * Motion and deformation are computed in the vertex shader.
+ */
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js';
+
 export function startMatterCore(mount,{reducedMotion=false}={}){
-  let renderer,frame=0,disposed=false,observer;
-  const canvas=document.createElement('canvas');canvas.className='matter-webgl';canvas.setAttribute('aria-hidden','true');
-  renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'low-power'});
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.6));
-  renderer.outputColorSpace=THREE.SRGBColorSpace;
+  const canvas=document.createElement('canvas');
+  canvas.className='matter-webgl';
+  canvas.setAttribute('aria-hidden','true');
+  let renderer;
+  try{
+    renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:false,powerPreference:'low-power'});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+    renderer.outputColorSpace=THREE.SRGBColorSpace;
+  }catch(error){canvas.remove();throw error}
   const scene=new THREE.Scene();
-  const camera=new THREE.PerspectiveCamera(40,1,.1,30);camera.position.z=6;
-  const group=new THREE.Group();scene.add(group);
-  const state={uTime:{value:0},uVoice:{value:0},uAccent:{value:0}};
+  const camera=new THREE.PerspectiveCamera(42,1,.1,30);
+  camera.position.set(0,0,6.35);
+  const group=new THREE.Group();
+  scene.add(group);
+  const mobile=window.matchMedia('(max-width:680px)').matches;
+  const lowMemory=(navigator.deviceMemory||8)<=4;
+  const count=reducedMotion?24000:mobile||lowMemory?52000:115000;
+  const positions=new Float32Array(count*3);
+  const seeds=new Float32Array(count*3);
+  const TAU=Math.PI*2;
+  // Dense spherical cloud: mix an outer swirling mantle and a luminous inner core.
+  // Deterministic distribution prevents visible empty sectors and moving clumps.
+  for(let i=0;i<count;i++){
+    const u=(i+.5)/count;
+    const angle=i*2.399963229728653;
+    const y=1-2*u;
+    const horizontal=Math.sqrt(Math.max(0,1-y*y));
+    const f=Math.sin(i*12.9898)*43758.5453;
+    const rand=f-Math.floor(f);
+    const shell=i%6!==0;
+    const radius=shell?(.72+.70*Math.pow(rand,.53)):(.09+.78*Math.pow(rand,.85));
+    positions[i*3]=Math.cos(angle)*horizontal*radius;
+    positions[i*3+1]=y*radius;
+    positions[i*3+2]=Math.sin(angle)*horizontal*radius;
+    seeds[i*3]=rand;
+    seeds[i*3+1]=((i*37)%997)/997;
+    seeds[i*3+2]=((i*113)%991)/991;
+  }
+  const geometry=new THREE.BufferGeometry();
+  geometry.setAttribute('position',new THREE.BufferAttribute(positions,3));
+  geometry.setAttribute('aSeed',new THREE.BufferAttribute(seeds,3));
+  geometry.boundingSphere=new THREE.Sphere(new THREE.Vector3(),2.5);
+  const uniforms={
+    uTime:{value:0},
+    uVoice:{value:0},
+    uPulse:{value:0},
+    uDensity:{value:Math.min(window.devicePixelRatio||1,1.5)}
+  };
   const material=new THREE.ShaderMaterial({
-    uniforms:state,transparent:true,depthWrite:false,side:THREE.FrontSide,
+    uniforms,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,
     vertexShader:`
-      uniform float uTime,uVoice,uAccent;
-      varying vec3 vNormal;varying vec3 vLocal;varying vec3 vEye;
+      precision highp float;
+      attribute vec3 aSeed;
+      uniform float uTime,uVoice,uPulse,uDensity;
+      varying vec3 vTint;
+      varying float vAlpha;
       void main(){
-        vec3 p=position;vec3 n=normalize(position);
-        float fluid=sin(n.x*9.0+uTime*1.3)*sin(n.y*7.0-uTime*.72)
-                   +sin(n.z*13.0+n.y*5.0+uTime*.8)*.55;
-        float displacement=(.038+.14*uVoice+.10*uAccent)*fluid;
-        p+=n*displacement;
-        vec4 view=modelViewMatrix*vec4(p,1.);
-        vEye=normalize(-view.xyz);vNormal=normalize(normalMatrix*n);vLocal=p;
+        vec3 p=position;
+        float radius=length(p);
+        float phi=atan(p.z,p.x);
+        float drift=uTime*(.13+.28*aSeed.x);
+        // Particles orbit smoothly at distinct speeds, without flying apart.
+        phi+=drift+sin(uTime*.30+p.y*3.5+aSeed.y*6.283)*(.08+.10*uVoice);
+        float rXZ=length(p.xz);
+        p.x=rXZ*cos(phi);
+        p.z=rXZ*sin(phi);
+        float wave=sin(phi*5.0+p.y*7.0+uTime*.82+aSeed.z*6.283);
+        float ripple=sin(p.y*11.0-phi*3.0+uTime*1.25+aSeed.y*6.283);
+        float voiceShape=uVoice*(.09*wave+.055*ripple);
+        p+=normalize(p+vec3(.0001))*(.022*wave+voiceShape+uPulse*.035*ripple);
+        p.y+=sin(phi*3.0+uTime*.60+aSeed.x*7.0)*(.025+.048*uVoice);
+        vec4 view=modelViewMatrix*vec4(p,1.0);
         gl_Position=projectionMatrix*view;
+        float distanceScale=6.3/max(2.0,-view.z);
+        float twinkle=.78+.22*sin(uTime*1.2+aSeed.y*16.0);
+        float size=mix(1.0,2.25,pow(aSeed.x,4.0))*uDensity*distanceScale;
+        gl_PointSize=clamp(size*(1.0+.23*uVoice+.12*uPulse)*twinkle,1.0,5.0);
+        float core=1.0-smoothstep(.12,1.55,radius);
+        vTint=mix(vec3(.05,.48,.78),vec3(.70,.96,1.0),core*.50+aSeed.y*.30);
+        vAlpha=(.28+.52*core)*(.72+.28*aSeed.z)*(1.0+.26*uVoice);
       }`,
     fragmentShader:`
       precision mediump float;
-      uniform float uTime,uVoice,uAccent;
-      varying vec3 vNormal,vLocal,vEye;
+      varying vec3 vTint;
+      varying float vAlpha;
       void main(){
-        float edge=pow(1.-abs(dot(normalize(vNormal),normalize(vEye))),2.3);
-        float turbulence=sin(vLocal.y*9.0+sin(vLocal.x*6.0+uTime*.4)*2.+uTime*.7);
-        float threads=sin(vLocal.x*16.-vLocal.z*12.+uTime*1.4+turbulence*2.);
-        float luminous=smoothstep(.13,.85,turbulence*.37+threads*.23+.48);
-        vec3 c=mix(vec3(.035,.20,.37),vec3(.42,.90,1.),luminous*.77+edge*.19);
-        float alpha=.17+.24*luminous+.52*edge+.12*uVoice+.08*uAccent;
-        gl_FragColor=vec4(c,min(alpha,.96));
+        float d=length(gl_PointCoord-vec2(.5));
+        float feather=1.0-smoothstep(.16,.49,d);
+        if(feather<.025)discard;
+        gl_FragColor=vec4(vTint,feather*vAlpha);
       }`
   });
-  const geometry=new THREE.SphereGeometry(1.37,96,64);
-  const matter=new THREE.Mesh(geometry,material);group.add(matter);
-  const haloMaterial=new THREE.MeshBasicMaterial({color:0x5fd9f5,transparent:true,opacity:.13,depthWrite:false,side:THREE.BackSide,blending:THREE.AdditiveBlending});
-  const haloGeometry=new THREE.SphereGeometry(1.49,48,32);
-  const halo=new THREE.Mesh(haloGeometry,haloMaterial);group.add(halo);
-  // Delicate interior glow, with no artificial eyes or metal rings.
-  const glowCanvas=document.createElement('canvas');glowCanvas.width=128;glowCanvas.height=128;
+  const points=new THREE.Points(geometry,material);
+  group.add(points);
+  // A subtle softly glowing heart, still made of light rather than solid matter.
+  const glowCanvas=document.createElement('canvas');
+  glowCanvas.width=96;glowCanvas.height=96;
   const ctx=glowCanvas.getContext('2d');
   if(ctx){
-    const gradient=ctx.createRadialGradient(64,64,2,64,64,64);
-    gradient.addColorStop(0,'rgba(239,255,255,1)');
-    gradient.addColorStop(.18,'rgba(127,230,253,.75)');
-    gradient.addColorStop(.5,'rgba(36,135,198,.24)');
-    gradient.addColorStop(1,'rgba(12,50,108,0)');
-    ctx.fillStyle=gradient;ctx.fillRect(0,0,128,128);
+    const gradient=ctx.createRadialGradient(48,48,1,48,48,48);
+    gradient.addColorStop(0,'rgba(220,255,255,.93)');
+    gradient.addColorStop(.16,'rgba(79,220,248,.50)');
+    gradient.addColorStop(.50,'rgba(16,123,197,.12)');
+    gradient.addColorStop(1,'rgba(9,58,110,0)');
+    ctx.fillStyle=gradient;ctx.fillRect(0,0,96,96);
   }
   const texture=new THREE.CanvasTexture(glowCanvas);
-  const glowMaterial=new THREE.SpriteMaterial({map:texture,transparent:true,opacity:.68,depthWrite:false,blending:THREE.AdditiveBlending});
-  const light=new THREE.Sprite(glowMaterial);light.scale.set(2.7,2.7,1);light.position.z=.1;scene.add(light);
-  let speaking=false,target=0,accent=0,t=0;
+  const glowMaterial=new THREE.SpriteMaterial({
+    map:texture,transparent:true,opacity:.38,depthWrite:false,blending:THREE.AdditiveBlending
+  });
+  const light=new THREE.Sprite(glowMaterial);
+  light.scale.set(2.1,2.1,1);
+  scene.add(light);
+  let speaking=false,voiceLevel=0,pulse=0,elapsed=0,dead=false,frame=0,observer;
+  const resize=()=>{
+    if(dead)return;
+    const w=Math.max(1,mount.clientWidth),h=Math.max(1,mount.clientHeight);
+    renderer.setSize(w,h,false);
+    camera.aspect=w/h;
+    camera.updateProjectionMatrix();
+    renderer.render(scene,camera);
+  };
   mount.appendChild(canvas);
-  const resize=()=>{if(disposed)return;const w=Math.max(1,mount.clientWidth),h=Math.max(1,mount.clientHeight);renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();renderer.render(scene,camera)};
   resize();
-  observer=new ResizeObserver(resize);observer.observe(mount);
+  observer=new ResizeObserver(resize);
+  observer.observe(mount);
   const clock=new THREE.Clock();
-  const render=()=>{
-    if(disposed)return;frame=requestAnimationFrame(render);
-    t+=Math.min(.05,clock.getDelta());
-    const shimmer=speaking?.40+.36*(.5+.5*Math.sin(t*7.1)):0;
-    target+=(shimmer-target)*.07;
-    accent*=.93;
-    state.uTime.value=t;state.uVoice.value=target;state.uAccent.value=accent;
-    if(!reducedMotion){group.rotation.y=t*.075;group.rotation.x=Math.sin(t*.25)*.12;group.position.y=Math.sin(t*.68)*.035}
-    light.scale.setScalar(2.65+target*.32+accent*.23);
-    glowMaterial.opacity=.54+target*.24+accent*.14;
+  const animate=()=>{
+    if(dead)return;
+    frame=requestAnimationFrame(animate);
+    const delta=Math.min(clock.getDelta(),.06);
+    elapsed+=delta;
+    const target=speaking?.40+.28*(.5+.5*Math.sin(elapsed*6.5))+.08*Math.sin(elapsed*10.2):0;
+    voiceLevel+=(Math.max(0,target)-voiceLevel)*Math.min(1,delta*5.5);
+    pulse=Math.max(0,pulse-delta*.65);
+    uniforms.uTime.value=elapsed;
+    uniforms.uVoice.value=voiceLevel;
+    uniforms.uPulse.value=pulse;
+    if(!reducedMotion){
+      group.rotation.y=elapsed*.055;
+      group.rotation.x=Math.sin(elapsed*.21)*.11;
+      group.position.y=Math.sin(elapsed*.68)*.025;
+    }
+    light.scale.setScalar(2.1+.18*voiceLevel);
+    glowMaterial.opacity=.30+.18*voiceLevel;
     if(!document.hidden)renderer.render(scene,camera);
   };
-  if(!reducedMotion)render();else renderer.render(scene,camera);
+  if(!reducedMotion)animate();
+  else renderer.render(scene,camera);
   return {
-    setSpeaking(value){speaking=!!value;if(reducedMotion){state.uVoice.value=speaking?.65:0;renderer.render(scene,camera)}},
-    accent(){accent=1;if(reducedMotion){state.uAccent.value=1;renderer.render(scene,camera)}},
-    dispose(){if(disposed)return;disposed=true;cancelAnimationFrame(frame);observer?.disconnect();geometry.dispose();haloGeometry.dispose();material.dispose();haloMaterial.dispose();glowMaterial.dispose();texture.dispose();renderer.dispose();renderer.forceContextLoss();canvas.remove()}
+    setSpeaking(value){
+      speaking=!!value;
+      if(reducedMotion){
+        uniforms.uVoice.value=speaking?.32:0;
+        renderer.render(scene,camera);
+      }
+    },
+    accent(){
+      // No blast: just a small temporary emphasis in brightness and surface motion.
+      pulse=.45;
+      if(reducedMotion){uniforms.uPulse.value=.20;renderer.render(scene,camera)}
+    },
+    dispose(){
+      if(dead)return;
+      dead=true;
+      cancelAnimationFrame(frame);
+      observer?.disconnect();
+      geometry.dispose();material.dispose();glowMaterial.dispose();texture.dispose();
+      renderer.dispose();renderer.forceContextLoss();canvas.remove();
+    }
   };
 }
