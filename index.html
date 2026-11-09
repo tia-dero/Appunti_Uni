@@ -1494,6 +1494,29 @@
     @keyframes bootWebglIn{to{opacity:1}}
     @media(prefers-reduced-motion:reduce){#bootDialog #holoStage .boot-core-canvas{animation:none;opacity:1}}
 
+
+    /* Stark-style voice activity: restrained telemetry, not a flashing audio visualizer. */
+    #bootDialog .boot-voice-state{
+      display:flex;align-items:center;justify-content:center;gap:9px;
+      margin:0 0 13px;color:#6b909a;
+      font:500 9px ui-monospace,Consolas,monospace;letter-spacing:.18em;
+    }
+    #bootDialog .boot-voice-state i{
+      width:5px;height:5px;border-radius:50%;background:#4c8290;
+      box-shadow:none;transition:background .25s,box-shadow .25s;
+    }
+    #bootDialog.boot-speaking .boot-voice-state{color:#a5d7e0}
+    #bootDialog.boot-speaking .boot-voice-state span{font-size:0}
+    #bootDialog.boot-speaking .boot-voice-state span::after{content:"JARVIS STA PARLANDO";font-size:9px}
+    #bootDialog.boot-speaking .boot-voice-state i{
+      background:#9beaf5;box-shadow:0 0 9px #63d5ebaa;animation:voiceLed 2.2s ease-in-out infinite;
+    }
+    #bootDialog.boot-speaking .holo-ring.r1{border-top-color:rgba(164,240,252,.76)}
+    @keyframes voiceLed{50%{opacity:.45}}
+    @media(prefers-reduced-motion:reduce){
+      #bootDialog.boot-speaking .boot-voice-state i{animation:none}
+    }
+
 </style>
 </head>
 <body class="jarvis-ui">
@@ -1570,6 +1593,7 @@
     </div>
     <div class="holo-interact-hint"><b>MUOVI IL CURSORE</b> · CLICCA IL NUCLEO</div>
     <div class="holo-name"><span id="holoTitle">JARVIS</span><i class="holo-caret"></i><small id="holoSub">SISTEMA OPERATIVO</small></div>
+    <div class="boot-voice-state" aria-hidden="true"><i></i><span>ASSISTENTE IN ESECUZIONE</span></div>
     <div id="bootHoliday" class="boot-holiday" hidden aria-label="Festività"></div>
     <div class="boot-lines" id="bootLines"></div>
     <div class="boot-barwrap"><div class="boot-bar"><i id="bootBar"></i></div><span id="bootPct">0%</span></div>
@@ -3156,7 +3180,7 @@
     let stopRain=()=>{};
     const close=()=>{stopRain();cleanupHolo();if(dlg.open)dlg.close();dlg.classList.remove('boot-out');if(typeof done==='function')done();};
     let bootVoiceStarted=false,bootVoiceUtterance=null,bootVoiceFallback=0,bootVoiceWatchdog=0;
-    const finish=(instant,fromVoice=false)=>{if(finished)return;finished=true;timers.forEach(t=>{if(t&&t.__interval)clearInterval(t.__interval);else clearTimeout(t);});clearTimeout(bootVoiceFallback);clearTimeout(bootVoiceWatchdog);if(!fromVoice&&window.speechSynthesis){try{window.speechSynthesis.cancel();}catch{}}if(instant===true||fast){close();return;}dlg.classList.add('boot-out');setTimeout(close,720);};
+    const finish=(instant,fromVoice=false)=>{if(finished)return;finished=true;dlg.classList.remove('boot-speaking');reactorController?.setVoiceActive(false);timers.forEach(t=>{if(t&&t.__interval)clearInterval(t.__interval);else clearTimeout(t);});clearTimeout(bootVoiceFallback);clearTimeout(bootVoiceWatchdog);if(!fromVoice&&window.speechSynthesis){try{window.speechSynthesis.cancel();}catch{}}if(instant===true||fast){close();return;}dlg.classList.add('boot-out');setTimeout(close,720);};
     $('bootSkip').onclick=()=>finish(true);dlg.addEventListener('cancel',event=>{event.preventDefault();finish(true);},{once:true});
     dlg.showModal();$('bootSkip').focus();
     /* La voce accompagna l'ologramma: quando termina, la schermata si chiude da sola. */
@@ -3164,9 +3188,9 @@
       try{
         const synth=window.speechSynthesis;
         bootVoiceUtterance=speechUtterance(buildWelcomeSpeech());
-        bootVoiceUtterance.onstart=()=>{bootVoiceStarted=true;clearTimeout(bootVoiceFallback);bootVoiceWatchdog=setTimeout(()=>finish(false),30000);};
-        bootVoiceUtterance.onend=()=>finish(false,true);
-        bootVoiceUtterance.onerror=()=>{if(!finished)bootVoiceFallback=setTimeout(()=>finish(false),900);};
+        bootVoiceUtterance.onstart=()=>{bootVoiceStarted=true;dlg.classList.add('boot-speaking');reactorController?.setVoiceActive(true);clearTimeout(bootVoiceFallback);bootVoiceWatchdog=setTimeout(()=>finish(false),30000);};
+        bootVoiceUtterance.onend=()=>{dlg.classList.remove('boot-speaking');reactorController?.setVoiceActive(false);finish(false,true);};
+        bootVoiceUtterance.onerror=()=>{dlg.classList.remove('boot-speaking');reactorController?.setVoiceActive(false);if(!finished)bootVoiceFallback=setTimeout(()=>finish(false),900);};
         synth.cancel();
         synth.speak(bootVoiceUtterance);
         /* Se il browser blocca l'avvio automatico, non lasciare l'ologramma aperto all'infinito. */
@@ -3180,7 +3204,7 @@
     /* Progressive enhancement: real WebGL 3D, keep the existing CSS rotor if loading fails. */
     import('./boot-reactor.js').then(module=>{
       if(reactorDisposed||!dlg.open)return;
-      try{reactorController=module.startBootReactor(stage,{reducedMotion:fast});}
+      try{reactorController=module.startBootReactor(stage,{reducedMotion:fast});reactorController.setVoiceActive(bootVoiceStarted&&!finished);}
       catch(error){console.warn('JARVIS WebGL non disponibile: utilizzo il nucleo CSS.',error);}
     }).catch(error=>console.warn('JARVIS offline: nucleo CSS alternativo attivo.',error));
     const resetTilt=()=>{stage.style.setProperty('--tilt-x','0deg');stage.style.setProperty('--tilt-y','0deg');reactorController?.resetPointer();};
@@ -3193,7 +3217,7 @@
     const pulseHolo=()=>{reactorController?.pulse();stage.classList.remove('holo-boost');void stage.offsetWidth;stage.classList.add('holo-boost');clearTimeout(boostTimer);boostTimer=setTimeout(()=>stage.classList.remove('holo-boost'),1450);};
     const keyHolo=event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();pulseHolo();}};
     dlg.addEventListener('pointermove',moveHolo);dlg.addEventListener('pointerleave',resetTilt);stage.addEventListener('click',pulseHolo);stage.addEventListener('keydown',keyHolo);
-    const cleanupHolo=()=>{reactorDisposed=true;reactorController?.stop();reactorController=null;dlg.removeEventListener('pointermove',moveHolo);dlg.removeEventListener('pointerleave',resetTilt);stage.removeEventListener('click',pulseHolo);stage.removeEventListener('keydown',keyHolo);clearTimeout(boostTimer);resetTilt();stage.classList.remove('holo-boost');};
+    const cleanupHolo=()=>{reactorDisposed=true;dlg.classList.remove('boot-speaking');reactorController?.setVoiceActive(false);reactorController?.stop();reactorController=null;dlg.removeEventListener('pointermove',moveHolo);dlg.removeEventListener('pointerleave',resetTilt);stage.removeEventListener('click',pulseHolo);stage.removeEventListener('keydown',keyHolo);clearTimeout(boostTimer);resetTilt();stage.classList.remove('holo-boost');};
     fillBootHud(timers);
     /* Restyling minimale: niente pioggia digitale né glitch, per un avvio più sobrio. */
     steps.forEach((step,index)=>timers.push(setTimeout(()=>{const row=document.createElement('div'),label=document.createElement('span'),text=step[0]+': '+step[1];row.innerHTML='<b>OK</b>';row.append(label);lines.append(row);if(fast)label.textContent=text;else scrambleText(label,text,300);const pct=Math.round((index+1)/steps.length*100);bar.style.width=pct+'%';$('bootPct').textContent=pct+'%';},gap*(index+1))));
