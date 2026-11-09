@@ -65,17 +65,19 @@ export function startMatterCore(mount,{reducedMotion=false}={}){
         vec3 p=position;
         float radius=length(p);
         float phi=atan(p.z,p.x);
-        float drift=uTime*(.13+.28*aSeed.x);
+        float drift=uTime*(.29+.43*aSeed.x);
         // Particles orbit smoothly at distinct speeds, without flying apart.
-        phi+=drift+sin(uTime*.30+p.y*3.5+aSeed.y*6.283)*(.08+.10*uVoice);
+        phi+=drift+sin(uTime*.56+p.y*4.8+aSeed.y*6.283)*(.16+.13*uVoice);
         float rXZ=length(p.xz);
         p.x=rXZ*cos(phi);
         p.z=rXZ*sin(phi);
-        float wave=sin(phi*5.0+p.y*7.0+uTime*.82+aSeed.z*6.283);
-        float ripple=sin(p.y*11.0-phi*3.0+uTime*1.25+aSeed.y*6.283);
-        float voiceShape=uVoice*(.09*wave+.055*ripple);
-        p+=normalize(p+vec3(.0001))*(.022*wave+voiceShape+uPulse*.035*ripple);
-        p.y+=sin(phi*3.0+uTime*.60+aSeed.x*7.0)*(.025+.048*uVoice);
+        float wave=sin(phi*5.0+p.y*7.0+uTime*1.28+aSeed.z*6.283);
+        float ripple=sin(p.y*11.0-phi*3.0+uTime*1.85+aSeed.y*6.283);
+        float voiceShape=uVoice*(.115*wave+.075*ripple);
+        p+=normalize(p+vec3(.0001))*(.045*wave+.027*ripple+voiceShape+uPulse*.035*ripple);
+        p.y+=sin(phi*3.0+uTime*1.10+aSeed.x*7.0)*(.055+.060*uVoice);
+        // A second soft current adds visible circulation, but particles remain bound.
+        p.x+=sin(uTime*.83+p.y*4.0+aSeed.z*6.283)*(.032+.035*uVoice);
         vec4 view=modelViewMatrix*vec4(p,1.0);
         gl_Position=projectionMatrix*view;
         float distanceScale=6.3/max(2.0,-view.z);
@@ -144,9 +146,10 @@ export function startMatterCore(mount,{reducedMotion=false}={}){
     uniforms.uVoice.value=voiceLevel;
     uniforms.uPulse.value=pulse;
     if(!reducedMotion){
-      group.rotation.y=elapsed*.055;
-      group.rotation.x=Math.sin(elapsed*.21)*.11;
-      group.position.y=Math.sin(elapsed*.68)*.025;
+      group.rotation.y=elapsed*.13;
+      group.rotation.x=Math.sin(elapsed*.35)*.18;
+      group.rotation.z=Math.sin(elapsed*.23)*.095;
+      group.position.y=Math.sin(elapsed*.90)*.045;
     }
     light.scale.setScalar(2.1+.18*voiceLevel);
     glowMaterial.opacity=.30+.18*voiceLevel;
