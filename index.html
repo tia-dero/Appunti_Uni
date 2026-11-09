@@ -1517,6 +1517,144 @@
       #bootDialog.boot-speaking .boot-voice-state i{animation:none}
     }
 
+
+/* JARVIS CINEMA 2026: three-column interactive startup, adapted from chosen concept. */
+#bootDialog{width:100vw;max-width:none;height:100dvh;max-height:none;inset:0;margin:0;padding:0;border:0;overflow:auto;
+ background:radial-gradient(ellipse 50% 62% at 50% 48%,#0c3547 0%,#061824 44%,#020910 100%);color:#dff7fd}
+#bootDialog::before,#bootDialog::after{content:none!important;display:none!important}
+#bootDialog::backdrop{background:#020910}
+#bootDialog #bootFx,#bootDialog>.hud,#bootDialog .holo-particles,#bootDialog .holo-orbit,#bootDialog .holo-base,
+#bootDialog .holo-flash,#bootDialog .holo-beam,#bootDialog .holo-scan,#bootDialog .holo-reticle,
+#bootDialog .holo-ticks,#bootDialog .holo-caret,#bootDialog>.boot-lines{display:none!important}
+#bootDialog .boot-cinema{position:relative;z-index:1;min-height:100%;display:flex;flex-direction:column;
+ padding:clamp(18px,3vw,38px) clamp(22px,4vw,58px) 24px;isolation:isolate;gap:12px}
+#bootDialog .boot-cinema::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+ background:linear-gradient(90deg,transparent 49.96%,rgba(99,183,205,.09) 50%,transparent 50.04%),
+ radial-gradient(circle at 50% 54%,transparent 0 16%,rgba(70,181,214,.08) 16.1%,transparent 16.3%,transparent 20%,rgba(70,181,214,.055) 20.1%,transparent 20.3%);
+ opacity:.65}
+#bootDialog .boot-cinema-head{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;
+ background:none!important;border:0!important;padding:0 0 12px!important;min-height:55px}
+#bootDialog .boot-cinema-brand{display:flex;gap:12px;align-items:center;color:#c5f4fe;font:700 16px/1.1 ui-monospace,Consolas,monospace;letter-spacing:.32em}
+#bootDialog .boot-cinema-brand-icon{font-size:31px;color:#54c7e5;font-weight:300}
+#bootDialog .boot-cinema-brand small{display:block;font:500 9px/1.5 ui-monospace,Consolas,monospace;letter-spacing:.22em;margin-top:5px;color:#659fb2}
+#bootDialog .boot-cinema-clock{text-align:right;font:500 11px ui-monospace,Consolas,monospace;color:#8bb8c8;letter-spacing:.14em}
+#bootDialog .boot-cinema-clock strong{display:block;font:500 clamp(19px,2.5vw,30px)/1 ui-monospace,Consolas,monospace;color:#c8f5ff;margin-bottom:7px}
+#bootDialog .boot-cinema-grid{display:grid;grid-template-columns:minmax(180px,1fr) minmax(325px,2.4fr) minmax(180px,1fr);
+ align-items:center;gap:clamp(12px,2vw,34px);flex:1;width:100%;max-width:1520px;margin:auto;min-height:0}
+#bootDialog .boot-cinema-panel{position:relative;border:1px solid rgba(70,174,208,.42);background:linear-gradient(145deg,rgba(6,36,51,.59),rgba(3,20,31,.47));
+ border-radius:3px;padding:20px 17px;box-shadow:inset 0 1px rgba(122,217,242,.07),0 10px 40px rgba(0,0,0,.12);color:#c0e7f0}
+#bootDialog .boot-cinema-panel::before,#bootDialog .boot-cinema-panel::after{content:"";position:absolute;pointer-events:none;width:15px;height:15px;border-color:#80e4f9}
+#bootDialog .boot-cinema-panel::before{top:-1px;left:-1px;border-top:2px solid;border-left:2px solid}
+#bootDialog .boot-cinema-panel::after{bottom:-1px;right:-1px;border-bottom:2px solid;border-right:2px solid}
+#bootDialog .boot-cinema-panel h3{font:650 11px ui-monospace,Consolas,monospace;color:#8bdff3;letter-spacing:.20em;
+ margin:0 0 14px;padding:0 0 13px;border-bottom:1px solid rgba(95,193,220,.19)}
+#bootDialog .boot-cinema-panel h3 span{margin-right:7px;color:#56899d}
+#bootDialog .boot-cinema-stat{display:grid;grid-template-columns:29px minmax(0,1fr) 10px;align-items:center;gap:9px;
+ padding:10px 0;border-bottom:1px solid rgba(98,196,224,.12);font:600 10px ui-monospace,Consolas,monospace;letter-spacing:.06em}
+#bootDialog .boot-cinema-stat:last-child{border:0}
+#bootDialog .boot-cinema-stat small{display:block;color:#69d6a5;font:600 10px ui-monospace,Consolas,monospace;margin-top:4px;letter-spacing:.09em}
+#bootDialog .boot-stat-icon{display:grid;place-items:center;width:28px;height:28px;border:1px solid #448ba15e;border-radius:6px;font-size:15px;color:#79cfe6}
+#bootDialog .boot-cinema-stat>b{color:#47dba2;font-size:10px;font-weight:400}
+#bootDialog .boot-cinema-center{display:flex;align-items:center;flex-direction:column;justify-content:center;min-width:0}
+#bootDialog .boot-cinema-core-label{font:600 10px ui-monospace,Consolas,monospace;letter-spacing:.19em;color:#76acbd}
+#bootDialog .boot-cinema-core-label span{margin-left:9px;color:#5ed9ae;font-size:9px}
+#bootDialog .boot-cinema-core-wrap{width:min(100%,530px);height:clamp(290px,43vh,530px);position:relative;display:grid;place-items:center}
+#bootDialog .boot-cinema-reticle{position:absolute;width:min(94%,500px);aspect-ratio:1;border-radius:50%;pointer-events:none;
+ border:1px solid rgba(75,170,198,.17);box-shadow:0 0 0 25px rgba(36,117,153,.025),0 0 0 56px rgba(36,117,153,.02);
+ background:repeating-conic-gradient(from 0deg,rgba(121,209,234,.22) 0deg .55deg,transparent .75deg 12deg);
+ -webkit-mask:radial-gradient(circle,transparent 0 71%,#000 71.4% 72%,transparent 72.3%);mask:radial-gradient(circle,transparent 0 71%,#000 71.4% 72%,transparent 72.3%);
+ opacity:.8;animation:bootReticleTurn 100s linear infinite}
+#bootDialog .holo-stage{width:min(78%,410px,42vh);height:auto;aspect-ratio:1;margin:0!important;position:relative;z-index:2;
+ transform:perspective(850px) rotateY(var(--tilt-x)) rotateX(var(--tilt-y))!important;
+ border-radius:50%;animation:none!important}
+#bootDialog .holo-stage .holo-ring.r1{inset:2%;opacity:.28;animation-duration:27s}
+#bootDialog .holo-stage .holo-ring.r2{display:none}
+#bootDialog .jarvis-core-3d{width:88%;height:88%;left:6%;top:6%}
+#bootDialog .boot-cinema-platform{position:absolute;bottom:1%;left:50%;width:82%;height:20%;transform:translateX(-50%);
+ pointer-events:none;opacity:.82;filter:drop-shadow(0 0 15px #47d5ff33)}
+#bootDialog .boot-cinema-platform i{position:absolute;left:50%;top:45%;width:100%;height:48%;border-radius:50%;border:1px solid rgba(72,195,233,.36);
+ transform:translate(-50%,-50%) rotateX(58deg);box-shadow:0 0 9px #41b5da44,inset 0 0 16px #39b3dc22}
+#bootDialog .boot-cinema-platform i:nth-child(2){width:72%;height:43%;border-color:#78e2f9b0;box-shadow:0 0 15px #58c5e977}
+#bootDialog .boot-cinema-platform i:nth-child(3){width:35%;height:35%;background:radial-gradient(ellipse,#74e6ff77,transparent 70%);
+ border:0;box-shadow:0 0 35px #6be3ff77}
+#bootDialog .boot-cinema-name{margin:-4px 0 0!important;color:#d8f8ff;font:600 clamp(25px,4vw,44px) system-ui,Segoe UI,sans-serif;
+ letter-spacing:.38em;text-align:center;text-shadow:0 0 18px #43c6f455;padding-left:.38em}
+#bootDialog .boot-cinema-name small{font:500 10px ui-monospace,Consolas,monospace;letter-spacing:.27em;color:#89c0d0;margin-top:9px}
+#bootDialog .boot-holiday{margin:12px 0 0!important}
+#bootDialog .boot-cinema-wave{height:93px;display:flex;align-items:center;justify-content:center;gap:3px;
+ border:1px solid rgba(104,198,219,.17);background:linear-gradient(90deg,transparent,rgba(48,130,162,.08),transparent);padding:12px 6px}
+#bootDialog .boot-cinema-wave i{display:block;flex:1;max-width:4px;min-width:2px;height:var(--wave-h,12px);background:#63cce6;
+ border-radius:3px;opacity:.43;transform:scaleY(.55);transition:opacity .25s;transform-origin:center}
+#bootDialog .boot-cinema-wave i:nth-child(7n + 1){--wave-h:13px}
+#bootDialog .boot-cinema-wave i:nth-child(7n + 2){--wave-h:24px}
+#bootDialog .boot-cinema-wave i:nth-child(7n + 3){--wave-h:38px}
+#bootDialog .boot-cinema-wave i:nth-child(7n + 4){--wave-h:58px}
+#bootDialog .boot-cinema-wave i:nth-child(7n + 5){--wave-h:31px}
+#bootDialog .boot-cinema-wave i:nth-child(7n + 6){--wave-h:48px}
+#bootDialog.boot-speaking .boot-cinema-wave i{opacity:.95;animation:bootVoiceBars .57s ease-in-out infinite alternate}
+#bootDialog.boot-speaking .boot-cinema-wave i:nth-child(3n + 1){animation-delay:-.2s}
+#bootDialog.boot-speaking .boot-cinema-wave i:nth-child(4n + 2){animation-delay:-.39s}
+#bootDialog .boot-cinema-voice{display:flex;align-items:center;gap:9px;color:#b8e7f3;
+ font:600 10px ui-monospace,Consolas,monospace;letter-spacing:.12em;padding:17px 2px}
+#bootDialog .boot-cinema-voice i{width:7px;height:7px;border-radius:50%;background:#58ddb2;box-shadow:0 0 9px #4debc988}
+#bootDialog .boot-cinema-connection{display:flex;justify-content:space-between;gap:12px;
+ border-top:1px solid #5bd2f72e;padding-top:14px;font:500 9px ui-monospace,Consolas,monospace;letter-spacing:.07em;color:#76a8b9}
+#bootDialog .boot-cinema-connection b{color:#77e2b4;letter-spacing:.06em}
+#bootDialog .boot-cinema-foot{margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:18px;padding:12px 0 0}
+#bootDialog .boot-cinema-progress{text-align:center;width:min(500px,90%);font:600 11px ui-monospace,Consolas,monospace;letter-spacing:.17em;color:#b3e8f4}
+#bootDialog .boot-cinema-progress .boot-barwrap{width:100%;display:flex;align-items:center;gap:13px;margin:12px 0 0}
+#bootDialog .boot-cinema-progress .boot-bar{height:5px;flex:1;border:1px solid #337e98;background:#092637;box-shadow:0 0 7px #41c4e922}
+#bootDialog .boot-cinema-progress .boot-bar i{height:100%;display:block;background:linear-gradient(90deg,#298eaf,#84e9ff);
+ box-shadow:0 0 14px #47cfff88;transition:width .4s ease}
+#bootDialog .boot-cinema-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;
+ border-top:1px solid rgba(85,174,203,.2);padding-top:12px;font:500 9px ui-monospace,Consolas,monospace;
+ color:#719eae;letter-spacing:.08em;text-transform:uppercase}
+#bootDialog .boot-cinema-actions .boot-skip{margin:0;padding:10px 22px;border:1px solid #49badb78;background:#062330a6;
+ color:#b9f4ff;font:600 11px ui-monospace,Consolas,monospace;border-radius:5px;letter-spacing:.1em}
+#bootDialog .boot-cinema-actions .boot-skip:hover{background:#155369}
+#bootDialog.boot-out .boot-cinema{animation:bootCinemaExit .7s ease-in forwards}
+@keyframes bootCinemaExit{to{opacity:0;transform:scale(.975);filter:blur(7px)}}
+@keyframes bootReticleTurn{to{transform:rotate(360deg)}}
+@keyframes bootVoiceBars{from{transform:scaleY(.45)}to{transform:scaleY(1.06)}}
+@media(max-width:940px){
+ #bootDialog .boot-cinema-grid{grid-template-columns:minmax(145px,1fr) minmax(240px,2fr) minmax(145px,1fr);gap:10px}
+ #bootDialog .boot-cinema-panel{padding:11px 9px}
+ #bootDialog .boot-cinema-stat{font-size:9px;grid-template-columns:24px minmax(0,1fr) 7px;gap:5px}
+ #bootDialog .boot-stat-icon{width:23px;height:23px}
+ #bootDialog .boot-cinema-core-wrap{height:clamp(260px,38vh,400px)}
+}
+@media(max-width:680px){
+ #bootDialog .boot-cinema{padding:16px 14px;gap:4px}
+ #bootDialog .boot-cinema-brand{font-size:13px}
+ #bootDialog .boot-cinema-brand small{font-size:8px}
+ #bootDialog .boot-cinema-head{min-height:40px;padding-bottom:0!important}
+ #bootDialog .boot-cinema-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:10px;align-content:center}
+ #bootDialog .boot-cinema-center{grid-column:1/-1;grid-row:1}
+ #bootDialog .boot-cinema-core-wrap{height:min(37vh,340px)}
+ #bootDialog .holo-stage{width:min(66vw,265px,32vh)}
+ #bootDialog .boot-cinema-panel{align-self:start}
+ #bootDialog .boot-cinema-panel h3{font-size:9px;margin-bottom:6px;padding-bottom:8px}
+ #bootDialog .boot-cinema-stat{padding:6px 0;font-size:8px}
+ #bootDialog .boot-cinema-stat small{font-size:8px}
+ #bootDialog .boot-cinema-name{font-size:25px;margin:-2px 0 0!important}
+ #bootDialog .boot-cinema-name small{font-size:8px}
+ #bootDialog .boot-cinema-wave{height:67px}
+ #bootDialog .boot-cinema-voice{font-size:8px;padding:9px 0}
+ #bootDialog .boot-cinema-connection{font-size:8px}
+ #bootDialog .boot-cinema-actions>span{display:none}
+ #bootDialog .boot-cinema-actions{justify-content:center}
+ #bootDialog .boot-cinema-progress{font-size:9px}
+}
+@media(max-height:700px) and (min-width:681px){
+ #bootDialog .boot-cinema-core-wrap{height:clamp(200px,35vh,330px)}
+ #bootDialog .holo-stage{width:min(280px,32vh)}
+ #bootDialog .boot-cinema{padding-top:14px;padding-bottom:12px}
+ #bootDialog .boot-cinema-panel{padding:12px}
+}
+@media(prefers-reduced-motion:reduce){
+ #bootDialog .boot-cinema-reticle,#bootDialog.boot-speaking .boot-cinema-wave i,#bootDialog.boot-out .boot-cinema{animation:none!important}
+}
+
 </style>
 </head>
 <body class="jarvis-ui">
@@ -1566,12 +1704,29 @@
     </form>
   </dialog>
   <dialog id="folderDialog"><form id="folderForm" method="dialog"><div class="dialog-head"><h2 id="folderDialogTitle">Nuova cartella</h2><button class="icon-btn" type="button" data-close="folderDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body"><label for="folderName">Nome della cartella<input id="folderName" maxlength="90" required placeholder="Es. Lezioni e slide del modulo"></label></div><div class="dialog-foot"><span></span><div class="foot-right"><button class="btn" type="button" data-close="folderDialog">Annulla</button><button class="btn btn-primary" type="submit">Salva cartella</button></div></div></form></dialog>
-  <dialog id="bootDialog" aria-label="Avvio del sistema"><canvas id="bootFx" aria-hidden="true"></canvas>
-  <div class="hud hud-tl" aria-hidden="true"><span id="hudTime">--:--:--</span><small id="hudDate"></small></div>
-  <div class="hud hud-tr" aria-hidden="true"><span id="hudNet">RETE</span><small id="hudCache"></small></div>
-  <div class="hud hud-bl" aria-hidden="true"><span id="hudBat">ENERGIA</span><small>ALIMENTAZIONE</small></div>
-  <div class="hud hud-br" aria-hidden="true"><span id="hudScreen">SCHERMO</span><small>INTERFACCIA</small></div>
-  <div class="boot-shell holo-shell">
+  <dialog id="bootDialog" aria-label="Avvio del sistema JARVIS">
+  <canvas id="bootFx" aria-hidden="true"></canvas>
+  <div class="hud hud-tl" aria-hidden="true"><span id="hudTime"></span><small id="hudDate"></small></div>
+  <div class="hud hud-tr" aria-hidden="true"><span id="hudNet"></span><small id="hudCache"></small></div>
+  <div class="hud hud-bl" aria-hidden="true"><span id="hudBat"></span></div>
+  <div class="hud hud-br" aria-hidden="true"><span id="hudScreen"></span></div>
+  <div class="boot-cinema">
+    <header class="boot-cinema-head">
+      <div class="boot-cinema-brand"><span class="boot-cinema-brand-icon" aria-hidden="true">◈</span><span>JARVIS <small>PERSONAL ASSISTANT SYSTEM</small></span></div>
+      <div class="boot-cinema-clock"><strong id="bootClock">--:--</strong><small id="bootDate"></small></div>
+    </header>
+    <div class="boot-cinema-grid">
+      <aside class="boot-cinema-panel boot-cinema-left" aria-label="Stato dei moduli">
+        <h3><span>01</span> SYSTEM STATUS</h3>
+        <div class="boot-cinema-stat"><span class="boot-stat-icon">◉</span><span>VOICE INTERFACE<small id="bootVoiceStatus">READY</small></span><b id="bootVoiceDot" aria-hidden="true">●</b></div>
+        <div class="boot-cinema-stat"><span class="boot-stat-icon">▤</span><span>ARCHIVIO<small id="bootArchiveStatus">READY</small></span><b aria-hidden="true">●</b></div>
+        <div class="boot-cinema-stat"><span class="boot-stat-icon">▦</span><span>LEZIONI<small id="bootLessonsStatus">READY</small></span><b aria-hidden="true">●</b></div>
+        <div class="boot-cinema-stat"><span class="boot-stat-icon">✚</span><span>ANATOMIA 3D<small>MODULE READY</small></span><b aria-hidden="true">●</b></div>
+      </aside>
+      <div class="boot-cinema-center">
+        <div class="boot-cinema-core-label">HOLOGRAPHIC CORE <span>● ONLINE</span></div>
+        <div class="boot-cinema-core-wrap">
+          <div class="boot-cinema-reticle" aria-hidden="true"></div>
     <div class="holo-stage" id="holoStage" role="button" tabindex="0" aria-label="Attiva impulso olografico JARVIS" title="Clicca o premi Invio per attivare il nucleo">
       <i class="holo-ring r1"></i><i class="holo-ring r2"></i><i class="holo-ring r3"></i>
       <i class="holo-ring r4"></i><i class="holo-ring r5"></i><i class="holo-ring r6"></i><i class="holo-ring r7"></i>
@@ -1591,14 +1746,31 @@
       <i class="holo-base"></i><i class="holo-particles" id="holoParticles"></i>
       <div class="holo-orbit" id="holoOrbit"></div><i class="holo-reticle"></i><i class="holo-wave"></i><i class="holo-flash"></i>
     </div>
-    <div class="holo-interact-hint"><b>MUOVI IL CURSORE</b> · CLICCA IL NUCLEO</div>
-    <div class="holo-name"><span id="holoTitle">JARVIS</span><i class="holo-caret"></i><small id="holoSub">SISTEMA OPERATIVO</small></div>
-    <div class="boot-voice-state" aria-hidden="true"><i></i><span>ASSISTENTE IN ESECUZIONE</span></div>
-    <div id="bootHoliday" class="boot-holiday" hidden aria-label="Festività"></div>
-    <div class="boot-lines" id="bootLines"></div>
-    <div class="boot-barwrap"><div class="boot-bar"><i id="bootBar"></i></div><span id="bootPct">0%</span></div>
-    <button class="boot-skip" id="bootSkip" type="button">SALTA</button>
-  </div></dialog>
+
+          <div class="boot-cinema-platform" aria-hidden="true"><i></i><i></i><i></i></div>
+        </div>
+        <div class="holo-name boot-cinema-name"><span id="holoTitle">JARVIS</span><i class="holo-caret"></i><small id="holoSub">SYSTEM INITIALIZATION</small></div>
+        <div id="bootHoliday" class="boot-holiday" hidden aria-label="Festività"></div>
+      </div>
+      <aside class="boot-cinema-panel boot-cinema-right" aria-label="Interfaccia vocale">
+        <h3><span>02</span> VOICE CORE</h3>
+        <div class="boot-cinema-wave" id="bootVoiceWave" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="boot-cinema-voice"><i aria-hidden="true"></i><span id="bootVoiceLabel">JARVIS READY</span></div>
+        <div class="boot-cinema-connection"><span>NETWORK</span><b id="bootConnection">CHECKING</b></div>
+      </aside>
+    </div>
+    <footer class="boot-cinema-foot">
+      <div class="boot-cinema-progress">
+        <span id="bootProgressLabel">INITIALIZING SYSTEM...</span>
+        <div class="boot-barwrap"><div class="boot-bar"><i id="bootBar"></i></div><span id="bootPct">0%</span></div>
+      </div>
+      <div class="boot-cinema-actions"><span>JARVIS / SCienze motorie</span><button class="boot-skip" id="bootSkip" type="button">ENTRA NELL'ARCHIVIO</button><span id="bootFooterNet">SYSTEM STARTUP</span></div>
+    </footer>
+  </div>
+  <div class="boot-lines" id="bootLines" aria-hidden="true"></div>
+</dialog>
   <dialog id="welcomeDialog" aria-labelledby="welcomeTitle"><canvas id="welcomeFx" aria-hidden="true"></canvas><div class="welcome-shell"><header class="welcome-top"><div class="welcome-brand"><span class="welcome-brand-mark"><img src="logo-192.png" alt=""></span><span>APPUNTI &#xB7; INSUBRIA<small>IL TUO SPAZIO PERSONALE</small></span></div><span class="welcome-status"><i></i>SISTEMA ATTIVO &#xB7; <span id="welcomeSystemMsg">ARCHIVIO LOCALE</span><time id="welcomeClock">--:--</time></span><button class="welcome-skip" type="button" data-close="welcomeDialog">Vai all&#x2019;archivio</button></header><main class="welcome-main"><section class="welcome-copy"><div class="welcome-radar" aria-hidden="true"><span class="welcome-radar-core">SM</span></div><p class="welcome-eyebrow">Il tuo piano di oggi</p><h1 id="welcomeTitle">Buongiorno<span></span></h1><p id="welcomeDate" class="welcome-date"></p><p id="welcomeIntro" class="welcome-intro"></p></section><section class="welcome-panel" aria-label="Materie di oggi"><div class="welcome-panel-head"><h2 id="welcomePanelTitle">Le tue lezioni</h2><span id="welcomeBadge">OGGI</span></div><div id="welcomeLessons" class="welcome-lessons"></div><div id="welcomeCountdown"></div><details class="welcome-recent"><summary>Ultimi appunti <span>ACCESSO RAPIDO</span></summary><div id="welcomeRecent" class="welcome-recent-list"></div></details></section></main><footer class="welcome-footer"><span class="welcome-footer-note">Archivio locale &#xB7; i tuoi appunti restano sul dispositivo</span><div class="welcome-footer-actions"><button class="welcome-voice" type="button" id="speakBriefingBtn">Ascolta briefing</button><button class="welcome-command" type="button" id="voiceSettingsBtn">Voce</button><button class="welcome-command welcome-mute" type="button" id="voiceMuteBtn" aria-pressed="false" aria-label="Disattiva voce automatica">&#x1F50A; Voce attiva</button><button class="welcome-command" type="button" id="welcomeCommandBtn">Ctrl+K&nbsp; Comandi</button><button class="welcome-enter" type="button" id="enterArchiveBtn">Entra nei miei appunti</button></div></footer></div></dialog>
   <dialog id="voiceSettingsDialog" class="voice-settings-dialog" aria-labelledby="voiceSettingsTitle"><div class="dialog-head"><div><h2 id="voiceSettingsTitle">Configurazione vocale</h2><p class="voice-settings-subtitle">Regola la voce del briefing</p></div><button class="icon-btn" type="button" data-close="voiceSettingsDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body voice-settings-body"><label for="speechVoiceSelect">Voce disponibile<select id="speechVoiceSelect"><option value="">Italiano predefinito del dispositivo</option></select><small class="voice-settings-hint">Le voci dipendono dal browser e dal dispositivo. Per un risultato pi&#xF9; naturale, prova una voce italiana &#x201C;Natural&#x201D; o &#x201C;Enhanced&#x201D;, se disponibile.</small></label><button class="btn voice-preset" id="jarvisVoicePresetBtn" type="button">Applica preset JARVIS &#xB7; Decisa</button><label class="voice-range-label" for="speechPitch"><span>Tono <output id="speechPitchValue">0,88</output></span><input id="speechPitch" type="range" min="0.65" max="1.25" step="0.05" value="0.88"></label><label class="voice-range-label" for="speechRate"><span>Velocit&#xE0; <output id="speechRateValue">0,92&#xD7;</output></span><input id="speechRate" type="range" min="0.75" max="1.15" step="0.05" value="0.92"></label><p class="voice-settings-hint">Il preset abbassa leggermente il tono e rallenta il ritmo. La naturalezza dipende soprattutto dalla voce italiana installata nel dispositivo; il browser non pu&#xF2; riprodurre esattamente la voce del film.</p></div><div class="dialog-foot voice-settings-foot"><button class="btn" id="previewVoiceBtn" type="button">Prova la voce</button><div class="foot-right"><button class="btn" type="button" data-close="voiceSettingsDialog">Chiudi</button><button class="btn btn-primary" id="saveVoiceSettingsBtn" type="button">Salva</button></div></div></dialog>
   <dialog id="docxPreviewDialog" aria-labelledby="docxPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="docxPreviewTitle">Anteprima documento</h2><p>Anteprima locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadDocxBtn" type="button">Scarica</button><button class="icon-btn" type="button" data-close="docxPreviewDialog" aria-label="Chiudi anteprima">&#xD7;</button></div></div><div class="docx-preview-scroll"><div id="docxPreviewError" class="docx-preview-error hidden" role="status"></div><article id="docxContent" class="docx-content"></article></div></dialog>
@@ -3140,6 +3312,17 @@
     const dlg=$('bootDialog'),lines=$('bootLines'),bar=$('bootBar');let finished=false,timers=[];
     const fast=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,gap=fast?60:790;
     lines.replaceChildren();bar.style.width='0%';$('bootPct').textContent='0%';
+    const bootNow=new Date();
+    $('bootClock').textContent=bootNow.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+    $('bootDate').textContent=bootNow.toLocaleDateString('it-IT',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}).toUpperCase();
+    $('bootArchiveStatus').textContent=data.notes.length+' APPUNTI';
+    $('bootLessonsStatus').textContent=(scheduleMap()[dayKey()]||[]).length+' OGGI';
+    $('bootConnection').textContent=navigator.onLine?'CONNECTED':'OFFLINE';
+    $('bootConnection').style.color=navigator.onLine?'#77e2b4':'#e9b381';
+    $('bootFooterNet').textContent=navigator.onLine?'ONLINE':'OFFLINE';
+    $('bootVoiceStatus').textContent=isVoiceMuted()?'DISATTIVATA':'READY';
+    $('bootVoiceLabel').textContent=isVoiceMuted()?'VOICE MUTED':'JARVIS READY';
+
     const today=dayKey(),lessons=(scheduleMap()[today]||[]).length,exam=upcomingExams()[0],now=new Date();
     const fest=$('bootHoliday');
     const month=now.getMonth()+1,day=now.getDate();
@@ -3188,7 +3371,7 @@
       try{
         const synth=window.speechSynthesis;
         bootVoiceUtterance=speechUtterance(buildWelcomeSpeech());
-        bootVoiceUtterance.onstart=()=>{bootVoiceStarted=true;dlg.classList.add('boot-speaking');reactorController?.setVoiceActive(true);clearTimeout(bootVoiceFallback);bootVoiceWatchdog=setTimeout(()=>finish(false),30000);};
+        bootVoiceUtterance.onstart=()=>{bootVoiceStarted=true;$('bootVoiceLabel').textContent='JARVIS STA PARLANDO';$('bootVoiceStatus').textContent='SPEAKING';dlg.classList.add('boot-speaking');reactorController?.setVoiceActive(true);clearTimeout(bootVoiceFallback);bootVoiceWatchdog=setTimeout(()=>finish(false),30000);};
         bootVoiceUtterance.onend=()=>{dlg.classList.remove('boot-speaking');reactorController?.setVoiceActive(false);finish(false,true);};
         bootVoiceUtterance.onerror=()=>{dlg.classList.remove('boot-speaking');reactorController?.setVoiceActive(false);if(!finished)bootVoiceFallback=setTimeout(()=>finish(false),900);};
         synth.cancel();
@@ -3220,7 +3403,7 @@
     const cleanupHolo=()=>{reactorDisposed=true;dlg.classList.remove('boot-speaking');reactorController?.setVoiceActive(false);reactorController?.stop();reactorController=null;dlg.removeEventListener('pointermove',moveHolo);dlg.removeEventListener('pointerleave',resetTilt);stage.removeEventListener('click',pulseHolo);stage.removeEventListener('keydown',keyHolo);clearTimeout(boostTimer);resetTilt();stage.classList.remove('holo-boost');};
     fillBootHud(timers);
     /* Restyling minimale: niente pioggia digitale né glitch, per un avvio più sobrio. */
-    steps.forEach((step,index)=>timers.push(setTimeout(()=>{const row=document.createElement('div'),label=document.createElement('span'),text=step[0]+': '+step[1];row.innerHTML='<b>OK</b>';row.append(label);lines.append(row);if(fast)label.textContent=text;else scrambleText(label,text,300);const pct=Math.round((index+1)/steps.length*100);bar.style.width=pct+'%';$('bootPct').textContent=pct+'%';},gap*(index+1))));
+    steps.forEach((step,index)=>timers.push(setTimeout(()=>{const row=document.createElement('div'),label=document.createElement('span'),text=step[0]+': '+step[1];row.innerHTML='<b>OK</b>';row.append(label);lines.append(row);if(fast)label.textContent=text;else scrambleText(label,text,300);const pct=Math.round((index+1)/steps.length*100);bar.style.width=pct+'%';$('bootPct').textContent=pct+'%';$('bootProgressLabel').textContent=pct===100?'SYSTEM READY':'INITIALIZING SYSTEM...';},gap*(index+1))));
     /* La chiusura è gestita dalla fine della voce; in modalità silenziosa resta il timer di fallback. */
   }
 
