@@ -51,6 +51,50 @@ export function startBootReactor(stage,{reducedMotion=false}={}){
     dot.position.set(Math.cos(a)*1.58,Math.sin(a)*1.58,0);
     dot.scale.setScalar(.76);
   }
+  // Transparent spherical intelligence field inspired by the selected JARVIS concept.
+  // Actual 3D meridians, latitude orbits and a segmented luminous equator.
+  const sphereRig=new THREE.Group();rig.add(sphereRig);
+  const sphereOuter=mat(new THREE.MeshPhysicalMaterial({
+    color:0x166e92,metalness:.2,roughness:.18,transparent:true,opacity:.12,
+    side:THREE.DoubleSide,depthWrite:false,clearcoat:1,clearcoatRoughness:.1,
+    emissive:0x08789a,emissiveIntensity:.22
+  }));
+  const latitudeMaterial=mat(new THREE.LineBasicMaterial({color:0x54bbdf,transparent:true,opacity:.28,depthWrite:false}));
+  const meridianMaterial=mat(new THREE.LineBasicMaterial({color:0x8adaee,transparent:true,opacity:.20,depthWrite:false}));
+  const shell=add(sphereRig,geom(new THREE.SphereGeometry(1.34,56,36)),sphereOuter);
+  shell.renderOrder=1;
+  const parallel=(radius,y,material)=>{
+    const positions=[],segments=100;
+    for(let i=0;i<=segments;i++){const a=i*Math.PI*2/segments;positions.push(Math.cos(a)*radius,y,Math.sin(a)*radius);}
+    const geometry=geom(new THREE.BufferGeometry());geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
+    sphereRig.add(new THREE.Line(geometry,material));
+  };
+  for(let n=-4;n<=4;n++){
+    const phi=n*Math.PI/11;
+    parallel(Math.cos(phi)*1.355,Math.sin(phi)*1.355,latitudeMaterial);
+  }
+  for(let n=0;n<12;n++){
+    const meridian=new THREE.Group();meridian.rotation.y=n*Math.PI/12;sphereRig.add(meridian);
+    const g=geom(new THREE.BufferGeometry()),pts=[];
+    for(let i=0;i<=84;i++){
+      const p=i*Math.PI*2/84;pts.push(Math.cos(p)*1.36,Math.sin(p)*1.36,0);
+    }
+    g.setAttribute('position',new THREE.Float32BufferAttribute(pts,3));
+    meridian.add(new THREE.Line(g,meridianMaterial));
+  }
+  const surfaceMarkers=new THREE.Group();sphereRig.add(surfaceMarkers);
+  const markerGeo=geom(new THREE.BoxGeometry(.12,.045,.055));
+  for(let i=0;i<24;i++){
+    const a=i*Math.PI/12;
+    const marker=add(surfaceMarkers,markerGeo,i%4===0?bright:accent);
+    marker.position.set(Math.cos(a)*1.39,0,Math.sin(a)*1.39);
+    marker.rotation.y=-a;
+  }
+  const orbitBand=pivot(.18,.4,-.15);
+  ring(orbitBand,1.43,.015,accent);
+  const innerSphere=add(sphereRig,geom(new THREE.SphereGeometry(.97,36,24)),
+    mat(new THREE.MeshBasicMaterial({color:0x1b7193,transparent:true,opacity:.045,depthWrite:false,side:THREE.BackSide})));
+  innerSphere.renderOrder=0;
   const housing=add(rig,geom(new THREE.SphereGeometry(1.03,48,32)),metal);
   housing.scale.z=.64;
   const innerRing=ring(rig,.96,.033,litMetal);innerRing.position.z=.49;
@@ -95,6 +139,8 @@ export function startBootReactor(stage,{reducedMotion=false}={}){
       gA.rotation.z+=.0028*velocity;
       gB.rotation.z-=.0037*velocity;
       gC.rotation.z+=.0019*velocity;
+      sphereRig.rotation.y+=.0014*velocity;
+      sphereRig.rotation.z=Math.sin(t*.21)*.10;
       rig.rotation.y+=(Math.sin(t*.27)*.26+dragX-rig.rotation.y)*.035;
       rig.rotation.x+=(Math.cos(t*.31)*.14+dragY-rig.rotation.x)*.035;
       rig.position.y=Math.sin(t*.85)*.045;
@@ -105,6 +151,7 @@ export function startBootReactor(stage,{reducedMotion=false}={}){
       energy.scale.setScalar(voiceActive?1+.13*voiceWave:1);
       centerLight.intensity=8+(boost>0?6:0)+(voiceActive?5+6*voiceWave:0);
       iris.scale.setScalar(voiceActive?1+.025*voiceWave:1);
+      sphereOuter.opacity=voiceActive?.16+.025*voiceWave:.12;
     }
     if(!document.hidden)renderer.render(scene,camera);
   };
