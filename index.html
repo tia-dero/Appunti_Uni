@@ -1295,6 +1295,31 @@
       #bootDialog .holo-ring.r1,#bootDialog .holo-ring.r2,#bootDialog .holo-logo{animation:none !important}
     }
 
+
+    /* Nucleo originale ispirato alle interfacce circolari di JARVIS, senza logo. */
+    #bootDialog .holo-emitter{
+      width:76%;height:76%;aspect-ratio:1;border:0;border-radius:50%;
+      background:radial-gradient(circle,#1f60702c 0%,#0b2e3a20 47%,transparent 72%);
+      box-shadow:none;animation:none!important;overflow:visible;
+      display:grid;place-items:center;transform:none!important;
+    }
+    #bootDialog .stark-reactor{
+      width:100%;height:100%;display:block;overflow:visible;
+      filter:drop-shadow(0 0 14px rgba(70,186,209,.15));
+      animation:reactorReveal 1s ease-out both;
+    }
+    #bootDialog .reactor-rotor{transform-origin:120px 120px;animation:reactorTurn 20s linear infinite}
+    #bootDialog .reactor-counter{transform-origin:120px 120px;animation:reactorTurn 26s linear infinite reverse}
+    #bootDialog .reactor-center{transform-origin:120px 120px;animation:reactorBreath 4s ease-in-out infinite}
+    #bootDialog .holo-stage.holo-boost .reactor-rotor{animation-duration:4s}
+    #bootDialog .holo-stage.holo-boost .reactor-center{filter:drop-shadow(0 0 10px #7edce8)}
+    @keyframes reactorTurn{to{transform:rotate(360deg)}}
+    @keyframes reactorBreath{50%{opacity:.73;transform:scale(.97)}}
+    @keyframes reactorReveal{from{opacity:0;transform:scale(.84)}to{opacity:1;transform:scale(1)}}
+    @media(prefers-reduced-motion:reduce){
+      #bootDialog .reactor-rotor,#bootDialog .reactor-counter,#bootDialog .reactor-center,#bootDialog .stark-reactor{animation:none!important}
+    }
+
 </style>
 </head>
 <body class="jarvis-ui">
@@ -1354,9 +1379,29 @@
       <i class="holo-ring r1"></i><i class="holo-ring r2"></i><i class="holo-ring r3"></i>
       <i class="holo-ring r4"></i><i class="holo-ring r5"></i><i class="holo-ring r6"></i><i class="holo-ring r7"></i>
       <i class="holo-ticks"></i><i class="holo-beam"></i><i class="holo-scan"></i>
-      <div class="holo-emitter">
-        <img class="holo-logo" src="logo-192.png" alt="Logo JARVIS" draggable="false">
-        <i class="core-crosshair"></i><i class="core-glass"></i>
+      <div class="holo-emitter" aria-hidden="true">
+        <svg class="stark-reactor" viewBox="0 0 240 240" focusable="false" aria-hidden="true">
+          <defs>
+            <radialGradient id="reactorLight"><stop offset="0" stop-color="#e9fcff"/><stop offset=".27" stop-color="#95edf5"/><stop offset=".63" stop-color="#2f9fba"/><stop offset="1" stop-color="#123743"/></radialGradient>
+            <filter id="reactorGlow" x="-75%" y="-75%" width="250%" height="250%"><feGaussianBlur stdDeviation="5"/></filter>
+          </defs>
+          <circle cx="120" cy="120" r="103" fill="none" stroke="#4ba5b9" stroke-opacity=".13" stroke-width="1"/>
+          <g class="reactor-rotor"><circle cx="120" cy="120" r="93" fill="none" stroke="#68c5d7" stroke-opacity=".52" stroke-width="2" stroke-dasharray="46 17 12 24 38 15"/>
+            <circle cx="120" cy="120" r="84" fill="none" stroke="#7ecbd8" stroke-opacity=".26" stroke-width="1" stroke-dasharray="2 7"/>
+          </g>
+          <circle cx="120" cy="120" r="70" fill="none" stroke="#8ddce5" stroke-opacity=".4" stroke-width="1"/>
+          <g class="reactor-stator" stroke="#78c5d3" stroke-width="3" stroke-opacity=".72" fill="none">
+            <path d="M120 44v19 M120 177v19 M44 120h19 M177 120h19 M66.3 66.3l13.5 13.5 M160.2 160.2l13.5 13.5 M173.7 66.3l-13.5 13.5 M79.8 160.2l-13.5 13.5"/>
+          </g>
+          <g class="reactor-counter"><circle cx="120" cy="120" r="57" fill="none" stroke="#9de6ef" stroke-opacity=".65" stroke-width="3" stroke-dasharray="59 14 33 14 8 14"/>
+            <circle cx="120" cy="120" r="46" fill="none" stroke="#beeef4" stroke-opacity=".33" stroke-width="1"/>
+          </g>
+          <circle cx="120" cy="120" r="32" fill="#72dcec" opacity=".3" filter="url(#reactorGlow)"/>
+          <g class="reactor-center"><circle cx="120" cy="120" r="28" fill="#0b2f3c" stroke="#a4e5ed" stroke-width="2"/>
+            <circle cx="120" cy="120" r="19" fill="url(#reactorLight)" opacity=".9"/>
+            <circle cx="120" cy="120" r="6" fill="#e6fbff" opacity=".9"/>
+          </g>
+        </svg>
       </div>
       <i class="holo-base"></i><i class="holo-particles" id="holoParticles"></i>
       <div class="holo-orbit" id="holoOrbit"></div><i class="holo-reticle"></i><i class="holo-wave"></i><i class="holo-flash"></i>
