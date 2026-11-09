@@ -1779,6 +1779,95 @@
 }
 #bootDialog.boot-speaking .energy-orb-light{animation-duration:2.1s}
 
+
+/* Cinematic reactor boot + atmospheric control-room backdrop, only inside boot dialog. */
+#bootDialog{
+ background:
+   radial-gradient(ellipse 45% 65% at 50% 57%,rgba(18,87,124,.31),transparent 78%),
+   radial-gradient(ellipse 28% 36% at 86% 6%,rgba(29,102,157,.21),transparent 95%),
+   linear-gradient(135deg,#050d16 0%,#071b27 42%,#030b13 100%);
+}
+#bootDialog .boot-cinema{position:relative;overflow:hidden}
+#bootDialog .boot-scene{position:absolute;inset:0;pointer-events:none;z-index:-1;overflow:hidden}
+#bootDialog .boot-scene-globe{
+ position:absolute;right:-10%;top:-41%;width:min(68vw,950px);aspect-ratio:1;border-radius:50%;
+ opacity:.40;transform:rotate(-12deg);
+ background:
+   radial-gradient(circle at 33% 33%,rgba(113,203,253,.16),transparent 44%),
+   radial-gradient(ellipse at 45% 53%,transparent 39%,rgba(84,178,236,.5) 63%,rgba(44,135,187,.12) 73%,transparent 77%),
+   repeating-linear-gradient(12deg,transparent 0 13px,rgba(96,192,231,.08) 13px 14px),
+   repeating-linear-gradient(100deg,transparent 0 23px,rgba(95,178,222,.04) 23px 24px),
+   radial-gradient(circle at 28% 35%,#15394c 3%,#0d253b 44%,#061420 71%,transparent 73%);
+ box-shadow:inset 28px 12px 65px #74dcfa1a,0 0 35px rgba(32,131,188,.25);
+ -webkit-mask-image:radial-gradient(circle,#000 0 69%,transparent 73%);
+ mask-image:radial-gradient(circle,#000 0 69%,transparent 73%);
+}
+#bootDialog .boot-scene-haze{
+ position:absolute;inset:0;
+ background:radial-gradient(ellipse 33% 33% at 50% 49%,rgba(52,164,212,.13),transparent 75%),
+ linear-gradient(90deg,rgba(3,12,20,.36),transparent 32% 68%,rgba(4,13,22,.25));
+}
+#bootDialog .boot-scene-grid{
+ position:absolute;inset:auto -20% -20% -20%;height:50%;
+ transform:perspective(560px) rotateX(65deg);transform-origin:50% 100%;
+ background-image:linear-gradient(rgba(74,175,210,.17) 1px,transparent 1px),
+ linear-gradient(90deg,rgba(74,175,210,.13) 1px,transparent 1px);
+ background-size:60px 60px;
+ -webkit-mask-image:linear-gradient(0deg,#000,transparent 86%);
+ mask-image:linear-gradient(0deg,#000,transparent 86%);opacity:.5;
+}
+#bootDialog .boot-cinema-core-wrap:after{
+ content:"";position:absolute;z-index:0;pointer-events:none;
+ width:42%;height:36%;left:29%;bottom:0%;
+ background:linear-gradient(0deg,rgba(49,167,216,.03),rgba(69,190,229,.23),transparent);
+ clip-path:polygon(19% 100%,81% 100%,58% 0,42% 0);filter:blur(13px);
+}
+#bootDialog .holo-stage{z-index:3}
+#bootDialog .holo-stage .holo-ring.r1{opacity:.4!important}
+#bootDialog .reactor-fallback{
+ position:absolute;inset:1%;display:grid;place-items:center;border-radius:50%;
+ background:radial-gradient(circle,#42c8ed16 0%,#0b466541 29%,#031b2e25 55%,transparent 70%);
+ filter:drop-shadow(0 0 12px rgba(63,202,238,.28));
+}
+#bootDialog .reactor-fallback-ring{
+ display:block;position:absolute;border-radius:50%;
+ border:2px solid transparent;
+ box-shadow:inset 0 0 18px #49cefd20,0 0 13px #4ccff62b;
+}
+#bootDialog .reactor-fallback-ring.ring-outer{
+ inset:3%;border-top-color:#8cecff;border-right-color:#4baac9;border-bottom-color:#4696b466;
+ background:repeating-conic-gradient(from 0deg,transparent 0 10deg,#78ddf77a 10deg 14deg,transparent 14deg 25deg);
+ -webkit-mask:radial-gradient(circle,transparent 0 86%,#000 87% 94%,transparent 95%);
+ mask:radial-gradient(circle,transparent 0 86%,#000 87% 94%,transparent 95%);
+ animation:reactorFallbackSpin 22s linear infinite;
+}
+#bootDialog .reactor-fallback-ring.ring-mid{
+ inset:18%;border-top-color:#a8f8ff;border-left-color:#37aed2a8;border-bottom-color:#60deff;
+ background:repeating-conic-gradient(from 15deg,#75d5ec 0 10deg,transparent 10deg 28deg);
+ -webkit-mask:radial-gradient(circle,transparent 0 76%,#000 77% 93%,transparent 94%);
+ mask:radial-gradient(circle,transparent 0 76%,#000 77% 93%,transparent 94%);
+ animation:reactorFallbackSpin 15s linear infinite reverse;
+}
+#bootDialog .reactor-fallback-ring.ring-inner{
+ inset:34%;border:2px solid #8de8f7ac;
+ box-shadow:0 0 22px #4fe2ff55,inset 0 0 17px #6fe3ff4b;
+ animation:reactorFallbackSpin 28s linear infinite;
+}
+#bootDialog .reactor-fallback-center{
+ position:absolute;inset:42%;border-radius:50%;
+ background:radial-gradient(circle,#fff 0%,#d0ffff 20%,#76ddfa 44%,#0b7bb448 72%,transparent 95%);
+ box-shadow:0 0 23px #76e5ffbb,0 0 48px #34bff18a;
+ animation:reactorFallbackPulse 4s ease-in-out infinite;
+}
+#bootDialog.boot-speaking .reactor-fallback-center{animation-duration:2s}
+#bootDialog .boot-cinema-panel{background:linear-gradient(125deg,rgba(8,32,45,.88),rgba(5,20,31,.83))}
+@keyframes reactorFallbackSpin{to{transform:rotate(360deg)}}
+@keyframes reactorFallbackPulse{50%{opacity:.7;transform:scale(.93)}}
+@media(max-width:700px){#bootDialog .boot-scene-globe{right:-42%;top:-13%;width:110vw;opacity:.17}#bootDialog .boot-scene-grid{opacity:.25}}
+@media(prefers-reduced-motion:reduce){
+ #bootDialog .reactor-fallback-ring,#bootDialog .reactor-fallback-center{animation:none!important}
+}
+
 </style>
 </head>
 <body class="jarvis-ui">
@@ -1835,6 +1924,7 @@
   <div class="hud hud-bl" aria-hidden="true"><span id="hudBat"></span></div>
   <div class="hud hud-br" aria-hidden="true"><span id="hudScreen"></span></div>
   <div class="boot-cinema">
+    <div class="boot-scene" aria-hidden="true"><div class="boot-scene-globe"></div><div class="boot-scene-haze"></div><div class="boot-scene-grid"></div></div>
     <header class="boot-cinema-head">
       <div class="boot-cinema-brand"><span class="boot-cinema-brand-icon" aria-hidden="true">◈</span><span>JARVIS <small>PERSONAL ASSISTANT SYSTEM</small></span></div>
       <div class="boot-cinema-clock"><strong id="bootClock">--:--</strong><small id="bootDate"></small></div>
@@ -1856,11 +1946,11 @@
       <i class="holo-ring r4"></i><i class="holo-ring r5"></i><i class="holo-ring r6"></i><i class="holo-ring r7"></i>
       <i class="holo-ticks"></i><i class="holo-beam"></i><i class="holo-scan"></i>
       <div class="holo-emitter jarvis-core-3d" aria-hidden="true">
-        <div class="energy-orb">
-          <i class="energy-orb-haze"></i>
-          <i class="energy-orb-shell"></i>
-          <i class="energy-orb-filaments"></i>
-          <i class="energy-orb-light"></i>
+        <div class="reactor-fallback">
+          <i class="reactor-fallback-ring ring-outer"></i>
+          <i class="reactor-fallback-ring ring-mid"></i>
+          <i class="reactor-fallback-ring ring-inner"></i>
+          <i class="reactor-fallback-center"></i>
         </div>
       </div>
       <i class="holo-base"></i><i class="holo-particles" id="holoParticles"></i>
