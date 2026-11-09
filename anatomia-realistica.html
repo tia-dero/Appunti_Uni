@@ -141,7 +141,7 @@ function cercaStruttura(raw){
  let best=null, scoreMax=0;
  for(const o of objects){
   const it=normalizzaRicerca(label(o)),en=normalizzaRicerca(o.userData.name||o.name), side=String(o.userData.side||'').toLowerCase();
-  const sideIsWrong=!!wantedSide&&side!==wantedSide&&!(o.userData.name||'').toLowerCase().includes(wantedSide);
+  const sideIsWrong=!!wantedSide&&side!==wantedSide&&!(o.userData.englishName||o.userData.name||'').toLowerCase().includes(wantedSide);
   if(sideIsWrong)continue;
   let score=0;
   for(const t of candidates){
@@ -233,7 +233,7 @@ function registerAdditional(model,system){
   while(n&&!part){part=n.userData?.za_name||'';n=n.parent}
   part=part||o.name||'Struttura anatomica';o.userData.name=italianExtra(part);o.userData.englishName=part;
   o.userData.extraSystem=system;
-  o.userData.side=/\.l$/i.test(part)?'left':/\.r$/i.test(part)?'right':'midline';
+  o.userData.side=/\.l$|\bleft\b/i.test(part)?'left':/\.r$|\bright\b/i.test(part)?'right':'midline';
   const str=part.toLowerCase();
   o.userData.tissue=system==='visceral'?'organ':/artery|aorta|arterial|pulmonary trunk/.test(str)?'artery':/vein|vena cava|venous|azygos/.test(str)?'vein':'heart';
   if(o.material){o.material=o.material.clone();o.material.side=THREE.DoubleSide;
