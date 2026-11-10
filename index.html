@@ -2904,10 +2904,7 @@
         <span class="matter-status-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
       </div>
     </div>
-<section class="jarvis-study-grid" aria-label="Riepilogo universitario JARVIS">
-<section class="jarvis-hud-telemetry jarvis-hud-left" aria-label="Missione universitaria e prossima lezione"><section class="welcome-copy"><div class="welcome-radar" aria-hidden="true"><span class="welcome-radar-core">SM</span></div><p class="welcome-eyebrow">Il tuo piano di oggi</p><h1 id="welcomeTitle">Buongiorno<span></span></h1><p id="welcomeDate" class="welcome-date"></p><p id="welcomeIntro" class="welcome-intro"></p></section></section>
-<section class="jarvis-hud-telemetry jarvis-hud-right" aria-label="Lezioni, esami e materiali recenti"><section class="welcome-panel" aria-label="Materie di oggi"><div class="welcome-panel-head"><h2 id="welcomePanelTitle">Le tue lezioni</h2><span id="welcomeBadge">OGGI</span></div><div id="welcomeLessons" class="welcome-lessons"></div><details class="welcome-recent"><summary>Ultimi appunti <span>ACCESSO RAPIDO</span></summary><div id="welcomeRecent" class="welcome-recent-list"></div></details></section></section>
-</section>
+
     <div class="matter-voice-caption" aria-hidden="true"><span class="matter-voice-caption-line"></span><span>PARTICLE SYNCHRONIZATION</span><span class="matter-voice-caption-line"></span></div>
 <footer class="welcome-footer jarvis-hud-actions"><span class="welcome-footer-note">Archivio locale &#xB7; i tuoi appunti restano sul dispositivo</span><div class="welcome-footer-actions"><button class="welcome-voice" type="button" id="speakBriefingBtn">Ascolta briefing</button><button class="welcome-command" type="button" id="voiceSettingsBtn">Voce</button><button class="welcome-command welcome-mute" type="button" id="voiceMuteBtn" aria-pressed="false" aria-label="Disattiva voce automatica">&#x1F50A; Voce attiva</button><button class="welcome-command" type="button" id="welcomeCommandBtn">Ctrl+K&nbsp; Comandi</button><button class="welcome-enter" type="button" id="enterArchiveBtn">Entra nei miei appunti</button><a class="welcome-command" href="anatomia-realistica.html" id="hudAnatomyLink">◎ Anatomia 3D</a><button class="welcome-command" type="button" id="hudScheduleBtn">▦ Orario</button></div></footer>
     <div class="matter-footer"><span class="matter-footer-brand">◈ SCIENZE MOTORIE <b>/</b> INSUBRIA</span><span class="matter-footer-mid" aria-hidden="true">J.A.R.V.I.S. <i></i> SYSTEM INITIALIZATION</span><button type="button" id="matterSkip">ENTRA NELL'ARCHIVIO <span aria-hidden="true">↗</span></button></div>
@@ -3038,22 +3035,8 @@
     $('dailyCard').querySelectorAll('[data-daily-subject]').forEach(button=>button.addEventListener('click',()=>activateSubject(button.dataset.dailySubject,true)));
     $('openScheduleBtn').addEventListener('click',openSchedule);
   }
-  function renderWelcome(){
-    const today=dayKey(),lessons=scheduleMap()[today]||[],now=new Date(),greeting=greetingWord(now),title=$('welcomeTitle'),name=document.createElement('span');
-    title.replaceChildren(document.createTextNode(userName()?greeting+', ':greeting),name);name.textContent=userName()?userName()+'.':'.';$('welcomeDate').textContent=calendarDateLabel(today);
-    let badge='OGGI',panelTitle='Le tue lezioni',intro='',rows='';
-    const all=allLessons();
-    const lessonRow=(lesson,date=null)=>{const subject=calendarSubject(lesson.subject),time=date?calendarDateLabel(date)+' \u00B7 '+lesson.start:lesson.start+'\u2013'+lesson.end,meta=date?(lesson.place||'Prossimo appuntamento'):(lesson.place||'');return '<article class="welcome-lesson"><span class="welcome-lesson-time">'+escapeHtml(time)+'</span><span class="welcome-lesson-name">'+escapeHtml(lesson.subject)+(meta?'<small>'+escapeHtml(meta)+'</small>':'')+'</span>'+(subject?'<button class="btn" type="button" data-welcome-subject="'+escapeHtml(subject.id)+'">Apri appunti</button>':'<span class="daily-next">Materia non presente</span>')+'</article>';};
-    if(lessons.length){intro='Ecco le materie che hai oggi. Apri l\u2019area di una materia per ritrovare subito appunti e slide.';rows=lessons.map(lesson=>lessonRow(lesson)).join('');}
-
-    else if(all.length){badge='ORARIO CONCLUSO';panelTitle='Il tuo archivio';intro='Non ci sono altre lezioni nel calendario. Puoi aggiornare l\u2019orario dal pulsante Orario nella panoramica.';rows='<div class="welcome-empty"><strong>Nessuna lezione in programma.</strong>Entra nell\u2019archivio e scegli la materia da consultare.</div>';}
-    else{badge='ORARIO VUOTO';panelTitle='Il tuo archivio';intro='Non hai ancora inserito un orario. Puoi importarlo (.ics) o aggiungerlo a mano dalla panoramica.';rows='<div class="welcome-empty"><strong>Nessuna lezione disponibile.</strong>Gli appunti sono a portata di mano quando vuoi.</div>';}
-    $('welcomeBadge').textContent=badge;$('welcomePanelTitle').textContent=panelTitle;$('welcomeIntro').textContent=intro;$('welcomeLessons').innerHTML=rows;
-    // No upcoming-lesson or exam cards in the holographic home screen.
-    const recent=recentlyOpenedNotes().slice(0,3);$('welcomeRecent').innerHTML=recent.length?recent.map(item=>{const note=item.note,subject=data.subjects.find(entry=>entry.id===note.subjectId),title=note.title||fileTitle(note.fileName)||'Appunto senza titolo',type=fileTypeMeta(note.fileName);return '<button class="welcome-recent-item" type="button" data-welcome-note="'+escapeHtml(note.id)+'"><span class="welcome-recent-icon">'+svgIcon('file')+'</span><span class="welcome-recent-text">'+escapeHtml(title)+'<small>'+escapeHtml(subject?.name||'Materia')+' \u00B7 '+escapeHtml(type.label)+'</small></span><span class="welcome-recent-arrow">></span></button>';}).join(''):'<div class="welcome-empty"><strong>Nessun materiale aperto ancora.</strong>Qui compariranno gli ultimi materiali consultati.</div>';
-    $('welcomeLessons').querySelectorAll('[data-welcome-subject]').forEach(button=>button.addEventListener('click',()=>{if($('matterBoot').open)$('matterBoot').close();activateSubject(button.dataset.welcomeSubject,true);}));
-    $('welcomeRecent').querySelectorAll('[data-welcome-note]').forEach(button=>button.addEventListener('click',()=>{const note=data.notes.find(item=>item.id===button.dataset.welcomeNote);if(!note)return;if($('matterBoot').open)$('matterBoot').close();recordNoteOpened(note.id);if(note.attachmentId)openAttachmentForNote(note.id);else openNote(note.id);}));
-  }
+  // Legacy welcome panels were removed: retained as a harmless compatibility hook.
+  function renderWelcome(){}
   /* ===== Aggiunte: messaggi di sistema, consultazione, log accessi, comandi rapidi, sfondo benvenuto ===== */
   const SYSTEM_MESSAGES=['Archivio pronto','Materiali sincronizzati localmente','Sessione di studio attiva','Indice appunti allineato','Canale locale stabile','Archivio locale attivo'];
   let systemMessageIndex=Math.floor(Math.random()*SYSTEM_MESSAGES.length);
