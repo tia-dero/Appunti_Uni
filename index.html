@@ -2101,6 +2101,103 @@
  #matterBoot .matter-readout-bar i,#matterBoot .matter-voice-spectrum i{animation:none!important}
 }
 
+
+/* JARVIS cinematic polish: restrained, thin translucent instrumentation,
+   atmospheric depth and coordinated voice response. No fake numeric readouts. */
+#matterBoot{
+ background:
+   radial-gradient(ellipse 34% 50% at 50% 42%,rgba(14,114,154,.22),transparent 89%),
+   radial-gradient(ellipse 90% 45% at 50% 108%,rgba(18,89,127,.33),transparent 76%),
+   linear-gradient(110deg,#030b12 0%,#071c2a 50%,#030b12 100%);
+}
+#matterBoot .matter-boot-content{overflow:hidden}
+#matterBoot .matter-boot-content::after{
+ content:"";position:absolute;left:-22%;right:-22%;bottom:-22vh;height:40vh;
+ pointer-events:none;z-index:-1;opacity:.35;
+ background-image:
+  linear-gradient(rgba(71,183,220,.20) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(71,183,220,.12) 1px,transparent 1px);
+ background-size:70px 70px;
+ transform:perspective(520px) rotateX(65deg);transform-origin:bottom;
+ mask-image:linear-gradient(0deg,#000 8%,transparent 98%);
+}
+#matterBoot .matter-scene{width:min(1480px,100%);grid-template-columns:minmax(185px,1fr) minmax(0,660px) minmax(185px,1fr);gap:clamp(15px,2.2vw,38px)}
+#matterBoot .matter-side{
+ background:linear-gradient(140deg,rgba(6,27,42,.37),rgba(5,19,30,.17));
+ border:0;border-left:1px solid rgba(118,215,235,.42);border-right:1px solid rgba(118,215,235,.16);
+ border-top:1px solid rgba(118,215,235,.16);border-bottom:1px solid rgba(118,215,235,.34);
+ border-radius:0 4px 0 4px;
+ padding:clamp(15px,1.8vw,23px) clamp(14px,1.7vw,23px);
+ box-shadow:inset 0 1px 20px rgba(37,137,166,.035),0 14px 38px #0000001a;
+ backdrop-filter:blur(11px);-webkit-backdrop-filter:blur(11px);
+ gap:0;max-width:285px;min-height:0;
+}
+#matterBoot .matter-mini-head{font-size:10px;padding-bottom:18px;letter-spacing:.16em}
+#matterBoot .matter-mini-head span{border:none;border-left:2px solid #78e6f2;padding:0 0 0 8px}
+#matterBoot .matter-system-line{display:grid;grid-template-columns:8px minmax(0,1fr) auto;align-items:center;
+ gap:9px;padding:15px 0;border-bottom:1px solid #73bacc26}
+#matterBoot .matter-system-indicator{width:6px;height:6px;border:1px solid #71dfed;border-radius:50%;box-shadow:0 0 8px #6edbea66}
+#matterBoot .matter-system-line div{display:flex;flex-direction:column;gap:4px;min-width:0}
+#matterBoot .matter-system-line strong{font:600 9px ui-monospace,Consolas,monospace;letter-spacing:.07em;color:#cceaf1;margin:0;line-height:1.4}
+#matterBoot .matter-system-line small{font-size:8px;letter-spacing:.07em;color:#709ca9}
+#matterBoot .matter-system-line > b{font-size:8px;color:#8be5dc;font-weight:550}
+#matterBoot .matter-side-section{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+#matterBoot .matter-side-section > span{font:600 9px ui-monospace,Consolas,monospace;letter-spacing:.18em;color:#9cc8d5;margin-bottom:2px}
+#matterBoot .matter-side-section > div{display:flex;align-items:center;justify-content:space-between;gap:6px;
+ font:500 8px ui-monospace,Consolas,monospace;letter-spacing:.04em;color:#718f9e}
+#matterBoot .matter-side-section > div b{color:#aacbd7;font-weight:550;text-align:right}
+#matterBoot .matter-voice-heading{display:flex;gap:10px;align-items:center;padding-top:21px}
+#matterBoot .matter-voice-icon{border:1px solid #5acde16b;border-radius:50%;width:34px;height:34px;
+ display:grid;place-items:center;color:#9aebf3;font-size:18px}
+#matterBoot .matter-voice-heading > div{display:flex;flex-direction:column;gap:4px}
+#matterBoot .matter-voice-heading strong{font-size:12px;margin:0;color:#d1f4fa}
+#matterBoot .matter-voice-heading small{color:#70dcce;font-size:9px}
+#matterBoot .matter-voice-spectrum{height:76px;border-bottom:1px solid #7dc1d438;margin:10px 0 0}
+#matterBoot .matter-voice-spectrum i{width:2px;border-radius:4px}
+#matterBoot .matter-voice-connection{display:flex;justify-content:space-between;gap:10px;padding:18px 0;
+ border-bottom:1px solid #7dc1d438;font:500 9px ui-monospace,Consolas,monospace;color:#83aab7}
+#matterBoot .matter-voice-connection b{color:#81dfd1;font-weight:600}
+#matterBoot .matter-stage:before{background:radial-gradient(circle,#46cdef19,#268bb122 38%,transparent 73%);filter:blur(22px)}
+#matterBoot .matter-orbit-a,#matterBoot .matter-orbit-b{opacity:.54}
+#matterBoot .matter-orbit-c{opacity:.35}
+#matterBoot .matter-topline{font-size:12px;letter-spacing:.23em;border-bottom:1px solid #95cfe333}
+#matterBoot .matter-topline em{color:#7da8b8}
+#matterBoot .matter-topline-live time{margin-left:14px;color:#c0edf7;font-size:13px;font-weight:600}
+#matterBoot .matter-identity h2{font-weight:490;letter-spacing:.35em;font-size:clamp(35px,4.5vw,59px)}
+#matterBoot .matter-identity-sub{letter-spacing:.25em;color:#a1c3d0}
+#matterBoot .matter-identity-rule{color:#86b8c5}
+#matterBoot .matter-status-track{border-color:#74d5e130;background:linear-gradient(90deg,transparent,#103448aa,transparent)}
+#matterBoot .matter-voice-caption{display:flex;align-items:center;justify-content:center;gap:20px;width:min(570px,95%);
+ color:#709faf;font:500 8px ui-monospace,Consolas,monospace;letter-spacing:.25em;margin:0 0 2px}
+#matterBoot .matter-voice-caption-line{height:1px;flex:1;background:linear-gradient(90deg,transparent,#59bacc66)}
+#matterBoot .matter-voice-caption-line:last-child{background:linear-gradient(90deg,#59bacc66,transparent)}
+#matterBoot.matter-speaking .matter-system-indicator{background:#77e5ef;box-shadow:0 0 13px #63e7ef88}
+#matterBoot.matter-speaking .matter-stage:before{filter:blur(26px) brightness(1.3)}
+#matterBoot.matter-speaking .matter-identity h2{text-shadow:0 0 34px #4ed7ed44}
+#matterBoot .matter-corner-notch{width:13px;height:13px;opacity:.4}
+@media(max-width:1150px) and (min-width:781px){
+ #matterBoot .matter-scene{grid-template-columns:minmax(135px,1fr) minmax(0,560px) minmax(135px,1fr);gap:12px}
+ #matterBoot .matter-side{padding:15px 11px}
+ #matterBoot .matter-system-line{grid-template-columns:6px minmax(0,1fr);gap:6px;padding:10px 0}
+ #matterBoot .matter-system-line > b{grid-column:2;font-size:7px}
+ #matterBoot .matter-voice-spectrum{height:50px}
+}
+@media(max-width:780px){
+ #matterBoot .matter-scene{grid-template-columns:1fr}
+ #matterBoot .matter-topline time{display:none}
+ #matterBoot .matter-side{display:none}
+ #matterBoot .matter-voice-caption{font-size:7px;gap:7px}
+ #matterBoot .matter-identity h2{font-size:clamp(32px,7vw,46px)}
+}
+@media(max-height:750px) and (min-width:781px){
+ #matterBoot .matter-system-line{padding:8px 0}
+ #matterBoot .matter-mini-head{padding-bottom:8px}
+ #matterBoot .matter-side-section{margin-top:10px;gap:7px}
+ #matterBoot .matter-voice-heading{padding-top:9px}
+ #matterBoot .matter-voice-connection{padding:10px 0}
+}
+@media(prefers-reduced-motion:reduce){#matterBoot .matter-boot-content::after{animation:none}}
+
 </style>
 </head>
 <body class="jarvis-ui">
@@ -2153,15 +2250,15 @@
   
   <dialog id="matterBoot" aria-label="Avvio JARVIS">
   <div class="matter-boot-content">
-    <div class="matter-topline" aria-hidden="true"><span><b>◈</b> JARVIS <em>PERSONAL INTELLIGENCE</em></span><span class="matter-topline-live"><i></i> CORE SYSTEM ACTIVE</span></div>
+    <div class="matter-topline" aria-hidden="true"><span><b>◈</b> JARVIS <em>UNIVERSITY INTELLIGENCE SYSTEM</em></span><span class="matter-topline-live"><i></i> SYSTEM ONLINE <time id="matterClock">--:--</time></span></div>
     <p class="matter-kicker"><span aria-hidden="true">●</span> NEURAL PARTICLE ENGINE / 01</p>
     <div class="matter-scene">
-      <aside class="matter-side matter-side-left" aria-hidden="true">
-        <div class="matter-mini-head"><span>01</span> PARTICLE FIELD</div>
-        <strong>MATTER CORE</strong><small>ORBITAL FLOW / ACTIVE</small>
-        <div class="matter-readout"><span>ENERGY STREAM</span><div class="matter-readout-bar"><i></i></div></div>
-        <div class="matter-mini-grid"><span>PARTICLE ENGINE</span><b>GPU</b><span>FLOW DYNAMICS</span><b>LIVE</b><span>SHAPE</span><b>STABLE</b></div>
-        <div class="matter-corner-notch"></div>
+      <aside class="matter-side matter-side-left" aria-label="Stato dei moduli JARVIS">
+        <div class="matter-mini-head"><span>01</span> SYSTEM OVERVIEW</div>
+        <div class="matter-system-line"><span class="matter-system-indicator"></span><div><strong>ARCHIVIO UNIVERSITARIO</strong><small>CARICATO E DISPONIBILE</small></div><b>READY</b></div>
+        <div class="matter-system-line"><span class="matter-system-indicator"></span><div><strong>NUCLEO PARTICELLARE</strong><small>FLUSSO ORBITALE ATTIVO</small></div><b>ACTIVE</b></div>
+        <div class="matter-system-line"><span class="matter-system-indicator"></span><div><strong>INTERFACCIA VOCALE</strong><small>SINTESI DI JARVIS</small></div><b id="matterVoiceStatusLeft">READY</b></div>
+        <div class="matter-side-section"><span>SYSTEM PROFILE</span><div><span>EDIZIONE</span><b>UNIVERSITÀ</b></div><div><span>INTERFACCIA</span><b>PARTICLE CORE</b></div></div>
       </aside>
       <div class="matter-stage" id="matterStage" aria-label="Nucleo di materia tridimensionale">
         <div class="matter-aura" aria-hidden="true"></div>
@@ -2177,24 +2274,25 @@
         <div class="matter-axis-text matter-axis-bottom" aria-hidden="true">PARTICLE FIELD · STABLE</div>
         <div class="matter-fallback" aria-hidden="true"></div>
       </div>
-      <aside class="matter-side matter-side-right" aria-hidden="true">
+      <aside class="matter-side matter-side-right" aria-label="Interfaccia vocale e connessione">
         <div class="matter-mini-head"><span>02</span> VOICE INTERFACE</div>
-        <strong>JARVIS ONLINE</strong><small>NEURAL RESPONSE / ACTIVE</small>
-        <div class="matter-voice-spectrum"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <div class="matter-mini-grid"><span>SYNTHESIS</span><b id="matterVoiceState">READY</b><span>NETWORK</span><b id="matterNetworkState">CHECKING</b><span>CORE LINK</span><b>ACTIVE</b></div>
-        <div class="matter-corner-notch"></div>
+        <div class="matter-voice-heading"><span class="matter-voice-icon" aria-hidden="true">◉</span><div><strong>VOICE CORE</strong><small id="matterVoiceState">READY</small></div></div>
+        <div class="matter-voice-spectrum" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="matter-voice-connection"><span>CONNESSIONE</span><b id="matterNetworkState">CHECKING</b></div>
+        <div class="matter-side-section"><span>CORE LINK</span><div><span>RISPOSTA VOCALE</span><b>ATTIVA</b></div><div><span>MATERIA DIGITALE</span><b>STABILE</b></div></div>
       </aside>
     </div>
     <div class="matter-identity">
       <div class="matter-identity-rule" aria-hidden="true"><i></i><span>PERSONAL INTELLIGENCE SYSTEM</span><i></i></div>
       <h2>JARVIS</h2>
-      <p class="matter-identity-sub">INTERFACCIA NEURALE <span aria-hidden="true">·</span> NUCLEO PARTICELLARE</p>
+      <p class="matter-identity-sub">NEURAL PARTICLE CORE <span aria-hidden="true">·</span> VOICE RESPONSIVE SYSTEM</p>
       <div class="matter-status-track" role="status" aria-live="polite">
         <span class="matter-status-led" aria-hidden="true"></span>
         <span id="matterStatus" class="matter-status">SISTEMA IN AVVIO</span>
         <span class="matter-status-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
       </div>
     </div>
+    <div class="matter-voice-caption" aria-hidden="true"><span class="matter-voice-caption-line"></span><span>PARTICLE SYNCHRONIZATION</span><span class="matter-voice-caption-line"></span></div>
     <div class="matter-footer"><span class="matter-footer-brand">◈ SCIENZE MOTORIE <b>/</b> INSUBRIA</span><span class="matter-footer-mid" aria-hidden="true">J.A.R.V.I.S. <i></i> SYSTEM INITIALIZATION</span><button type="button" id="matterSkip">ENTRA NELL'ARCHIVIO <span aria-hidden="true">↗</span></button></div>
   </div>
 </dialog>
@@ -3731,8 +3829,10 @@
       exitTimer=setTimeout(()=>{cleanup();openWelcome()},520);
     };
     dlg.showModal();
+    $('matterClock').textContent=new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
     $('matterNetworkState').textContent=navigator.onLine?'ONLINE':'OFFLINE';
     $('matterVoiceState').textContent=isVoiceMuted()?'MUTED':'READY';
+    $('matterVoiceStatusLeft').textContent=isVoiceMuted()?'MUTED':'READY';
     $('matterSkip').onclick=()=>finish(true);
     dlg.addEventListener('cancel',event=>{event.preventDefault();finish(true)},{once:true});
     import('./matter-core.js').then(module=>{
@@ -3745,7 +3845,7 @@
         const synth=window.speechSynthesis,voice=speechUtterance(buildWelcomeSpeech());
         voice.onstart=()=>{
           if(finished)return;
-          speechStarted=true;status.textContent='JARVIS STA PARLANDO';$('matterVoiceState').textContent='SPEAKING';dlg.classList.add('matter-speaking');
+          speechStarted=true;status.textContent='JARVIS STA PARLANDO';$('matterVoiceState').textContent='SPEAKING';$('matterVoiceStatusLeft').textContent='ACTIVE';dlg.classList.add('matter-speaking');
           core?.setSpeaking(true);clearTimeout(waitTimer);
           watchdog=setTimeout(()=>finish(false),30000);
         };
