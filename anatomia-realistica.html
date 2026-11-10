@@ -64,14 +64,64 @@ input[type=search]{border-radius:6px;background:rgba(4,17,24,.84);border-color:r
 #anatomyQuizQuestion{font-size:13px;color:#e8faff;min-height:39px}
 #anatomyQuizScore{display:inline-flex;align-items:center}
 #anatomyStudyPanel .row button{flex:0 1 auto}
+
+/* STARK BIOMECHANICAL LAB — immersive layout without changing model data. */
+:root{--cyan:#87f2ff;--line:rgba(104,217,239,.29)}
+body{background:radial-gradient(ellipse 55% 46% at 47% 5%,#123746 0%,#06131d 60%,#030a11 100%)}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.32;background-image:linear-gradient(#5ddff30a 1px,transparent 1px),linear-gradient(90deg,#5ddff30a 1px,transparent 1px);background-size:48px 48px}
+header{box-shadow:0 10px 40px #0003}
+#viewport{box-shadow:inset 0 0 100px #01121b94,0 12px 46px #0004;border-color:#62e6f44d}
+#viewport::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;background:repeating-linear-gradient(0deg,transparent 0 5px,rgba(87,218,245,.018) 6px);mix-blend-mode:screen}
+#viewport .lab-corner{position:absolute;z-index:2;width:24px;height:24px;border-color:#8ae9f3a8;pointer-events:none}
+.lab-corner-tl{left:13px;top:13px;border-left:1px solid;border-top:1px solid}
+.lab-corner-tr{right:13px;top:13px;border-right:1px solid;border-top:1px solid}
+.lab-corner-bl{left:13px;bottom:84px;border-left:1px solid;border-bottom:1px solid}
+.lab-corner-br{right:13px;bottom:84px;border-right:1px solid;border-bottom:1px solid}
+.lab-selection{position:absolute;z-index:3;right:18px;top:16px;max-width:min(45%,350px);display:flex;flex-direction:column;align-items:flex-end;text-align:right;pointer-events:none;gap:4px}
+.lab-selection-kicker{font:700 9px ui-monospace,Consolas,monospace;letter-spacing:.15em;color:#7bcbda}
+.lab-selection strong{font:700 clamp(12px,1.3vw,18px) ui-monospace,Consolas,monospace;letter-spacing:.04em;color:#d9ffff;text-shadow:0 0 14px #8ce9f75e}
+.lab-selection small{font-size:10px;color:#7fbaca}
+.lab-focus-hint{position:absolute;z-index:2;bottom:91px;left:18px;color:#77adbc;font:600 9px ui-monospace,Consolas,monospace;letter-spacing:.13em;pointer-events:none}
+#toolbar{justify-content:center;box-shadow:0 5px 25px #0005}
+#toolbar button{font:650 11px ui-monospace,Consolas,monospace;letter-spacing:.025em;transition:background .2s,border-color .2s,box-shadow .2s}
+#toolbar button[aria-pressed=true]{border-color:#7febf6;background:#165264;box-shadow:0 0 16px #4ef4ff20}
+.panel{position:relative;transition:border-color .2s,transform .2s}
+.panel:hover{border-color:#6be8f166}
+.panel h2{display:flex;align-items:center;gap:6px}
+.lab-quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.lab-quick-grid button{font:650 10px ui-monospace,Consolas,monospace;letter-spacing:.07em;text-align:left;border-radius:3px;padding:12px 9px;border-color:#52c7e850}
+.lab-quick-grid button:hover{background:#134456;box-shadow:inset 3px 0 #76eaf7}
+#details dl{display:grid;grid-template-columns:1fr;gap:1px}
+#details dt{margin-top:9px;padding-top:8px;border-top:1px solid #69d6ee1f;letter-spacing:.06em}
+#details dd{line-height:1.6}
+#anatomyQuizPanel{border-color:#65d7e14a}
+#anatomyQuizChoices button{min-height:48px}
+body.lab-immersive header,body.lab-immersive #attribution,body.lab-immersive aside{display:none}
+body.lab-immersive main{display:block;max-width:none;padding:0}
+body.lab-immersive #viewport{height:100dvh;min-height:100dvh;border:0;border-radius:0}
+body.lab-immersive #toolbar{left:clamp(8px,2vw,25px);right:clamp(8px,2vw,25px)}
+body.lab-immersive #labFocusMode{border-color:#8becf8;background:#1a4b58}
+@media(max-width:680px){.lab-selection{top:70px;right:12px;max-width:42%}.lab-selection strong{font-size:11px}.lab-focus-hint{display:none}#toolbar{padding:6px;gap:4px}#toolbar button{font-size:10px;padding:7px 9px}.lab-quick-grid{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){.panel,#toolbar button{transition:none}}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/"}}</script>
 </head><body>
 <header><a href="index.html?rientro=anatomia">← JARVIS</a><div><strong>ARCHIVIO ANATOMICO INTERATTIVO</strong><b>ANATOMIA 3D • REALISTICA</b></div><span class="tag">634 STRUTTURE ANATOMICHE</span></header>
-<main><section id="viewport" aria-label="Atlante anatomico 3D"><div id="hud">◈ ATLANTE ANATOMICO JARVIS<br><span id="counter">CARICAMENTO IN CORSO</span></div><div id="load"><strong>INIZIALIZZAZIONE ATLANTE</strong><p id="loading">Caricamento modello anatomico dettagliato…</p></div><div id="toolbar"><button id="front">Anteriore</button><button id="rear">Posteriore</button><button id="reset">Reset</button><button id="zoomIn">＋</button><button id="zoomOut">－</button><button id="moveUp" title="Sposta la visuale verso la testa">↑ Su</button><button id="moveDown" title="Sposta la visuale verso i piedi">↓ Giù</button><button id="show">Mostra tutti</button></div></section>
+<main><section id="viewport" aria-label="Atlante anatomico 3D"><div id="hud">◈ STARK BIOMECHANICAL LAB / 3D<br><span id="counter">CARICAMENTO IN CORSO</span></div>
+<div class="lab-selection" aria-live="polite"><span class="lab-selection-kicker">◈ STRUTTURA ATTIVA</span><strong id="labSelectedName">NESSUNA SELEZIONE</strong><small id="labSelectedType">Seleziona una struttura nel modello</small></div>
+<div class="lab-corner lab-corner-tl"></div><div class="lab-corner lab-corner-tr"></div><div class="lab-corner lab-corner-bl"></div><div class="lab-corner lab-corner-br"></div>
+<div class="lab-focus-hint" id="labFocusHint">TRASCINA PER RUOTARE · CLICCA PER ANALIZZARE</div><div id="load"><strong>INIZIALIZZAZIONE ATLANTE</strong><p id="loading">Caricamento modello anatomico dettagliato…</p></div><div id="toolbar"><button type="button" id="labFocusMode" aria-pressed="false">⛶ Focus 3D</button><button type="button" id="labAutoRotate" aria-pressed="false">◎ Rotazione</button><button id="front">Anteriore</button><button id="rear">Posteriore</button><button id="reset">Reset</button><button id="zoomIn">＋</button><button id="zoomOut">－</button><button id="moveUp" title="Sposta la visuale verso la testa">↑ Su</button><button id="moveDown" title="Sposta la visuale verso i piedi">↓ Giù</button><button id="show">Mostra tutti</button></div></section>
 <aside><section class="panel" id="jarvisPanel"><h2>◈ JARVIS · ASSISTENTE ANATOMICO</h2><p class="small">Quale muscolo, osso o altra struttura vuoi osservare?</p><form id="jarvisAnatomyForm"><input type="search" id="jarvisQuery" placeholder="Es. bicipite brachiale destro, femore sinistro…" autocomplete="off" aria-label="Struttura anatomica da cercare"><div class="row" style="margin-top:9px"><button type="submit" id="jarvisShow">◎ Evidenzia</button><button type="button" id="jarvisIsolate">◉ Isola</button><button type="button" id="jarvisSpeak">🎙 Parla</button></div></form><div class="row" style="margin-top:8px"><button type="button" id="jarvisLocate">↻ Ruota verso</button><button type="button" id="jarvisContext">↶ Corpo intero</button></div><p id="jarvisStatus" role="status" aria-live="polite" class="small">Pronto: digita o pronuncia il nome della struttura.</p></section>
 <section class="panel"><h2>STRATI ANATOMICI</h2><div class="row"><button data-mode="both" class="active">Tutte</button><button data-mode="muscles">Muscoli</button><button data-mode="bones">Ossa</button><button data-mode="cartilage">Cartilagini</button><button data-mode="eyes">Occhi</button><button data-mode="teeth">Denti</button><button data-mode="organs">Organi</button><button data-mode="arteries">Arterie</button><button data-mode="veins">Vene</button><button data-mode="circulatory">Circolatorio</button><button data-mode="all">Tutti i sistemi</button></div><label for="depth">Visibilità dei muscoli superficiali: <output id="depthLabel">100%</output></label><input id="depth" type="range" min="0" max="100" value="100"><p class="small">A 0% osservi i muscoli profondi e le altre strutture selezionate.</p></section>
 <section class="panel"><h2>ORGANI E VASI SANGUIGNI</h2><p class="small">Attiva i modelli aggiuntivi quando ti servono.</p><div class="row"><button id="loadOrgans" type="button">＋ Carica organi</button><button id="loadVessels" type="button">＋ Carica circolatorio</button></div><p id="systemsStatus" class="small" role="status">Connessione internet richiesta per i nuovi modelli 3D.</p></section>
+<section class="panel lab-quick-panel"><h2>◈ ACCESSO RAPIDO · SCANSIONE</h2><div class="lab-quick-grid">
+<button type="button" data-lab-quick="Bicipite brachiale">BICIPITE</button>
+<button type="button" data-lab-quick="Deltoide">DELTOIDE</button>
+<button type="button" data-lab-quick="Grande pettorale">PETTORALE</button>
+<button type="button" data-lab-quick="Trapezio">TRAPEZIO</button>
+<button type="button" data-lab-quick="Gastrocnemio">POLPACCIO</button>
+<button type="button" data-lab-quick="Bicipite femorale">BICIPITE FEMORALE</button>
+</div><p class="small">Seleziona un muscolo per evidenziarlo nel modello 3D.</p></section>
 <section class="panel" id="anatomyStudyPanel"><h2>◈ STUDIO MUSCOLARE · JARVIS</h2><p class="small">Seleziona un muscolo nel modello per leggere origine, inserzione, azione e innervazione, quando disponibili nel database didattico.</p><div class="row" id="anatomyQuickRegions"><button type="button" data-anatomy-region="braccio">Braccio</button><button type="button" data-anatomy-region="spalla">Spalla</button><button type="button" data-anatomy-region="tronco">Tronco</button><button type="button" data-anatomy-region="coscia">Coscia</button><button type="button" data-anatomy-region="gamba">Gamba</button></div><p class="small" id="anatomyRegionStatus" aria-live="polite">Scegli una regione per esplorare i muscoli.</p></section>
 <section class="panel" id="anatomyQuizPanel"><h2>◈ QUIZ ANATOMICO</h2><p class="small">Quale muscolo corrisponde alla funzione indicata?</p><p id="anatomyQuizQuestion" aria-live="polite">Premi «Nuova domanda» per iniziare.</p><div id="anatomyQuizChoices" class="row"></div><p id="anatomyQuizFeedback" class="small" role="status"></p><div class="row"><button type="button" id="anatomyQuizNext">Nuova domanda</button><span class="small" id="anatomyQuizScore">0 corrette su 0</span></div></section>
 <section class="panel"><h2>STRUTTURA SELEZIONATA</h2><div id="details"><p>Seleziona un muscolo o un osso cliccando sul modello oppure cerca una struttura nell'elenco.</p></div></section>
@@ -148,7 +198,10 @@ const studyFor=o=>{
  return MUSCLE_STUDY.find(m=>m.alias.some(alias=>text.includes(normalizeStudy(alias))))||null;
 };
 
-function select(o){if(selected&&originalMaterials.has(selected)){selected.material=originalMaterials.get(selected)}selected=o;selectedName=o?label(o):'';if(!o){$('details').innerHTML='<p>Nessuna struttura selezionata.</p>';return}o.material=accent;const d=$('details');d.replaceChildren();
+function select(o){if(selected&&originalMaterials.has(selected)){selected.material=originalMaterials.get(selected)}selected=o;selectedName=o?label(o):'';
+$('labSelectedName').textContent=selectedName||'NESSUNA SELEZIONE';
+$('labSelectedType').textContent=o?categoriaIT(o)+' · '+latoIT(o):'Seleziona una struttura nel modello';
+if(!o){$('details').innerHTML='<p>Nessuna struttura selezionata.</p>';return}o.material=accent;const d=$('details');d.replaceChildren();
 const h=document.createElement('h3');h.textContent=selectedName;d.append(h);
 const p=document.createElement('p');p.textContent=categoriaIT(o);d.append(p);
 const dl=document.createElement('dl');
@@ -414,6 +467,30 @@ $('anatomyQuizNext').onclick=()=>{
  }
 };
 
+
+let labRotation=false;
+$('labFocusMode').onclick=()=>{
+ const enabled=!document.body.classList.contains('lab-immersive');
+ document.body.classList.toggle('lab-immersive',enabled);
+ $('labFocusMode').setAttribute('aria-pressed',String(enabled));
+ $('labFocusMode').textContent=enabled?'✕ Esci da Focus':'⛶ Focus 3D';
+ requestAnimationFrame(()=>fit());
+};
+$('labAutoRotate').onclick=()=>{
+ labRotation=!labRotation;
+ controls.autoRotate=labRotation;
+ controls.autoRotateSpeed=.8;
+ $('labAutoRotate').setAttribute('aria-pressed',String(labRotation));
+ $('labAutoRotate').textContent=labRotation?'◉ Ferma rotazione':'◎ Rotazione';
+};
+document.addEventListener('keydown',event=>{
+ if(event.key==='Escape'&&document.body.classList.contains('lab-immersive'))$('labFocusMode').click();
+});
+document.querySelectorAll('[data-lab-quick]').forEach(button=>button.addEventListener('click',()=>{
+ const name=button.dataset.labQuick;
+ $('jarvisQuery').value=name;
+ apriAssistente(false,name);
+}));
 $('search').oninput=search;
 renderer.domElement.addEventListener('pointerdown',e=>{startX=e.clientX;startY=e.clientY;dragging=false});
 renderer.domElement.addEventListener('pointerup',e=>{if(Math.hypot(e.clientX-startX,e.clientY-startY)>5)return;const rect=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1);picker.setFromCamera(pointer,camera);const hits=picker.intersectObjects(objects.filter(o=>o.visible),false);if(hits.length)select(hits[0].object)});
