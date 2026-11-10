@@ -4102,6 +4102,44 @@
         browserFallback();
       }
     };
+    // Prefer the user's recorded JARVIS greeting when the local asset exists.
+    // If the file is missing, preserve the existing ElevenLabs/browser flow.
+    const playRecordedGreeting=async()=>{
+      if(finished||isVoiceMuted())return false;
+      try{
+        const response=await fetch('./jarvis-intro.m4a',{method:'HEAD',cache:'no-store'});
+        if(!response.ok)return false;
+        const recording=new Audio('./jarvis-intro.m4a');
+        recording.preload='auto';
+        audio=recording;
+        recording.onended=()=>finish(false,true);
+        recording.onerror=()=>{if(!finished)browserFallback();};
+        const startRecording=async()=>{
+          await recording.play();
+          if(finished){recording.pause();return;}
+          playButton.hidden=true;
+          clearTimeout(waitTimer);
+          markSpeaking();
+          status.textContent='JARVIS · VOCE REGISTRATA';
+          $('matterVoiceState').textContent='JARVIS';
+          clearTimeout(watchdog);
+          watchdog=setTimeout(()=>finish(false),30000);
+        };
+        try{await startRecording();}
+        catch(error){
+          if(error?.name!=='NotAllowedError')throw error;
+          status.textContent='PREMI PER ASCOLTARE JARVIS';
+          playButton.textContent='▶ ASCOLTA JARVIS';
+          playButton.hidden=false;
+          playButton.onclick=()=>startRecording().catch(()=>browserFallback());
+        }
+        return true;
+      }catch(error){
+        console.warn('JARVIS: registrazione non disponibile',error);
+        if(audio){audio.pause();audio=null;}
+        return false;
+      }
+    };
     dlg.showModal();
     $('matterClock').textContent=new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
     $('matterNetworkState').textContent=navigator.onLine?'ONLINE':'OFFLINE';
@@ -4114,9 +4152,14 @@
       try{core=module.startMatterCore(stage,{reducedMotion:reduced});stage.classList.add('matter-ready');core.setSpeaking(speechStarted);}
       catch(e){console.warn('JARVIS: nucleo CSS alternativo',e);}
     }).catch(e=>console.warn('JARVIS: rendering 3D non disponibile',e));
-    if(reduced||isVoiceMuted()||!navigator.onLine){
-      browserFallback();return;
-    }
+    if(isVoiceMuted()){browserFallback();return;}
+    // Recorded intro takes priority; otherwise keep the original voice service.
+    playRecordedGreeting().then(available=>{
+      if(available||finished)return;
+      if(reduced||!navigator.onLine){browserFallback();return;}
+      beginNeuralVoice();
+    });
+    function beginNeuralVoice(){
     status.textContent='COLLEGAMENTO VOCE NEURALE';
     // Do not leave the intro hanging if Turnstile is blocked or requires interaction.
     waitTimer=setTimeout(browserFallback,25000);
@@ -4147,6 +4190,7 @@
       script.onload=renderTurnstile;
       script.onerror=browserFallback;
       document.head.appendChild(script);
+    }
     }
   }
 
