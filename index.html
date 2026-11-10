@@ -2327,19 +2327,10 @@
 #matterBoot .matter-micro-tag-bottom{bottom:17%;left:0;transform:translateX(-13%)}
 #matterBoot.matter-speaking .matter-micro-dot{animation:matterMicroBlink .85s ease-in-out infinite alternate}
 @keyframes matterMicroBlink{to{opacity:.5;box-shadow:0 0 15px #81ebff}}
-#matterBoot .matter-energy-link{--pulse:.08;position:absolute;z-index:2;pointer-events:none;height:1px;width:0;opacity:.43;
- background:linear-gradient(90deg,transparent,#55cce8aa,transparent);
- box-shadow:0 0 calc(3px + var(--pulse) * 13px) #40cae9;transition:opacity .18s ease}
-#matterBoot .matter-energy-link::before{content:"";position:absolute;inset:-9px 0;background:linear-gradient(90deg,transparent 10%,#8feaff 49%,transparent 55%);
- background-size:300% 100%;opacity:var(--pulse);animation:matterEnergyFlow 2.4s linear infinite}
-#matterBoot .matter-energy-link::after{content:"";position:absolute;right:-2px;top:-2px;width:5px;height:5px;
- border-radius:50%;background:#7be3f5;box-shadow:0 0 12px #49e4f7}
-@keyframes matterEnergyFlow{from{background-position:180% 0}to{background-position:-120% 0}}
 #matterBoot .matter-spectrum-live i{animation:none!important;transition:none!important;height:9%;opacity:.35;
  background:linear-gradient(180deg,#bcfaff,#47b9d1);box-shadow:0 0 7px #38cbeb48}
 #matterBoot .matter-spectrum-live{isolation:isolate}
-@media(max-width:780px){#matterBoot .matter-energy-link{display:none!important}
- #matterBoot .matter-micro-tag{padding:5px 6px;min-width:auto;gap:5px}
+@media(max-width:780px){#matterBoot .matter-micro-tag{padding:5px 6px;min-width:auto;gap:5px}
  #matterBoot .matter-micro-tag strong{font-size:8px}
  #matterBoot .matter-micro-tag small{font-size:7px}
  #matterBoot .matter-micro-tag-top{right:5%;top:14%;transform:none}
@@ -2401,8 +2392,8 @@
     <div class="matter-topline" aria-hidden="true"><span><b>◈</b> JARVIS <em>UNIVERSITY INTELLIGENCE SYSTEM</em></span><span class="matter-topline-live"><i></i> SYSTEM ONLINE <time id="matterClock">--:--</time></span></div>
     <p class="matter-kicker"><span aria-hidden="true">●</span> NEURAL PARTICLE ENGINE / 01</p>
     <div class="matter-scene">
-      <div class="matter-energy-link matter-energy-link-left" aria-hidden="true"><i></i></div>
-      <div class="matter-energy-link matter-energy-link-right" aria-hidden="true"><i></i></div>
+
+
       
 <aside class="matter-side matter-side-left" aria-label="Stato dei moduli JARVIS">
         <div class="matter-mini-head"><span>01</span> SYSTEM OVERVIEW</div>
@@ -4026,16 +4017,10 @@
     let finished=false,core=null,speaking=false,attemptedLocal=false,waitTimer=0,watchdog=0,exitTimer=0,audio=null;
     let introAudioContext=null,introEnvelope=null,introMeterFrame=0,introVolume=0;
     const liveBars=Array.from(dlg.querySelectorAll('.matter-spectrum-live i'));
-    const energyLinks=Array.from(dlg.querySelectorAll('.matter-energy-link'));
-    let linkObserver=null;
     const microState=$('matterMicroState');
     const showAudioLevel=(level,index=0)=>{
       const volume=Math.max(0,Math.min(1,Number(level)||0));
       dlg.style.setProperty('--jarvis-voice-level',volume.toFixed(3));
-      energyLinks.forEach(link=>{
-        link.style.setProperty('--pulse',(.08+volume*.85).toFixed(3));
-        link.style.opacity=(.20+volume*.67).toFixed(3);
-      });
       // Waveform-derived neighbouring windows; no independent animated preset.
       liveBars.forEach((bar,i)=>{
         const sample=introEnvelope?introEnvelope[Math.max(0,Math.min(introEnvelope.length-1,index+(i-7)*2))]||0:0;
@@ -4045,25 +4030,6 @@
         bar.style.opacity=(.36+mixed*.64).toFixed(3);
       });
     };
-    const alignEnergyLinks=()=>{
-      if(!dlg.open)return;
-      const rect=dlg.querySelector('.matter-scene').getBoundingClientRect();
-      const nucleus=stage.getBoundingClientRect();
-      const left=dlg.querySelector('.matter-side-left')?.getBoundingClientRect();
-      const right=dlg.querySelector('.matter-side-right')?.getBoundingClientRect();
-      if(!left||!right)return;
-      const y=nucleus.top+nucleus.height*.5-rect.top;
-      const nucleusLeft=nucleus.left+nucleus.width*.15-rect.left;
-      const nucleusRight=nucleus.right-nucleus.width*.15-rect.left;
-      const place=(link,x1,x2)=>{
-        const width=Math.max(0,x2-x1);
-        link.style.display=width<10?'none':'block';
-        link.style.left=x1+'px';link.style.top=y+'px';link.style.width=width+'px';
-      };
-      place(energyLinks[0],left.right-rect.left+4,nucleusLeft);
-      place(energyLinks[1],nucleusRight,right.left-rect.left-4);
-    };
-
     // The existing welcome components now live inside the holographic HUD.
     // This retains all their data bindings, countdowns and recent-note actions.
     const openWelcome=()=>{
@@ -4092,7 +4058,6 @@
       playButton.hidden=true;playButton.onclick=null;
       if(introMeterFrame)cancelAnimationFrame(introMeterFrame);
       introMeterFrame=0;introEnvelope=null;
-      linkObserver?.disconnect();linkObserver=null;
       showAudioLevel(0);
       if(audio){audio.pause();audio.removeAttribute('src');audio.load();audio=null;}
       if(introAudioContext){introAudioContext.close().catch(()=>{});introAudioContext=null;}
@@ -4214,11 +4179,6 @@
     };
     // Original holographic boot, centered with its original panels.
     dlg.showModal();
-    requestAnimationFrame(alignEnergyLinks);
-    if(window.ResizeObserver){
-      linkObserver=new ResizeObserver(alignEnergyLinks);
-      [dlg.querySelector('.matter-scene'),stage,dlg.querySelector('.matter-side-left'),dlg.querySelector('.matter-side-right')].filter(Boolean).forEach(el=>linkObserver.observe(el));
-    }
     showAudioLevel(0);
     $('matterClock').textContent=new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
     $('matterNetworkState').textContent=navigator.onLine?'ONLINE':'OFFLINE';
