@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#071017"><title>Piano di studio · JARVIS</title>
+<style>
+:root{color-scheme:dark;--bg:#071017;--panel:#10232b;--panel2:#0a1b22;--line:#2b5661;--ink:#e2faff;--muted:#92b3bf;--cyan:#60e0f0;--good:#65dfb2;--warn:#ffd58a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 60% -8%,#0c4b5c77,transparent 42%),linear-gradient(#5de8ff06 1px,transparent 1px),linear-gradient(90deg,#5de8ff06 1px,transparent 1px),var(--bg);background-size:auto,42px 42px,42px 42px,auto;color:var(--ink);font:15px/1.5 system-ui,sans-serif}header{border-bottom:1px solid var(--line);padding:16px clamp(16px,3vw,36px);display:flex;justify-content:space-between;gap:12px;align-items:center}a{color:var(--cyan)}.brand{font:700 12px ui-monospace,monospace;letter-spacing:.2em}.back{border:1px solid var(--line);border-radius:7px;padding:9px 13px;text-decoration:none;font-weight:700}.wrap{max-width:1160px;margin:auto;padding:28px 18px 70px}.eyebrow{font:700 11px ui-monospace,monospace;letter-spacing:.17em;color:var(--cyan)}h1{font-size:clamp(32px,5vw,57px);line-height:1.05;margin:9px 0}h2{margin:0 0 12px;font-size:19px}p{color:var(--muted);margin:8px 0 15px}.hero{margin-bottom:26px}.columns{display:grid;grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr);gap:18px;align-items:start}.card{border:1px solid var(--line);background:linear-gradient(145deg,#122a34eb,#081921f2);padding:20px;border-radius:14px;min-width:0;box-shadow:0 15px 34px #0002}form{display:grid;gap:12px}label{display:grid;gap:5px;color:#b6d6de;font-weight:650;font-size:13px}input,select,textarea,button{font:inherit}input,select,textarea{width:100%;padding:11px 12px;border:1px solid #38616c;border-radius:8px;background:#07151c;color:var(--ink);outline-color:var(--cyan)}textarea{min-height:136px;resize:vertical}.hint{font-size:12px;color:var(--muted)}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{cursor:pointer;border:1px solid #64cce4;padding:10px 15px;border-radius:8px;background:#133845;color:#dbf9fd;font-weight:750}.btn.primary{background:#12586b;border-color:#81edff}.btn.danger{border-color:#c96a79;background:#45232b;color:#ffdce2}.btn:disabled{opacity:.5;cursor:not-allowed}.btn:hover:not(:disabled){filter:brightness(1.18)}.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.empty{border:1px dashed #39646f;border-radius:12px;padding:24px;color:var(--muted);text-align:center}.plan{border:1px solid #416d7a;border-radius:12px;padding:16px;margin:0 0 12px;background:#0a2029}.plan-head{display:flex;justify-content:space-between;gap:14px;align-items:start}.plan h3{margin:0;font-size:20px}.meta{color:var(--muted);font-size:12px;margin:5px 0}.progress{height:9px;border-radius:99px;background:#20404b;overflow:hidden;margin:12px 0 8px}.progress i{display:block;height:100%;background:linear-gradient(90deg,#42aacf,#68e4bc);border-radius:99px}.session{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #234853}.session:last-child{border-bottom:0}.session input{width:18px;height:18px;flex:none;accent-color:#55e6bb}.session label{flex:1;display:block;font-size:13px;color:var(--ink);font-weight:500;cursor:pointer}.session label strong{font-size:12px}.session .hours{color:var(--cyan);font:700 12px ui-monospace,monospace;white-space:nowrap}.done label{text-decoration:line-through;color:#77949d}.sessions{max-height:380px;overflow:auto;margin-top:8px;scrollbar-color:#397482 transparent}.section-title{font-size:11px;letter-spacing:.14em;font-weight:800;color:var(--cyan);margin-top:14px}.warning{color:#ffe1a8;background:#4a371a5c;border:1px solid #b68f4877;padding:11px;border-radius:8px;font-size:13px;margin-top:11px}.ok{color:#b0f6d7;font-size:12px}.stats{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0}.stat{font:700 13px ui-monospace,monospace;color:var(--cyan)}.mini{font-size:12px;color:var(--muted)}.separator{height:1px;background:var(--line);margin:12px 0}#status{min-height:20px;color:var(--warn)}.daysummary{margin:12px 0;color:#adcad3;font-size:12px}details summary{cursor:pointer;color:var(--cyan);font-weight:700;font-size:13px;margin-top:10px}::-webkit-calendar-picker-indicator{filter:invert(.9)}@media(max-width:850px){.columns{grid-template-columns:1fr}}@media(max-width:520px){.two{grid-template-columns:1fr}.wrap{padding:18px 12px}.card{padding:15px}.plan-head{flex-direction:column}.row .btn{flex:1}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header><span class="brand">◈ JARVIS / STUDY PLANNER</span><a class="back" href="index.html">← Torna all'archivio</a></header>
+<main class="wrap">
+<div class="hero"><div class="eyebrow">UNIVERSITY INTELLIGENCE SYSTEM / MODULO STUDIO 01</div><h1>Piano di studio<span style="color:var(--cyan)">.</span></h1><p>Organizza gli argomenti fino all'esame, distribuisci le ore disponibili e segna le sessioni completate. Nessuna API o abbonamento: i dati restano nel browser, insieme all'archivio JARVIS.</p></div>
+<div class="columns">
+<section class="card" aria-labelledby="createHeading"><h2 id="createHeading">Crea un piano</h2>
+<form id="studyForm">
+<label>Collega a un esame già inserito (facoltativo)<select id="existingExam"><option value="">Nuovo piano indipendente</option></select></label>
+<label>Materia / obiettivo<input id="studyTitle" type="text" maxlength="100" required placeholder="Es. Anatomia umana"></label>
+<div class="two"><label>Data dell'esame<input id="studyExamDate" type="date" required></label><label>Inizio dello studio<input id="studyStartDate" type="date" required></label></div>
+<div class="two"><label>Ore al giorno · lun–ven<input id="studyWeekHours" type="number" min="0" max="16" step=".5" value="2" required></label><label>Ore al giorno · sab–dom<input id="studyWeekendHours" type="number" min="0" max="16" step=".5" value="3" required></label></div>
+<label>Argomenti da studiare (uno per riga)<textarea id="studyTopics" required placeholder="Sistema scheletrico | 3&#10;Sistema muscolare | 4&#10;Articolazioni | 2"></textarea><span class="hint">Puoi aggiungere una stima delle ore dopo il simbolo |. Senza stima, si considerano 2 ore per argomento.</span></label>
+<label>Giorni finali dedicati al ripasso<select id="studyReviewDays"><option value="0">Nessuno</option><option value="1">1 giorno</option><option value="2" selected>2 giorni</option><option value="3">3 giorni</option><option value="5">5 giorni</option></select></label>
+<button class="btn primary" type="submit">◈ Genera piano di studio</button>
+<div class="hint">Il piano termina il giorno prima dell'esame. Le ore non sufficienti vengono segnalate, senza nascondere le attività rimaste fuori.</div><div id="status" role="status" aria-live="polite"></div>
+</form></section>
+<section class="card" aria-labelledby="plansHeading"><div class="row" style="justify-content:space-between"><h2 id="plansHeading">I tuoi piani</h2><span id="planCount" class="eyebrow">0 PIANI</span></div><div id="plans"></div></section>
+</div>
+</main>
+<script>
+(()=>{
+'use strict';
+const KEY='appunti-universita-v1', $=id=>document.getElementById(id);
+const today=()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')};
+const asDate=s=>{const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const dateKey=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
+const fmt=s=>asDate(s).toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'short'});
+const uid=()=>crypto?.randomUUID?.()||'plan-'+Date.now()+'-'+Math.random().toString(36).slice(2);
+const getData=()=>{try{const d=JSON.parse(localStorage.getItem(KEY)||'{}');return d&&typeof d==='object'&&!Array.isArray(d)?d:{}}catch{return {}}};
+const plans=()=>{const p=getData().studyPlans;return Array.isArray(p)?p:[]};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function persist(fn){try{const data=getData();if(!Array.isArray(data.studyPlans))data.studyPlans=[];fn(data.studyPlans);localStorage.setItem(KEY,JSON.stringify(data));return true}catch(e){$('status').textContent='Impossibile salvare: controlla lo spazio del browser o le impostazioni di archiviazione.';return false}}
+function topicsFrom(text){return text.split(/\r?\n/).map(v=>v.trim()).filter(Boolean).map((line,i)=>{
+ const match=line.match(/^(.*?)\s*\|\s*(\d+(?:[.,]\d+)?)\s*$/);
+ const name=match?match[1].trim():line;
+ const hours=match?Number(match[2].replace(',','.')):2;
+ return {name:name.slice(0,140),hours:Math.round(hours*2)/2};
+}).filter(x=>x.name&&x.hours>0&&x.hours<=100).slice(0,120)}
+function generatePlan(settings){
+ const allDays=[];let d=asDate(settings.startDate);const exam=asDate(settings.examDate);
+ while(d<exam&&allDays.length<730){const key=dateKey(d),weekend=[0,6].includes(d.getDay());
+  allDays.push({date:key,capacity:weekend?settings.weekendHours:settings.weekHours,used:0});
+  d.setDate(d.getDate()+1);
+ }
+ if(!allDays.length)return {sessions:[],remaining:[],capacity:0};
+ const reserve=Math.min(settings.reviewDays,Math.max(0,allDays.length-1));
+ const learningDays=allDays.slice(0,allDays.length-reserve);
+ const reviewDays=allDays.slice(allDays.length-reserve);
+ const remaining=[];const sessions=[];
+ for(const topic of settings.topics){
+  let todo=topic.hours;
+  for(const day of learningDays){
+   const available=Math.round((day.capacity-day.used)*2)/2;
+   if(available<=0)continue;
+   const time=Math.min(todo,available);
+   if(time<=0)continue;
+   sessions.push({id:uid(),date:day.date,title:topic.name,hours:time,kind:'studio',done:false});
+   day.used+=time;todo=Math.round((todo-time)*2)/2;if(todo<=0)break;
+  }
+  if(todo>0)remaining.push({title:topic.name,hours:todo});
+ }
+ if(reserve>0){
+  const reviewTopics=settings.topics.map(x=>x.name);
+  let index=0;
+  for(const day of reviewDays){
+   let available=day.capacity;
+   while(available>=.5&&reviewTopics.length){
+    const duration=Math.min(1,available);
+    sessions.push({id:uid(),date:day.date,title:'Ripasso · '+reviewTopics[index%reviewTopics.length],hours:duration,kind:'ripasso',done:false});
+    day.used+=duration;available-=duration;index++;
+   }
+  }
+ }
+ sessions.sort((a,b)=>a.date.localeCompare(b.date)||(a.kind===b.kind?0:a.kind==='studio'?-1:1));
+ return {sessions,remaining,capacity:allDays.reduce((sum,day)=>sum+day.capacity,0)};
+}
+function refreshExams(){
+ const d=getData(),entries=Array.isArray(d.exams)?d.exams:[];
+ const select=$('existingExam');select.innerHTML='<option value="">Nuovo piano indipendente</option>';
+ entries.filter(e=>e&&e.title&&/^\d{4}-\d\d-\d\d$/.test(e.date||'')&&e.date>=today()).sort((a,b)=>a.date.localeCompare(b.date)).forEach(e=>{
+  const o=document.createElement('option');o.value=e.id;o.textContent=e.title+' · '+fmt(e.date);select.append(o);
+ });
+ select.onchange=()=>{const exam=entries.find(e=>e.id===select.value);if(exam){$('studyTitle').value=exam.title;$('studyExamDate').value=exam.date;}};
+}
+function draw(){
+ const entries=plans().slice().reverse();$('planCount').textContent=entries.length+' PIANI';
+ const root=$('plans');root.replaceChildren();
+ if(!entries.length){root.innerHTML='<div class="empty">Non hai ancora creato piani di studio.<br>Inserisci un esame e gli argomenti da preparare.</div>';return}
+ for(const plan of entries){
+  const sessions=Array.isArray(plan.sessions)?plan.sessions:[];
+  const done=sessions.filter(x=>x.done).length,total=sessions.length,pct=total?Math.round(done/total*100):0;
+  const completed=sessions.filter(x=>x.done).reduce((a,x)=>a+x.hours,0);
+  const scheduled=sessions.reduce((a,x)=>a+x.hours,0);
+  const article=document.createElement('article');article.className='plan';
+  const warn=(plan.remaining||[]).length?'<div class="warning">⚠ Ore insufficienti per completare tutti gli argomenti: '+plan.remaining.map(x=>esc(x.title)+' ('+x.hours+' h)').join('; ')+'. Aumenta le ore disponibili o anticipa l’inizio del piano.</div>':'';
+  article.innerHTML='<div class="plan-head"><div><h3>'+esc(plan.title)+'</h3><p class="meta">Esame '+esc(fmt(plan.examDate))+' · '+total+' sessioni programmate</p></div><button class="btn danger delete" type="button">Elimina</button></div>'+
+  '<div class="progress" role="progressbar" aria-valuenow="'+pct+'" aria-valuemin="0" aria-valuemax="100" aria-label="Avanzamento"><i style="width:'+pct+'%"></i></div>'+
+  '<div class="stats"><span class="stat">'+pct+'% completato</span><span class="stat">'+completed+' / '+scheduled+' ore</span></div>'+warn+
+  '<details><summary>Mostra sessioni e ripassi</summary><div class="sessions"></div></details>';
+  article.querySelector('.delete').onclick=()=>{
+   if(confirm('Eliminare il piano “'+plan.title+'”? Questa azione non cancella gli esami o gli appunti.')){
+    if(persist(rows=>{const i=rows.findIndex(x=>x.id===plan.id);if(i>=0)rows.splice(i,1)}))draw();
+   }
+  };
+  const holder=article.querySelector('.sessions');
+  if(!total){holder.innerHTML='<p class="mini">Nessuna sessione assegnabile. Controlla le date e le ore disponibili.</p>'}
+  let lastDay='';
+  for(const item of sessions){
+   if(item.date!==lastDay){const head=document.createElement('div');head.className='section-title';head.textContent=fmt(item.date);holder.append(head);lastDay=item.date}
+   const row=document.createElement('div');row.className='session'+(item.done?' done':'');
+   const check=document.createElement('input');check.type='checkbox';check.checked=!!item.done;check.setAttribute('aria-label','Completa '+item.title+' del '+fmt(item.date));
+   const label=document.createElement('label');label.textContent=item.title;label.prepend(document.createTextNode(item.kind==='ripasso'?'↻ ':''));
+   const hours=document.createElement('span');hours.className='hours';hours.textContent=item.hours+' h';
+   check.onchange=()=>{if(persist(rows=>{const p=rows.find(x=>x.id===plan.id),s=p?.sessions?.find(x=>x.id===item.id);if(s)s.done=check.checked}))draw();};
+   row.append(check,label,hours);holder.append(row);
+  }
+  root.append(article);
+ }
+}
+$('studyStartDate').value=today();refreshExams();draw();
+$('studyForm').addEventListener('submit',event=>{
+ event.preventDefault();$('status').textContent='';
+ const title=$('studyTitle').value.trim(),examDate=$('studyExamDate').value,startDate=$('studyStartDate').value;
+ const weekHours=Number($('studyWeekHours').value),weekendHours=Number($('studyWeekendHours').value);
+ const reviewDays=Number($('studyReviewDays').value),topics=topicsFrom($('studyTopics').value);
+ if(!title||!examDate||!startDate||startDate>=examDate){$('status').textContent='Controlla le date: lo studio deve iniziare prima dell’esame.';return}
+ if(asDate(examDate)-asDate(startDate)>730*864e5){$('status').textContent='La durata massima di un piano è due anni.';return}
+ if(!topics.length||topics.length>120){$('status').textContent='Inserisci almeno un argomento valido.';return}
+ if(!Number.isFinite(weekHours)||!Number.isFinite(weekendHours)||weekHours<0||weekendHours<0||weekHours>16||weekendHours>16||weekHours+weekendHours===0){$('status').textContent='Inserisci ore disponibili valide.';return}
+ const details={title,examDate,startDate,weekHours,weekendHours,reviewDays,topics};
+ const result=generatePlan(details);
+ const plan={...details,...result,id:uid(),examId:$('existingExam').value||null,createdAt:Date.now()};
+ if(persist(rows=>rows.push(plan))){$('status').textContent='Piano creato e salvato nel tuo archivio locale.';draw();$('studyTopics').value='';}
+});
+window.addEventListener('storage',event=>{if(event.key===KEY){refreshExams();draw()}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){refreshExams();draw()}});
+})();
+</script>
+</body></html>
