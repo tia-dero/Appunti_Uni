@@ -2802,6 +2802,13 @@
  #matterBoot.matter-dashboard .jarvis-hud-actions{flex-direction:column;align-items:stretch}
  #matterBoot.matter-dashboard .jarvis-hud-actions .welcome-footer-actions{justify-content:stretch}
 }
+/* HUD 64: ensure upcoming-subject and exam widgets never appear in intro. */
+#matterBoot .exam-strip,
+#matterBoot .welcome-countdown,
+#matterBoot .hud-lecture-countdown,
+#matterBoot [data-next-lesson],
+#matterBoot .next-lesson-card{display:none!important}
+#matterBoot .jarvis-build-mark{font:700 8px ui-monospace,Consolas,monospace;color:#70c8d7;letter-spacing:.11em;opacity:.75;margin-left:9px}
 </style>
 </head>
 <body class="jarvis-ui">
@@ -2854,7 +2861,7 @@
   
   <dialog id="matterBoot" aria-label="Avvio JARVIS">
   <div class="matter-boot-content">
-    <div class="matter-topline" aria-hidden="true"><span><b>◈</b> JARVIS <em>UNIVERSITY INTELLIGENCE SYSTEM</em></span><span class="matter-topline-live"><i></i> SYSTEM ONLINE <time id="matterClock">--:--</time></span></div>
+    <div class="matter-topline" aria-hidden="true"><span><b>◈</b> JARVIS <em>UNIVERSITY INTELLIGENCE SYSTEM</em> <em class="jarvis-build-mark">HUD 64</em></span><span class="matter-topline-live"><i></i> SYSTEM ONLINE <time id="matterClock">--:--</time></span></div>
     <p class="matter-kicker"><span aria-hidden="true">●</span> NEURAL PARTICLE ENGINE / 01</p>
     <div class="matter-scene">
       
@@ -4669,8 +4676,20 @@
   $('installBtn').addEventListener('click',async()=>{if(!installPrompt)return;installPrompt.prompt();try{await installPrompt.userChoice;}catch{}installPrompt=null;$('installBtn').classList.add('hidden');});
   if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
     navigator.serviceWorker.register('service-worker.js',{updateViaCache:'none'}).then(reg=>{
-      const watch=worker=>worker&&worker.addEventListener('statechange',()=>{if(worker.state==='installed'&&navigator.serviceWorker.controller)showToast('Nuova versione scaricata: ricarica la pagina per usarla.',8000);});
-      watch(reg.installing);reg.addEventListener('updatefound',()=>watch(reg.installing));
+      const VERSION='jarvis-hud-64';
+      // Only reload a controlled page when the service worker has been replaced.
+      // Prevent loops across navigation and subsequent controllerchange events.
+      const refresh=()=>{
+        try{
+          if(sessionStorage.getItem('jarvis-last-refresh')===VERSION)return;
+          sessionStorage.setItem('jarvis-last-refresh',VERSION);
+        }catch(error){console.warn('JARVIS: session storage not available',error);}
+        location.reload();
+      };
+      if(navigator.serviceWorker.controller){
+        navigator.serviceWorker.addEventListener('controllerchange',refresh,{once:true});
+      }
+      reg.update().catch(()=>{});
     }).catch(()=>{});
   }
 
