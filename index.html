@@ -2536,6 +2536,27 @@
     return d;
   }
   normalizeData(data);
+  // Lezioni ufficiali Biologia (prof. Micheloni, MED0018).
+  // Importazione una sola volta: niente sovrascrittura dell'orario personale.
+  const MICHELONI_SCHEDULE_2026=[["2026-11-05","14:00","16:00","06PA - Aula 06"],["2026-11-09","14:00","16:00","7PM - Aula 7 PM"],["2026-11-12","13:30","15:00","MTG09 - Aula 9 MTG"],["2026-11-16","13:00","15:30","01_0TM - Aula 1 TM"],["2026-11-19","13:00","15:00","MTG08 - Aula 8 MTG"],["2026-11-23","13:00","15:00","01_0TM - Aula 1 TM"],["2026-11-26","11:30","13:30","MTG06 - Aula 6 MTG"],["2026-12-01","11:00","13:00","MTG08 - Aula 8 MTG"]];
+  const MICHELONI_IMPORT_KEY='appunti-micheloni-biologia-2026-v1';
+  function mergeMicheloniSchedule(d){
+    if(!d.schedule||typeof d.schedule!=='object'||Array.isArray(d.schedule))d.schedule={};
+    if(localStorage.getItem(MICHELONI_IMPORT_KEY)==='1')return false;
+    let changed=false;
+    for(const [day,start,end,place] of MICHELONI_SCHEDULE_2026){
+      if(!Array.isArray(d.schedule[day]))d.schedule[day]=[];
+      if(d.schedule[day].some(entry=>String(entry.start)===start&&String(entry.end)===end&&/biolog/i.test(String(entry.subject||''))))continue;
+      d.schedule[day].push({subject:'Biologia',start,end,place});
+      d.schedule[day].sort((a,b)=>String(a.start).localeCompare(String(b.start)));
+      changed=true;
+    }
+    // Persist the marker only after the updated schedule has been saved.
+    localStorage.setItem('appunti-universita-v1',JSON.stringify(d));
+    localStorage.setItem(MICHELONI_IMPORT_KEY,'1');
+    return changed;
+  }
+  try{mergeMicheloniSchedule(data);}catch(error){console.warn('Importazione lezioni Biologia non completata',error);}
   const scheduleMap = () => data.schedule||{};
   const allLessons = () => {const map=scheduleMap();return Object.keys(map).sort().flatMap(date=>(map[date]||[]).map(lesson=>({...lesson,date})));};
   const userName=()=>{try{return (localStorage.getItem('appunti-user-name')||'').trim();}catch{return '';}};
