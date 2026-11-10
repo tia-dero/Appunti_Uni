@@ -2373,7 +2373,7 @@
   </div>
 </dialog>
 <dialog id="welcomeDialog" aria-labelledby="welcomeTitle"><canvas id="welcomeFx" aria-hidden="true"></canvas><div class="welcome-shell"><header class="welcome-top"><div class="welcome-brand"><span class="welcome-brand-mark"><img src="logo-192.png" alt=""></span><span>APPUNTI &#xB7; INSUBRIA<small>IL TUO SPAZIO PERSONALE</small></span></div><span class="welcome-status"><i></i>SISTEMA ATTIVO &#xB7; <span id="welcomeSystemMsg">ARCHIVIO LOCALE</span><time id="welcomeClock">--:--</time></span><button class="welcome-skip" type="button" data-close="welcomeDialog">Vai all&#x2019;archivio</button></header><main class="welcome-main"><section class="welcome-copy"><div class="welcome-radar" aria-hidden="true"><span class="welcome-radar-core">SM</span></div><p class="welcome-eyebrow">Il tuo piano di oggi</p><h1 id="welcomeTitle">Buongiorno<span></span></h1><p id="welcomeDate" class="welcome-date"></p><p id="welcomeIntro" class="welcome-intro"></p></section><section class="welcome-panel" aria-label="Materie di oggi"><div class="welcome-panel-head"><h2 id="welcomePanelTitle">Le tue lezioni</h2><span id="welcomeBadge">OGGI</span></div><div id="welcomeLessons" class="welcome-lessons"></div><div id="welcomeCountdown"></div><details class="welcome-recent"><summary>Ultimi appunti <span>ACCESSO RAPIDO</span></summary><div id="welcomeRecent" class="welcome-recent-list"></div></details></section></main><footer class="welcome-footer"><span class="welcome-footer-note">Archivio locale &#xB7; i tuoi appunti restano sul dispositivo</span><div class="welcome-footer-actions"><button class="welcome-voice" type="button" id="speakBriefingBtn">Ascolta briefing</button><button class="welcome-command" type="button" id="voiceSettingsBtn">Voce</button><button class="welcome-command welcome-mute" type="button" id="voiceMuteBtn" aria-pressed="false" aria-label="Disattiva voce automatica">&#x1F50A; Voce attiva</button><button class="welcome-command" type="button" id="welcomeCommandBtn">Ctrl+K&nbsp; Comandi</button><button class="welcome-enter" type="button" id="enterArchiveBtn">Entra nei miei appunti</button></div></footer></div></dialog>
-  <dialog id="voiceSettingsDialog" class="voice-settings-dialog" aria-labelledby="voiceSettingsTitle"><div class="dialog-head"><div><h2 id="voiceSettingsTitle">Configurazione vocale</h2><p class="voice-settings-subtitle">Regola la voce del briefing</p></div><button class="icon-btn" type="button" data-close="voiceSettingsDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body voice-settings-body"><label for="speechVoiceSelect">Voce disponibile<select id="speechVoiceSelect"><option value="">Italiano predefinito del dispositivo</option></select><small class="voice-settings-hint">Le voci dipendono dal browser e dal dispositivo. Per un risultato pi&#xF9; naturale, prova una voce italiana &#x201C;Natural&#x201D; o &#x201C;Enhanced&#x201D;, se disponibile.</small></label><button class="btn voice-preset" id="jarvisVoicePresetBtn" type="button">Applica preset JARVIS &#xB7; Decisa</button><label class="voice-range-label" for="speechPitch"><span>Tono <output id="speechPitchValue">0,88</output></span><input id="speechPitch" type="range" min="0.65" max="1.25" step="0.05" value="0.88"></label><label class="voice-range-label" for="speechRate"><span>Velocit&#xE0; <output id="speechRateValue">0,92&#xD7;</output></span><input id="speechRate" type="range" min="0.75" max="1.15" step="0.05" value="0.92"></label><p class="voice-settings-hint">Il preset abbassa leggermente il tono e rallenta il ritmo. La naturalezza dipende soprattutto dalla voce italiana installata nel dispositivo; il browser non pu&#xF2; riprodurre esattamente la voce del film.</p></div><div class="dialog-foot voice-settings-foot"><button class="btn" id="previewVoiceBtn" type="button">Prova la voce</button><div class="foot-right"><button class="btn" type="button" data-close="voiceSettingsDialog">Chiudi</button><button class="btn btn-primary" id="saveVoiceSettingsBtn" type="button">Salva</button></div></div></dialog>
+  <dialog id="voiceSettingsDialog" class="voice-settings-dialog" aria-labelledby="voiceSettingsTitle"><div class="dialog-head"><div><h2 id="voiceSettingsTitle">Configurazione vocale</h2><p class="voice-settings-subtitle">Regola la voce del briefing</p></div><button class="icon-btn" type="button" data-close="voiceSettingsDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body voice-settings-body"><label for="speechVoiceSelect">Voce disponibile<select id="speechVoiceSelect"><option value="">Italiano predefinito del dispositivo</option></select><small class="voice-settings-hint">Selezione automatica della migliore voce italiana disponibile. Puoi scegliere manualmente un'altra voce e ascoltarla in anteprima.</small></label><button class="btn voice-preset" id="jarvisVoicePresetBtn" type="button">Preset JARVIS &#xB7; Cinematografica</button><label class="voice-range-label" for="speechPitch"><span>Tono <output id="speechPitchValue">0,91</output></span><input id="speechPitch" type="range" min="0.65" max="1.25" step="0.01" value="0.91"></label><label class="voice-range-label" for="speechRate"><span>Velocit&#xE0; <output id="speechRateValue">0,94&#xD7;</output></span><input id="speechRate" type="range" min="0.75" max="1.15" step="0.01" value="0.94"></label><p class="voice-settings-hint">Il preset usa un tono leggermente pi&#xF9; basso e un ritmo naturale: abbassare troppo il tono pu&#xF2; peggiorare la qualit&#xE0;. Per una voce davvero cinematografica serve un motore vocale dedicato.</p></div><div class="dialog-foot voice-settings-foot"><button class="btn" id="previewVoiceBtn" type="button">Prova la voce</button><div class="foot-right"><button class="btn" type="button" data-close="voiceSettingsDialog">Chiudi</button><button class="btn btn-primary" id="saveVoiceSettingsBtn" type="button">Salva</button></div></div></dialog>
   <dialog id="docxPreviewDialog" aria-labelledby="docxPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="docxPreviewTitle">Anteprima documento</h2><p>Anteprima locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadDocxBtn" type="button">Scarica</button><button class="icon-btn" type="button" data-close="docxPreviewDialog" aria-label="Chiudi anteprima">&#xD7;</button></div></div><div class="docx-preview-scroll"><div id="docxPreviewError" class="docx-preview-error hidden" role="status"></div><article id="docxContent" class="docx-content"></article></div></dialog>
   <dialog id="videoPreviewDialog" aria-labelledby="videoPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="videoPreviewTitle">Video lezione</h2><p>Riproduzione locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadVideoBtn" type="button">Scarica</button><button class="icon-btn" type="button" data-close="videoPreviewDialog" aria-label="Chiudi video">&#xD7;</button></div></div><div class="video-stage"><div id="videoPreviewError" class="docx-preview-error hidden" role="status"></div><video id="videoPlayer" controls playsinline preload="metadata"></video></div></dialog>
   <dialog id="commandDialog" class="command-dialog" aria-label="Comandi rapidi"><div class="command-head"><span><i></i>INTERFACCIA COMANDI</span><kbd>ESC</kbd></div><label class="command-input-wrap" for="commandInput"><input id="commandInput" type="search" autocomplete="off" placeholder="Cerca materia, appunto o azione&#x2026; (es. apri anatomia, ultimi file)"><button class="mic-btn" id="micBtn" type="button" aria-label="Comando vocale">Parla</button></label><div id="commandResults" class="command-results"></div><div class="command-foot"><span>Frecce su e giù per scegliere &#xB7; Invio per aprire</span><span><kbd>CTRL</kbd> + <kbd>K</kbd></span></div></dialog>
@@ -2646,22 +2646,92 @@
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleClock();});
   window.addEventListener('focus',scheduleClock);
   window.addEventListener('pageshow',scheduleClock);
-  const readVoiceSettings = () => data.voiceSettings||{voiceURI:'',pitch:.78,rate:.88};
+  /* Voice engine: favor natural Italian synthesis, keep the user's saved choice. */
+  const JARVIS_VOICE_DEFAULTS={voiceURI:'',pitch:.91,rate:.94};
+  const readVoiceSettings=()=>({...JARVIS_VOICE_DEFAULTS,...(data.voiceSettings||{})});
+  const isItalianVoice=voice=>/^it(?:[-_]|$)/i.test(voice.lang||'');
+  function voiceQualityScore(voice){
+    if(!isItalianVoice(voice))return -1000;
+    const name=(voice.name+' '+(voice.voiceURI||'')).toLowerCase();
+    let score=100;
+    if(/natural|neural|enhanced|premium|online/.test(name))score+=55;
+    if(/microsoft/.test(name))score+=18;
+    if(/diego|cosimo|luca|giorgio|marco|andrea|giovanni|stefano|riccardo/.test(name))score+=26;
+    if(/google italiano/.test(name))score+=8;
+    if(voice.localService)score+=3;
+    return score;
+  }
+  function bestItalianVoice(voices){
+    return voices.filter(isItalianVoice).sort((a,b)=>voiceQualityScore(b)-voiceQualityScore(a))[0]||null;
+  }
   function speechUtterance(text,settings=readVoiceSettings()){
-    const utterance=new SpeechSynthesisUtterance(text);utterance.lang='it-IT';utterance.pitch=Number(settings.pitch)||.78;utterance.rate=Number(settings.rate)||.88;
+    const utterance=new SpeechSynthesisUtterance(text);
+    utterance.lang='it-IT';
+    utterance.pitch=Math.max(.65,Math.min(1.25,Number(settings.pitch) || JARVIS_VOICE_DEFAULTS.pitch));
+    utterance.rate=Math.max(.75,Math.min(1.15,Number(settings.rate) || JARVIS_VOICE_DEFAULTS.rate));
+    utterance.volume=1;
     const voices=window.speechSynthesis?.getVoices?.()||[];
-    const voice=voices.find(item=>(item.voiceURI||item.name)===settings.voiceURI)||voices.find(item=>/^it(-|_)/i.test(item.lang||'')&&/google italiano|microsoft.*(elsa|diego|cosimo|isabella)|premium|enhanced|natural/i.test(item.name))||voices.find(item=>/^it(-|_)/i.test(item.lang||''));
-    if(voice)utterance.voice=voice;return utterance;
+    const preferred=voices.find(item=>(item.voiceURI||item.name)===settings.voiceURI);
+    const voice=(preferred&&isItalianVoice(preferred)?preferred:null)||bestItalianVoice(voices);
+    if(voice)utterance.voice=voice;
+    return utterance;
   }
   function populateSpeechVoices(){
-    if(!window.speechSynthesis)return;const select=$('speechVoiceSelect'),voices=window.speechSynthesis.getVoices().slice().sort((a,b)=>Number(b.lang?.toLowerCase().startsWith('it'))-Number(a.lang?.toLowerCase().startsWith('it'))),selected=$('voiceSettingsDialog').open?select.value:readVoiceSettings().voiceURI;
-    select.innerHTML='<option value="">Italiano predefinito del dispositivo</option>'+voices.map(voice=>{const value=voice.voiceURI||voice.name;return '<option value="'+escapeHtml(value)+'">'+escapeHtml(voice.name)+' \u00B7 '+escapeHtml(voice.lang||'lingua sconosciuta')+'</option>';}).join('');select.value=voices.some(voice=>(voice.voiceURI||voice.name)===selected)?selected:'';
+    if(!window.speechSynthesis)return;
+    const select=$('speechVoiceSelect'),voices=window.speechSynthesis.getVoices().slice()
+      .sort((a,b)=>voiceQualityScore(b)-voiceQualityScore(a));
+    const selected=$('voiceSettingsDialog').open?select.value:readVoiceSettings().voiceURI;
+    select.innerHTML='<option value="">Automatico · migliore voce italiana disponibile</option>'+
+      voices.map(voice=>{
+        const value=voice.voiceURI||voice.name;
+        const quality=isItalianVoice(voice)&&/natural|neural|enhanced|premium/i.test(voice.name)?' · Alta qualità':'';
+        return '<option value="'+escapeHtml(value)+'">'+escapeHtml(voice.name)+' · '+escapeHtml(voice.lang||'lingua sconosciuta')+quality+'</option>';
+      }).join('');
+    select.value=voices.some(voice=>(voice.voiceURI||voice.name)===selected)?selected:'';
   }
-  function updateVoiceRangeLabels(){const pitch=Number($('speechPitch').value),rate=Number($('speechRate').value);$('speechPitchValue').textContent=pitch.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2});$('speechRateValue').textContent=rate.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+'\u00D7';}
-  function applyJarvisVoicePreset(){$('speechPitch').value='.78';$('speechRate').value='.88';updateVoiceRangeLabels();showToast('Preset JARVIS applicato: tono pi\u00F9 profondo e ritmo pi\u00F9 controllato. Provalo e salva se ti piace.');}
-  function openVoiceSettings(){if(!window.speechSynthesis||!window.SpeechSynthesisUtterance){showToast('La sintesi vocale non \u00E8 disponibile in questo browser.');return;}const settings=readVoiceSettings();populateSpeechVoices();$('speechPitch').value=settings.pitch??.78;$('speechRate').value=settings.rate??.88;updateVoiceRangeLabels();$('voiceSettingsDialog').showModal();}
-  function saveVoiceSettings(){data.voiceSettings={voiceURI:$('speechVoiceSelect').value,pitch:Number($('speechPitch').value),rate:Number($('speechRate').value)};save();$('voiceSettingsDialog').close();showToast('Impostazioni vocali salvate su questo dispositivo.');}
-  function previewVoiceSettings(){if(!window.speechSynthesis||!window.SpeechSynthesisUtterance)return;const synth=window.speechSynthesis;synth.cancel();const utterance=speechUtterance('Sistema pronto. '+greetingWord()+(userName()?' '+userName():'')+', questa \u00E8 la voce del tuo archivio.',{voiceURI:$('speechVoiceSelect').value,pitch:Number($('speechPitch').value),rate:Number($('speechRate').value)});synth.speak(utterance);}
+  function updateVoiceRangeLabels(){
+    const pitch=Number($('speechPitch').value),rate=Number($('speechRate').value);
+    $('speechPitchValue').textContent=pitch.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2});
+    $('speechRateValue').textContent=rate.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+'\u00D7';
+  }
+  function applyJarvisVoicePreset(){
+    $('speechPitch').value='.90';
+    $('speechRate').value='.94';
+    updateVoiceRangeLabels();
+    showToast('Preset cinematografico impostato: tono pieno e ritmo naturale. Ascolta la prova e poi salva.');
+  }
+  function openVoiceSettings(){
+    if(!window.speechSynthesis||!window.SpeechSynthesisUtterance){
+      showToast('La sintesi vocale non è disponibile in questo browser.');return;
+    }
+    const settings=readVoiceSettings();
+    populateSpeechVoices();
+    $('speechPitch').value=settings.pitch;
+    $('speechRate').value=settings.rate;
+    updateVoiceRangeLabels();
+    $('voiceSettingsDialog').showModal();
+  }
+  function saveVoiceSettings(){
+    data.voiceSettings={
+      voiceURI:$('speechVoiceSelect').value,
+      pitch:Number($('speechPitch').value),
+      rate:Number($('speechRate').value)
+    };
+    save();$('voiceSettingsDialog').close();
+    showToast('Voce salvata. Sarà usata anche durante l’avvio di JARVIS.');
+  }
+  function previewVoiceSettings(){
+    if(!window.speechSynthesis||!window.SpeechSynthesisUtterance)return;
+    const synth=window.speechSynthesis;
+    synth.cancel();
+    const phrase='Buongiorno'+(userName()?', '+userName():'')+'. Tutti i sistemi sono operativi. Il tuo archivio universitario è pronto. Come posso esserti utile?';
+    const utterance=speechUtterance(phrase,{
+      voiceURI:$('speechVoiceSelect').value,
+      pitch:Number($('speechPitch').value),
+      rate:Number($('speechRate').value)
+    });
+    synth.speak(utterance);
+  }
   function toggleVoiceBriefing(){
     const synth=window.speechSynthesis;if(!synth||!window.SpeechSynthesisUtterance)return;
     synth.cancel();synth.speak(speechUtterance(buildWelcomeSpeech()));
