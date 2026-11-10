@@ -4021,10 +4021,16 @@
       if(finished||reduced||isVoiceMuted()||attemptedLocal)return;
       attemptedLocal=true;
       try{
-        const response=await fetch('./jarvis-intro.m4a',{method:'HEAD',cache:'no-store'});
+        // New TTSMaker intro is preferred, with the previous recording as a fallback.
+        let recordingPath=null;
+        for(const path of ['./jarvis-intro.mp3','./jarvis-intro.m4a']){
+          try{const response=await fetch(path,{method:'HEAD',cache:'no-store'});
+            if(response.ok){recordingPath=path;break;}
+          }catch(error){console.warn('JARVIS: file audio non disponibile',path,error);}
+        }
         if(finished)return;
-        if(!response.ok){useBrowserVoice();return;}
-        audio=new Audio('./jarvis-intro.m4a');
+        if(!recordingPath){useBrowserVoice();return;}
+        audio=new Audio(recordingPath);
         audio.preload='auto';
         // Playback-only audio cleanup: clearer dialogue, less rumble and
         // more consistent volume. Original recording stays unchanged.
