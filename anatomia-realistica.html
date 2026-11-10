@@ -103,6 +103,29 @@ body.lab-immersive #toolbar{left:clamp(8px,2vw,25px);right:clamp(8px,2vw,25px)}
 body.lab-immersive #labFocusMode{border-color:#8becf8;background:#1a4b58}
 @media(max-width:680px){.lab-selection{top:70px;right:12px;max-width:42%}.lab-selection strong{font-size:11px}.lab-focus-hint{display:none}#toolbar{padding:6px;gap:4px}#toolbar button{font-size:10px;padding:7px 9px}.lab-quick-grid{grid-template-columns:1fr 1fr}}
 @media(prefers-reduced-motion:reduce){.panel,#toolbar button{transition:none}}
+
+/* Three-dimensional comparison, pinned anatomy labels and illustrative landmark cues. */
+.lab-compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.lab-compare-slot{min-width:0;border:1px solid #60e8f773;background:#071f2d;padding:10px;border-radius:6px}
+.lab-compare-slot span{font:700 10px ui-monospace,monospace;color:#6eeafa}
+.lab-compare-slot strong{display:block;font-size:12px;overflow-wrap:anywhere;margin-top:5px}
+.lab-compare-b{border-color:#f2b45b88}.lab-compare-b span{color:#ffd082}
+.lab-compare-details{display:grid;gap:8px}
+.lab-compare-details article{border-top:1px solid #65cbe22e;padding-top:9px;font-size:12px}
+.lab-compare-details h3{font-size:13px;margin:0 0 5px}
+.lab-compare-details dt{font-weight:700;color:#7de8f5;margin-top:5px}
+.lab-compare-details dd{margin:2px 0 5px;color:#c8dbe3;line-height:1.45}
+.lab-object-label,.lab-hover-label,.lab-point-label{
+ position:absolute;z-index:5;pointer-events:none;display:none;max-width:220px;
+ transform:translate(-50%,-125%);font:700 11px ui-monospace,Consolas,monospace;
+ letter-spacing:.04em;background:rgba(3,23,33,.92);border:1px solid #69e8f0a8;
+ color:#e3faff;padding:7px 10px;border-radius:4px;box-shadow:0 0 18px #1ac9ed2e;
+ white-space:normal;text-align:center
+}
+.lab-hover-label{z-index:4;font-size:10px;padding:5px 8px;border-color:#b9d8e685}
+.lab-origin-label{border-color:#56f5ff;color:#aaf8ff;font-size:10px}
+.lab-insertion-label{border-color:#ffbf6c;color:#ffe0a8;font-size:10px}
+.lab-compare-panel button[aria-pressed=true],.lab-landmark-panel button[aria-pressed=true]{border-color:#77e7f4;background:#175063}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/"}}</script>
 </head><body>
@@ -110,7 +133,11 @@ body.lab-immersive #labFocusMode{border-color:#8becf8;background:#1a4b58}
 <main><section id="viewport" aria-label="Atlante anatomico 3D"><div id="hud">◈ STARK BIOMECHANICAL LAB / 3D<br><span id="counter">CARICAMENTO IN CORSO</span></div>
 <div class="lab-selection" aria-live="polite"><span class="lab-selection-kicker">◈ STRUTTURA ATTIVA</span><strong id="labSelectedName">NESSUNA SELEZIONE</strong><small id="labSelectedType">Seleziona una struttura nel modello</small></div>
 <div class="lab-corner lab-corner-tl"></div><div class="lab-corner lab-corner-tr"></div><div class="lab-corner lab-corner-bl"></div><div class="lab-corner lab-corner-br"></div>
-<div class="lab-focus-hint" id="labFocusHint">TRASCINA PER RUOTARE · CLICCA PER ANALIZZARE</div><div id="load"><strong>INIZIALIZZAZIONE ATLANTE</strong><p id="loading">Caricamento modello anatomico dettagliato…</p></div><div id="toolbar"><button type="button" id="labFocusMode" aria-pressed="false">⛶ Focus 3D</button><button type="button" id="labAutoRotate" aria-pressed="false">◎ Rotazione</button><button id="front">Anteriore</button><button id="rear">Posteriore</button><button id="reset">Reset</button><button id="zoomIn">＋</button><button id="zoomOut">－</button><button id="moveUp" title="Sposta la visuale verso la testa">↑ Su</button><button id="moveDown" title="Sposta la visuale verso i piedi">↓ Giù</button><button id="show">Mostra tutti</button></div></section>
+<div class="lab-focus-hint" id="labFocusHint">TRASCINA PER RUOTARE · CLICCA PER ANALIZZARE</div>
+<div id="labObjectLabel" class="lab-object-label" aria-hidden="true"></div>
+<div id="labHoverLabel" class="lab-hover-label" aria-hidden="true"></div>
+<div id="labOriginLabel" class="lab-point-label lab-origin-label" aria-hidden="true">A* · ORIGINE</div>
+<div id="labInsertionLabel" class="lab-point-label lab-insertion-label" aria-hidden="true">B* · INSERZIONE</div><div id="load"><strong>INIZIALIZZAZIONE ATLANTE</strong><p id="loading">Caricamento modello anatomico dettagliato…</p></div><div id="toolbar"><button type="button" id="labFocusMode" aria-pressed="false">⛶ Focus 3D</button><button type="button" id="labAutoRotate" aria-pressed="false">◎ Rotazione</button><button id="front">Anteriore</button><button id="rear">Posteriore</button><button id="reset">Reset</button><button id="zoomIn">＋</button><button id="zoomOut">－</button><button id="moveUp" title="Sposta la visuale verso la testa">↑ Su</button><button id="moveDown" title="Sposta la visuale verso i piedi">↓ Giù</button><button id="show">Mostra tutti</button></div></section>
 <aside><section class="panel" id="jarvisPanel"><h2>◈ JARVIS · ASSISTENTE ANATOMICO</h2><p class="small">Quale muscolo, osso o altra struttura vuoi osservare?</p><form id="jarvisAnatomyForm"><input type="search" id="jarvisQuery" placeholder="Es. bicipite brachiale destro, femore sinistro…" autocomplete="off" aria-label="Struttura anatomica da cercare"><div class="row" style="margin-top:9px"><button type="submit" id="jarvisShow">◎ Evidenzia</button><button type="button" id="jarvisIsolate">◉ Isola</button><button type="button" id="jarvisSpeak">🎙 Parla</button></div></form><div class="row" style="margin-top:8px"><button type="button" id="jarvisLocate">↻ Ruota verso</button><button type="button" id="jarvisContext">↶ Corpo intero</button></div><p id="jarvisStatus" role="status" aria-live="polite" class="small">Pronto: digita o pronuncia il nome della struttura.</p></section>
 <section class="panel"><h2>STRATI ANATOMICI</h2><div class="row"><button data-mode="both" class="active">Tutte</button><button data-mode="muscles">Muscoli</button><button data-mode="bones">Ossa</button><button data-mode="cartilage">Cartilagini</button><button data-mode="eyes">Occhi</button><button data-mode="teeth">Denti</button><button data-mode="organs">Organi</button><button data-mode="arteries">Arterie</button><button data-mode="veins">Vene</button><button data-mode="circulatory">Circolatorio</button><button data-mode="all">Tutti i sistemi</button></div><label for="depth">Visibilità dei muscoli superficiali: <output id="depthLabel">100%</output></label><input id="depth" type="range" min="0" max="100" value="100"><p class="small">A 0% osservi i muscoli profondi e le altre strutture selezionate.</p></section>
 <section class="panel"><h2>ORGANI E VASI SANGUIGNI</h2><p class="small">Attiva i modelli aggiuntivi quando ti servono.</p><div class="row"><button id="loadOrgans" type="button">＋ Carica organi</button><button id="loadVessels" type="button">＋ Carica circolatorio</button></div><p id="systemsStatus" class="small" role="status">Connessione internet richiesta per i nuovi modelli 3D.</p></section>
@@ -122,6 +149,21 @@ body.lab-immersive #labFocusMode{border-color:#8becf8;background:#1a4b58}
 <button type="button" data-lab-quick="Gastrocnemio">POLPACCIO</button>
 <button type="button" data-lab-quick="Bicipite femorale">BICIPITE FEMORALE</button>
 </div><p class="small">Seleziona un muscolo per evidenziarlo nel modello 3D.</p></section>
+<section class="panel lab-compare-panel" id="labComparePanel">
+<h2>◈ CONFRONTO MUSCOLARE 3D</h2>
+<p class="small">Seleziona due muscoli sul modello e premi «Aggiungi al confronto». I colori restano visibili mentre ruoti il corpo.</p>
+<div class="lab-compare-grid">
+<div class="lab-compare-slot" id="labCompareSlotA"><span>A · CIANO</span><strong>Seleziona un muscolo</strong></div>
+<div class="lab-compare-slot lab-compare-b" id="labCompareSlotB"><span>B · AMBRA</span><strong>Seleziona un muscolo</strong></div>
+</div>
+<div class="row"><button type="button" id="labCompareClear">Azzera confronto</button><button type="button" id="labCompareShow" aria-pressed="true">◉ Mostra confronto</button></div>
+<div id="labCompareDetails" class="lab-compare-details" aria-live="polite"></div>
+</section>
+<section class="panel lab-landmark-panel"><h2>◈ INDICATORI 3D · ORIGINE / INSERZIONE</h2>
+<p class="small">Disponibili sui muscoli con scheda di studio. I marcatori indicano <strong>estremità geometriche approssimative</strong>: non rappresentano i veri punti di attacco e non sostituiscono un atlante anatomico.</p>
+<div class="row"><button type="button" id="labMarkersToggle" aria-pressed="false">◎ Mostra indicatori</button><button type="button" id="labLabelsToggle" aria-pressed="true">◉ Etichette attive</button></div>
+<p class="small" id="labMarkerStatus" role="status">Seleziona un muscolo con scheda anatomica.</p>
+</section>
 <section class="panel" id="anatomyStudyPanel"><h2>◈ STUDIO MUSCOLARE · JARVIS</h2><p class="small">Seleziona un muscolo nel modello per leggere origine, inserzione, azione e innervazione, quando disponibili nel database didattico.</p><div class="row" id="anatomyQuickRegions"><button type="button" data-anatomy-region="braccio">Braccio</button><button type="button" data-anatomy-region="spalla">Spalla</button><button type="button" data-anatomy-region="tronco">Tronco</button><button type="button" data-anatomy-region="coscia">Coscia</button><button type="button" data-anatomy-region="gamba">Gamba</button></div><p class="small" id="anatomyRegionStatus" aria-live="polite">Scegli una regione per esplorare i muscoli.</p></section>
 <section class="panel" id="anatomyQuizPanel"><h2>◈ QUIZ ANATOMICO</h2><p class="small">Quale muscolo corrisponde alla funzione indicata?</p><p id="anatomyQuizQuestion" aria-live="polite">Premi «Nuova domanda» per iniziare.</p><div id="anatomyQuizChoices" class="row"></div><p id="anatomyQuizFeedback" class="small" role="status"></p><div class="row"><button type="button" id="anatomyQuizNext">Nuova domanda</button><span class="small" id="anatomyQuizScore">0 corrette su 0</span></div></section>
 <section class="panel"><h2>STRUTTURA SELEZIONATA</h2><div id="details"><p>Seleziona un muscolo o un osso cliccando sul modello oppure cerca una struttura nell'elenco.</p></div></section>
@@ -147,6 +189,139 @@ controls.target.set(0,.95,0);controls.enableDamping=true;controls.minDistance=.6
 const picker=new THREE.Raycaster(),pointer=new THREE.Vector2();
 const objects=[], originalMaterials=new Map(), accent=new THREE.MeshStandardMaterial({color:0x56f5ff,emissive:0x107688,emissiveIntensity:.35,metalness:.16,roughness:.55});
 let root=null,selected=null,mode='both',outer=100, dragging=false,startX=0,startY=0, filtered=[], selectedName='';
+
+/* JARVIS anatomy interaction state. The comparison uses actual model meshes.
+   The origin/insertion visual cues are only geometric endpoints of the mesh. */
+const compareMaterials=[
+ new THREE.MeshStandardMaterial({color:0x46e9f9,emissive:0x0b7189,emissiveIntensity:.42,metalness:.16,roughness:.52}),
+ new THREE.MeshStandardMaterial({color:0xffbb66,emissive:0x87400b,emissiveIntensity:.4,metalness:.14,roughness:.53})
+];
+let comparison=[null,null],comparisonVisible=true,markersVisible=false,labelsVisible=true;
+let hoverTarget=null,hoverX=0,hoverY=0,hoverPending=false;
+const markerGroup=new THREE.Group();scene.add(markerGroup);
+const markerGeometry=new THREE.SphereGeometry(.014,12,10);
+const markerMaterialA=new THREE.MeshBasicMaterial({color:0x64edff,depthTest:false});
+const markerMaterialB=new THREE.MeshBasicMaterial({color:0xffbc65,depthTest:false});
+const originMarker=new THREE.Mesh(markerGeometry,markerMaterialA),insertionMarker=new THREE.Mesh(markerGeometry,markerMaterialB);
+markerGroup.add(originMarker,insertionMarker);markerGroup.visible=false;
+const markerPoints=[new THREE.Vector3(),new THREE.Vector3()];
+function updateCompareMaterials(){
+ for(const o of objects){
+  if(!originalMaterials.has(o))continue;
+  const index=comparisonVisible?comparison.indexOf(o):-1;
+  o.material=index>=0?compareMaterials[index]:o===selected?accent:originalMaterials.get(o);
+ }
+}
+function updateComparisonPanel(){
+ for(let i=0;i<2;i++){
+  const slot=$(i===0?'labCompareSlotA':'labCompareSlotB');
+  slot.querySelector('strong').textContent=comparison[i]?label(comparison[i]):'Seleziona un muscolo';
+ }
+ const holder=$('labCompareDetails');holder.replaceChildren();
+ comparison.forEach((o,i)=>{
+  if(!o)return;
+  const study=studyFor(o);
+  const article=document.createElement('article');
+  const heading=document.createElement('h3');heading.textContent=(i?'B · ':'A · ')+label(o);
+  heading.style.color=i?'#ffd082':'#7de8f5';article.append(heading);
+  if(study){
+   const dl=document.createElement('dl');
+   for(const [key,value] of [['Origine',study.origin],['Inserzione',study.insertion],['Azione',study.action],['Innervazione',study.nerve]]){
+    const dt=document.createElement('dt'),dd=document.createElement('dd');
+    dt.textContent=key;dd.textContent=value;dl.append(dt,dd);
+   }
+   article.append(dl);
+  }else{
+   const small=document.createElement('p');small.className='small';
+   small.textContent='Scheda dettagliata non ancora disponibile per questa struttura.';article.append(small);
+  }
+  holder.append(article);
+ });
+ updateCompareMaterials();
+}
+function addToComparison(o){
+ if(!o||categoria(o)!=='muscles'){ $('labMarkerStatus').textContent='Il confronto è disponibile per i muscoli.';return; }
+ if(comparison.includes(o))return;
+ const index=comparison.indexOf(null);
+ comparison[index<0?1:index]=o;
+ comparisonVisible=true;
+ $('labCompareShow').setAttribute('aria-pressed','true');
+ $('labCompareShow').textContent='◉ Mostra confronto';
+ updateComparisonPanel();
+}
+function resetComparison(){
+ comparison=[null,null];updateComparisonPanel();
+}
+$('labCompareClear').onclick=resetComparison;
+$('labCompareShow').onclick=()=>{
+ comparisonVisible=!comparisonVisible;
+ $('labCompareShow').setAttribute('aria-pressed',String(comparisonVisible));
+ $('labCompareShow').textContent=comparisonVisible?'◉ Mostra confronto':'◎ Mostra confronto';
+ updateCompareMaterials();
+};
+$('labMarkersToggle').onclick=()=>{
+ markersVisible=!markersVisible;
+ $('labMarkersToggle').setAttribute('aria-pressed',String(markersVisible));
+ $('labMarkersToggle').textContent=markersVisible?'◉ Nascondi indicatori':'◎ Mostra indicatori';
+ updateAnatomyMarkers();
+};
+$('labLabelsToggle').onclick=()=>{
+ labelsVisible=!labelsVisible;
+ $('labLabelsToggle').setAttribute('aria-pressed',String(labelsVisible));
+ $('labLabelsToggle').textContent=labelsVisible?'◉ Etichette attive':'◎ Etichette disattivate';
+};
+function updateAnatomyMarkers(){
+ markerGroup.visible=false;
+ const study=selected&&studyFor(selected);
+ if(!markersVisible||!study||!selected||!selected.visible){
+  $('labMarkerStatus').textContent=!study?'Seleziona un muscolo con scheda anatomica.':'Indicatori 3D disattivati.';
+  return;
+ }
+ // The source model does not provide certified tendon landmarks.
+ // Endpoints follow the longest axis of the actual mesh's world bounding box.
+ const box=new THREE.Box3().setFromObject(selected);
+ if(box.isEmpty())return;
+ const size=box.getSize(new THREE.Vector3());
+ const axis=size.x>size.y&&size.x>size.z?'x':size.z>size.y?'z':'y';
+ const center=box.getCenter(new THREE.Vector3());
+ const range=Math.max(.01,size[axis]);
+ markerPoints[0].copy(center);markerPoints[1].copy(center);
+ markerPoints[0][axis]-=range*.42;markerPoints[1][axis]+=range*.42;
+ // Visual endpoints A/B are intentionally not claimed to be the exact attachments.
+ originMarker.position.copy(markerPoints[0]);insertionMarker.position.copy(markerPoints[1]);
+ const scale=Math.max(.6,Math.min(2.4,range*1.5));
+ originMarker.scale.setScalar(scale);insertionMarker.scale.setScalar(scale);
+ markerGroup.visible=true;
+ $('labMarkerStatus').textContent='A* e B*: estremità geometriche indicative del muscolo selezionato, non punti di attacco anatomici.';
+}
+function pinOverlay(element,point,offsetY=0){
+ const p=point.clone().project(camera);
+ if(p.z>1||p.z< -1||Math.abs(p.x)>1.15||Math.abs(p.y)>1.15){element.style.display='none';return;}
+ const box=renderer.domElement.getBoundingClientRect();
+ const vp=viewport.getBoundingClientRect();
+ element.style.display='block';
+ element.style.left=(box.left-vp.left+(p.x+1)*box.width/2)+'px';
+ element.style.top=(box.top-vp.top+(1-p.y)*box.height/2+offsetY)+'px';
+}
+const labelPosition=new THREE.Vector3();
+function updateAnatomyLabels(){
+ const selection=$('labObjectLabel'),hover=$('labHoverLabel');
+ if(labelsVisible&&selected&&selected.visible){
+  new THREE.Box3().setFromObject(selected).getCenter(labelPosition);
+  selection.textContent=label(selected);
+  pinOverlay(selection,labelPosition,-13);
+ }else selection.style.display='none';
+ if(labelsVisible&&hoverTarget&&hoverTarget!==selected&&hoverTarget.visible){
+  hover.textContent=label(hoverTarget);
+  hover.style.display='block';
+  hover.style.left=hoverX+'px';hover.style.top=hoverY+'px';
+ }else hover.style.display='none';
+ const origin=$('labOriginLabel'),insertion=$('labInsertionLabel');
+ if(markerGroup.visible&&selected&&selected.visible){
+  pinOverlay(origin,markerPoints[0],-8);
+  pinOverlay(insertion,markerPoints[1],8);
+ }else{origin.style.display='none';insertion.style.display='none';}
+}
 const DIZIONARIO_IT={"atlas":"Atlante","axis":"Epistrofeo","body of sternum":"Corpo dello sterno","ethmoid":"Etmoide","external ear":"Padiglione auricolare","frontal bone":"Osso frontale","calcaneus":"Calcagno","capitate":"Capitato","clavicle":"Clavicola","cornea":"Cornea","cuboid bone":"Osso cuboide","hamate":"Uncinato","hip bone":"Osso dell'anca","inferior nasal concha":"Conca nasale inferiore","intermediate cuneiform bone":"Cuneiforme intermedio","lacrimal bone":"Osso lacrimale","lateral cuneiform bone":"Cuneiforme laterale","lateral nasal cartilage":"Cartilagine nasale laterale","lunate":"Semilunare","major alar cartilage":"Cartilagine alare maggiore","maxilla":"Mascella","medial cuneiform bone":"Cuneiforme mediale","nasal bone":"Osso nasale","palatine bone":"Osso palatino","parietal bone":"Osso parietale","patella":"Rotula","pisiform":"Pisiforme","scaphoid":"Scafoide","sclera":"Sclera","talus":"Astragalo","temporal bone":"Osso temporale","trapezium":"Trapezio del carpo","trapezoid":"Trapezoide del carpo","zygomatic bone":"Osso zigomatico","mandible":"Mandibola","manubrium":"Manubrio dello sterno","navicular bone of foot":"Navicolare del piede","occipital bone":"Osso occipitale","sacrum":"Osso sacro","septal nasal cartilage":"Cartilagine del setto nasale","sphenoid bone":"Sfenoide","vomer":"Vomere","xiphoid process":"Processo xifoideo","adductor brevis":"Adduttore breve","adductor minimus":"Adduttore minimo","adductor longus":"Adduttore lungo","adductor magnus":"Grande adduttore","corrugator supercilii":"Corrugatore del sopracciglio","extensor indicis":"Estensore dell'indice","flexor digitorum longus":"Flessore lungo delle dita","flexor digitorum profundus":"Flessore profondo delle dita","flexor digitorum superficialis":"Flessore superficiale delle dita","flexor hallucis longus":"Flessore lungo dell'alluce","flexor pollicis longus":"Flessore lungo del pollice","gemellus inferior":"Gemello inferiore","gemellus superior":"Gemello superiore","iliacus":"Iliaco","iliocostalis cervicis":"Ileocostale cervicale","iliocostalis lumborum":"Ileocostale lombare","iliocostalis thoracis":"Ileocostale toracico","internal oblique":"Obliquo interno","external oblique":"Obliquo esterno","longissimus capitis":"Lunghissimo della testa","longissimus cervicis":"Lunghissimo del collo","longissimus thoracis":"Lunghissimo del torace","medial pterygoid":"Pterigoideo mediale","lateral pterygoid":"Pterigoideo laterale","multifidus cervicis":"Multifido cervicale","multifidus lumborum":"Multifido lombare","multifidus thoracis":"Multifido toracico","obliquus capitis inferior":"Obliquo inferiore della testa","obliquus capitis superior":"Obliquo superiore della testa","obturator externus":"Otturatore esterno","obturator internus":"Otturatore interno","opponens pollicis":"Opponente del pollice","piriformis":"Piriforme","plantaris":"Plantare","popliteus":"Popliteo","pronator quadratus":"Pronatore quadrato","pronator teres":"Pronatore rotondo","psoas major":"Grande psoas","quadratus femoris":"Quadrato del femore","quadratus lumborum":"Quadrato dei lombi","rhomboid major":"Grande romboide","rhomboid minor":"Piccolo romboide","rotatores":"Rotatori vertebrali","scalenus anterior":"Scaleno anteriore","scalenus medius":"Scaleno medio","scalenus posterior":"Scaleno posteriore","semispinalis capitis":"Semispinale della testa","semispinalis cervicis":"Semispinale del collo","semispinalis thoracis":"Semispinale del torace","serratus posterior inferior":"Dentato posteriore inferiore","serratus posterior superior":"Dentato posteriore superiore","spinalis thoracis":"Spinale del torace","splenius cervicis":"Splenio del collo","splenius capitis":"Splenio della testa","subclavius":"Succlavio","supinator":"Supinatore","transversus abdominis":"Trasverso dell'addome","abductor hallucis":"Abduttore dell'alluce","abductor pollicis brevis":"Abduttore breve del pollice","abductor pollicis longus":"Abduttore lungo del pollice","anconeus":"Anconeo","brachialis":"Brachiale","brachioradialis":"Brachioradiale","calcaneal tendon":"Tendine d'Achille","coracobrachialis":"Coracobrachiale","depressor anguli oris":"Depressore dell'angolo della bocca","depressor labii inferioris":"Depressore del labbro inferiore","extensor carpi radialis brevis":"Estensore radiale breve del carpo","extensor carpi radialis longus":"Estensore radiale lungo del carpo","extensor carpi ulnaris":"Estensore ulnare del carpo","extensor digiti minimi":"Estensore del mignolo","extensor digitorum":"Estensore delle dita","extensor digitorum longus":"Estensore lungo delle dita","extensor hallucis brevis":"Estensore breve dell'alluce","extensor hallucis longus":"Estensore lungo dell'alluce","extensor pollicis brevis":"Estensore breve del pollice","extensor pollicis longus":"Estensore lungo del pollice","fibularis brevis":"Peroniero breve","fibularis longus":"Peroniero lungo","fibularis tertius":"Terzo peroniero","flexor carpi radialis":"Flessore radiale del carpo","flexor carpi ulnaris":"Flessore ulnare del carpo","flexor digitorum brevis":"Flessore breve delle dita","flexor pollicis brevis":"Flessore breve del pollice","frontalis":"Frontale","gracilis":"Gracile","iliotibial tract":"Tratto ileotibiale","levator labii superioris":"Elevatore del labbro superiore","levator scapulae":"Elevatore della scapola","mentalis":"Mentale","nasalis":"Nasale","omohyoid":"Omoioideo","orbicularis oris":"Orbicolare della bocca","orbicularis oculi":"Orbicolare dell'occhio","palmaris longus":"Palmare lungo","pectineus":"Pettineo","posterior layer of thoracolumbar fascia":"Fascia toracolombare posteriore","procerus":"Procero","risorius":"Risorio","semimembranosus":"Semimembranoso","semitendinosus":"Semitendinoso","serratus anterior":"Dentato anteriore","sternocleidomastoid":"Sternocleidomastoideo","sternohyoid":"Sternoioideo","sternothyroid":"Sternotiroideo","temporalis":"Temporale","tensor fasciae latae":"Tensore della fascia lata","teres major":"Grande rotondo","teres minor":"Piccolo rotondo","thyrohyoid":"Tiroioideo","zygomaticus major":"Grande zigomatico","zygomaticus minor":"Piccolo zigomatico","linea alba":"Linea alba","flexor hallucis brevis":"Flessore breve dell'alluce","adductor hallucis":"Adduttore dell'alluce","adductor pollicis":"Adduttore del pollice","opponens digiti minimi":"Opponente del mignolo","abductor digiti minimi":"Abduttore del mignolo","flexor digiti minimi brevis":"Flessore breve del mignolo","masseter":"Massetere","gastrocnemius":"Gastrocnemio","deltoid":"Deltoide","biceps femoris":"Bicipite femorale","biceps brachii":"Bicipite brachiale","triceps brachii":"Tricipite brachiale","pectoralis major":"Grande pettorale","pectoralis minor":"Piccolo pettorale","trapezius":"Trapezio","gluteus minimus":"Piccolo gluteo","gluteus medius":"Medio gluteo","gluteus maximus":"Grande gluteo","rectus abdominis":"Retto dell'addome","flexor retinaculum of wrist":"Retinacolo dei flessori del polso","set of palmar interossei of hand":"Interossei palmari della mano","set of dorsal interossei of hand":"Interossei dorsali della mano","set of lumbricals of hand":"Lombricali della mano"};
 const ORDINALI_IT={"first":1,"second":2,"third":3,"fourth":4,"fifth":5,"sixth":6,"seventh":7,"eighth":8,"ninth":9,"tenth":10,"eleventh":11,"twelfth":12};
 Object.assign(DIZIONARIO_IT,{"femur":"Femore","fibula":"Perone","humerus":"Omero","radius":"Radio","scapula":"Scapola","tibia":"Tibia","ulna":"Ulna","vomer":"Vomere","external intercostal muscle":"Muscolo intercostale esterno","rectus capitis posterior major":"Retto posteriore maggiore della testa","rectus capitis posterior minor":"Retto posteriore minore della testa","subscapularis":"Sottoscapolare","supraspinatus":"Sovraspinato","tibialis posterior":"Tibiale posteriore","vastus intermedius":"Vasto intermedio","infraspinatus muscle":"Sottospinato","latissimus dorsi":"Grande dorsale","rectus femoris":"Retto femorale","sartorius":"Sartorio","soleus":"Soleo","tibialis anterior":"Tibiale anteriore","vastus lateralis":"Vasto laterale","vastus medialis":"Vasto mediale","linea alba":"Linea alba"});
@@ -176,7 +351,7 @@ function categoria(o){const t=String(o.userData.tissue||'').toLowerCase();return
 function categoriaIT(o){return ({bones:'Osso',cartilage:'Cartilagine',eyes:'Parte dell’occhio',teeth:'Dente',muscles:'Muscolo',organs:'Organo',arteries:'Arteria',veins:'Vena',heart:'Struttura cardiaca',other:'Struttura anatomica'})[categoria(o)]}
 function livelloIT(o){const l=layer(o);return l.includes('deep')?'Muscolatura profonda':l.includes('superficial')?'Muscolatura superficiale':'Scheletro e strutture associate'}
 function latoIT(o){return ({left:'Sinistro',right:'Destro',midline:'Linea mediana'})[String(o.userData.side||'').toLowerCase()]||'Non specificato'}
-function updateVisibility(){for(const o of objects){const cat=categoria(o),isSuper=layer(o).includes('superficial');o.visible=(mode==='all'||(mode==='both'&&!o.userData.extraSystem)||(mode==='circulatory'&&['arteries','veins','heart'].includes(cat))||mode===cat||(mode==='organs'&&cat==='heart'))&&(!isSuper||outer>0);const mat=originalMaterials.get(o);if(mat){mat.opacity=isSuper?outer/100:1;mat.transparent=isSuper&&outer<100;mat.depthWrite=!isSuper||outer===100;mat.needsUpdate=true}}$('counter').textContent=objects.filter(x=>x.visible).length+' STRUTTURE VISIBILI'}
+function updateVisibility(){for(const o of objects){const cat=categoria(o),isSuper=layer(o).includes('superficial');o.visible=(mode==='all'||(mode==='both'&&!o.userData.extraSystem)||(mode==='circulatory'&&['arteries','veins','heart'].includes(cat))||mode===cat||(mode==='organs'&&cat==='heart'))&&(!isSuper||outer>0);const mat=originalMaterials.get(o);if(mat){mat.opacity=isSuper?outer/100:1;mat.transparent=isSuper&&outer<100;mat.depthWrite=!isSuper||outer===100;mat.needsUpdate=true}}$('counter').textContent=objects.filter(x=>x.visible).length+' STRUTTURE VISIBILI';updateAnatomyMarkers();updateCompareMaterials();}
 
 // Compact, reviewed study notes for selected major muscles.
 // Anatomical variants and individual differences exist; use a textbook for examination detail.
@@ -198,7 +373,7 @@ const studyFor=o=>{
  return MUSCLE_STUDY.find(m=>m.alias.some(alias=>text.includes(normalizeStudy(alias))))||null;
 };
 
-function select(o){if(selected&&originalMaterials.has(selected)){selected.material=originalMaterials.get(selected)}selected=o;selectedName=o?label(o):'';
+function select(o){if(selected&&originalMaterials.has(selected)){selected.material=originalMaterials.get(selected)}selected=o;selectedName=o?label(o):'';updateCompareMaterials();updateAnatomyMarkers();
 $('labSelectedName').textContent=selectedName||'NESSUNA SELEZIONE';
 $('labSelectedType').textContent=o?categoriaIT(o)+' · '+latoIT(o):'Seleziona una struttura nel modello';
 if(!o){$('details').innerHTML='<p>Nessuna struttura selezionata.</p>';return}o.material=accent;const d=$('details');d.replaceChildren();
@@ -219,7 +394,18 @@ const actions=document.createElement('div');actions.className='row';
 const iso=document.createElement('button');iso.textContent='Isola';iso.onclick=()=>{objects.forEach(x=>x.visible=x===o)};
 const hide=document.createElement('button');hide.textContent='Nascondi';hide.onclick=()=>{o.visible=false;select(null)};
 const focus=document.createElement('button');focus.textContent='Inquadra';focus.onclick=()=>{const b=new THREE.Box3().setFromObject(o);if(b.isEmpty())return;const c=b.getCenter(new THREE.Vector3()),size=b.getSize(new THREE.Vector3()).length();controls.target.copy(c);camera.position.copy(c.clone().add(new THREE.Vector3(0,size*.4,Math.max(.13,size*1.8))));controls.update()};
-actions.append(iso,hide,focus);d.append(actions);for(const b of $('results').children)b.classList.toggle('active',b.dataset.name===selectedName)}
+actions.append(iso,hide,focus);
+if(categoria(o)==='muscles'){
+ const compare=document.createElement('button');
+ compare.textContent='⊕ Aggiungi al confronto';
+ compare.onclick=()=>addToComparison(o);
+ actions.append(compare);
+ const landmarks=document.createElement('button');
+ landmarks.textContent='◎ Origine / inserzione 3D';
+ landmarks.onclick=()=>{if(!markersVisible)$('labMarkersToggle').click();else updateAnatomyMarkers();};
+ actions.append(landmarks);
+}
+d.append(actions);for(const b of $('results').children)b.classList.toggle('active',b.dataset.name===selectedName)}
 function search(){const q=$('search').value.trim().toLowerCase();filtered=objects.filter(o=>!q||label(o).toLowerCase().includes(q)||(o.userData.name||'').toLowerCase().includes(q)).slice(0,100);$('results').replaceChildren();for(const o of filtered){const b=document.createElement('button');b.className='result';b.dataset.name=label(o);b.textContent=label(o);b.onclick=()=>select(o);$('results').append(b)}}
 /* Comando ricevuto dalla voce JARVIS, per esempio: muscolo=bicipite brachiale destro. */
 function normalizzaRicerca(t){return String(t||'').toLocaleLowerCase('it').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\b(jarvis|il|lo|la|muscolo|mostrami|mostra|del|della|di)\b/g,' ').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim()}
@@ -492,9 +678,24 @@ document.querySelectorAll('[data-lab-quick]').forEach(button=>button.addEventLis
  apriAssistente(false,name);
 }));
 $('search').oninput=search;
+renderer.domElement.addEventListener('pointermove',e=>{
+ const box=viewport.getBoundingClientRect();
+ hoverX=e.clientX-box.left;hoverY=e.clientY-box.top-10;
+ if(hoverPending||!labelsVisible)return;
+ hoverPending=true;
+ requestAnimationFrame(()=>{
+  hoverPending=false;
+  const rect=renderer.domElement.getBoundingClientRect();
+  pointer.set((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1);
+  picker.setFromCamera(pointer,camera);
+  const hits=picker.intersectObjects(objects.filter(o=>o.visible),false);
+  hoverTarget=hits.length?hits[0].object:null;
+ });
+});
+renderer.domElement.addEventListener('pointerleave',()=>{hoverTarget=null;});
 renderer.domElement.addEventListener('pointerdown',e=>{startX=e.clientX;startY=e.clientY;dragging=false});
 renderer.domElement.addEventListener('pointerup',e=>{if(Math.hypot(e.clientX-startX,e.clientY-startY)>5)return;const rect=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1);picker.setFromCamera(pointer,camera);const hits=picker.intersectObjects(objects.filter(o=>o.visible),false);if(hits.length)select(hits[0].object)});
 const loader=new GLTFLoader();
 loader.load('https://raw.githubusercontent.com/Charleeh/ecorche/main/model/ecorche.glb',gltf=>{root=gltf.scene;scene.add(root);root.traverse(o=>{if(!o.isMesh)return;objects.push(o);if(o.material){o.material=o.material.clone();o.material.side=THREE.DoubleSide;o.material.transparent=false;o.material.depthWrite=true;originalMaterials.set(o,o.material)}});$('load').remove();anatomiaCaricata=true;search();updateVisibility();apriMuscoloRichiesto();const requested=new URLSearchParams(location.search).get('muscolo');if(requested){$('jarvisQuery').value=requested;apriAssistente(false,requested)}},xhr=>{if(xhr.total)$('loading').textContent='Download modello: '+Math.round(xhr.loaded/xhr.total*100)+'%'},err=>{$('loading').textContent='Impossibile caricare il modello. Verifica la connessione e ricarica la pagina. '+String(err.message||'')});
-function render(){requestAnimationFrame(render);controls.update();renderer.render(scene,camera)}fit();render();
+function render(){requestAnimationFrame(render);controls.update();updateAnatomyLabels();renderer.render(scene,camera)}fit();render();
 </script></body></html>
