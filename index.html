@@ -2532,6 +2532,152 @@
  #matterBoot.matter-dashboard .welcome-copy,
  #matterBoot.matter-dashboard .welcome-panel{transition:none;animation:none}
 }
+
+/* JARVIS HUD v2 — actual structural panels, not a recycled welcome layout.
+   Applied after the previous rules so the new layout wins decisively. */
+#matterBoot.matter-dashboard{background-color:#020b13;background-image:
+ radial-gradient(ellipse at 50% 32%,#1b76972b,transparent 58%),
+ linear-gradient(#65dff509 1px,transparent 1px),
+ linear-gradient(90deg,#65dff509 1px,transparent 1px);
+ background-size:auto,36px 36px,36px 36px}
+#matterBoot .jarvis-hud-telemetry,#matterBoot .jarvis-hud-actions{display:none}
+#matterBoot.matter-dashboard .matter-boot-content{
+ display:flex;flex-direction:column;justify-content:flex-start;align-items:center;
+ height:auto;min-height:100%;padding:16px clamp(12px,2vw,32px) 26px;
+}
+#matterBoot.matter-dashboard .matter-topline{width:min(1480px,100%);border-bottom:1px solid #58d4f43c;padding-bottom:12px}
+#matterBoot.matter-dashboard .matter-scene{
+ width:min(1480px,100%);max-width:100%;margin:22px auto 0;
+ display:grid!important;grid-template-columns:minmax(220px,1fr) minmax(310px,1.25fr) minmax(270px,1.18fr);
+ gap:clamp(12px,2vw,30px);align-items:center;
+}
+#matterBoot.matter-dashboard .matter-scene > .matter-side{display:none!important}
+#matterBoot.matter-dashboard .jarvis-hud-telemetry{
+ display:flex!important;flex-direction:column;min-width:0;
+ position:relative;isolation:isolate;align-self:stretch;justify-content:center;
+}
+#matterBoot.matter-dashboard .jarvis-hud-left{
+ grid-column:1;grid-row:1;padding:24px 18px 20px;
+ background:linear-gradient(105deg,#0b3340bd,#0519267d);
+ border:1px solid #60e0f349;border-left:3px solid #78edfc;
+ clip-path:polygon(0 0,calc(100% - 20px) 0,100% 20px,100% 100%,0 100%);
+ box-shadow:inset 12px 0 38px #30b6dc10;
+}
+#matterBoot.matter-dashboard .jarvis-hud-left::before{
+ content:"01 / MISSION CONTROL";position:absolute;left:18px;top:7px;
+ font:600 9px ui-monospace,Consolas,monospace;letter-spacing:.16em;color:#72c8dc;
+}
+#matterBoot.matter-dashboard .jarvis-hud-right{
+ grid-column:3;grid-row:1;padding:22px 17px;
+ background:linear-gradient(250deg,#0c3642dd,#061b2bc4);
+ border:1px solid #60e0f34d;border-right:3px solid #78edfc;
+ clip-path:polygon(0 0,100% 0,100% 100%,18px 100%,0 calc(100% - 18px));
+}
+#matterBoot.matter-dashboard .jarvis-hud-right::before{
+ content:"02 / DATA LINK";position:absolute;right:20px;top:7px;
+ font:600 9px ui-monospace,Consolas,monospace;letter-spacing:.16em;color:#72c8dc;
+}
+#matterBoot.matter-dashboard .matter-stage{
+ grid-column:2;grid-row:1;position:relative;top:auto;align-self:center;
+ width:min(100%,530px)!important;height:auto;aspect-ratio:1;
+ margin:auto;filter:drop-shadow(0 0 35px #40c8ed22);
+}
+#matterBoot.matter-dashboard .matter-stage::after{
+ content:"◈ CORE ONLINE · NEURAL LINK ACTIVE";position:absolute;
+ left:50%;bottom:-15px;transform:translateX(-50%);white-space:nowrap;
+ font:600 9px ui-monospace,Consolas,monospace;letter-spacing:.16em;
+ color:#8adcf1;pointer-events:none;
+}
+#matterBoot.matter-dashboard .jarvis-hud-left .welcome-copy{
+ display:flex;flex-direction:column;max-width:none;padding:0;margin:0;
+ text-align:left;background:none;border:0;clip-path:none;box-shadow:none;
+}
+#matterBoot.matter-dashboard .jarvis-hud-left .welcome-radar{display:none}
+#matterBoot.matter-dashboard .jarvis-hud-left .welcome-eyebrow{
+ color:#80eaf8;font:600 10px ui-monospace,Consolas,monospace;
+ letter-spacing:.18em;margin:0 0 12px;
+}
+#matterBoot.matter-dashboard .jarvis-hud-left h1{
+ color:#ebffff;font-size:clamp(25px,2.8vw,42px);line-height:1.12;
+ letter-spacing:-.04em;text-shadow:0 0 24px #63d9ee3a;margin:0 0 12px;
+}
+#matterBoot.matter-dashboard .jarvis-hud-left .welcome-date{
+ color:#86c9db;font:600 11px ui-monospace,Consolas,monospace;margin:0 0 12px;
+}
+#matterBoot.matter-dashboard .jarvis-hud-left .welcome-intro{
+ color:#b2d4df;font-size:12px;line-height:1.6;max-width:40ch;
+}
+#matterBoot.matter-dashboard .jarvis-hud-left #welcomeCountdown{
+ border-top:1px dashed #70dcec55;margin-top:20px;padding-top:12px;
+}
+#matterBoot.matter-dashboard .jarvis-hud-right .welcome-panel{
+ display:flex;flex-direction:column;width:100%;max-height:none;min-width:0;
+ padding:0;border:none;border-radius:0;background:transparent;
+ clip-path:none;box-shadow:none;text-align:left;
+}
+#matterBoot.matter-dashboard .jarvis-hud-right .welcome-panel::before{display:none}
+#matterBoot.matter-dashboard .jarvis-hud-right .welcome-panel-head h2{
+ color:#c7faff;font:700 13px ui-monospace,Consolas,monospace;letter-spacing:.1em;
+}
+#matterBoot.matter-dashboard .jarvis-hud-right #welcomeLessons{
+ display:grid;gap:7px;overflow:auto;max-height:clamp(150px,30vh,320px);
+}
+#matterBoot.matter-dashboard .jarvis-hud-right .welcome-lesson{
+ display:grid;grid-template-columns:65px minmax(0,1fr);gap:6px;
+ padding:10px;background:#071d2ab9;border:1px solid #57c9df2b;border-radius:3px;
+}
+#matterBoot.matter-dashboard .jarvis-hud-right .welcome-lesson .btn{
+ grid-column:1/-1;justify-self:start;
+}
+#matterBoot.matter-dashboard .jarvis-hud-right .welcome-recent{
+ border-top:1px solid #75e9fa28;padding-top:11px;margin-top:13px;
+}
+#matterBoot.matter-dashboard .jarvis-hud-right .welcome-recent-item{border-radius:3px}
+#matterBoot.matter-dashboard .jarvis-hud-actions{
+ display:flex!important;width:min(1480px,100%);
+ flex-direction:row;justify-content:space-between;align-items:center;
+ border-top:1px solid #68ddec3b;margin:18px 0 0;padding:16px 0 0;
+ background:none;box-shadow:none;gap:12px;
+}
+#matterBoot.matter-dashboard .jarvis-hud-actions .welcome-footer-actions{
+ display:flex;flex-wrap:wrap;gap:9px;justify-content:flex-end;
+}
+#matterBoot.matter-dashboard .jarvis-hud-actions .welcome-enter,
+#matterBoot.matter-dashboard .jarvis-hud-actions .welcome-command{
+ flex:0 1 auto;min-height:42px;padding:10px 16px;
+ border:1px solid #65daec91!important;border-radius:4px!important;
+ background:linear-gradient(135deg,#114255,#081e30)!important;
+ color:#c7f7ff!important;font:700 11px ui-monospace,Consolas,monospace;
+ text-decoration:none;letter-spacing:.04em;
+}
+#matterBoot.matter-dashboard .jarvis-hud-actions .welcome-enter{
+ border-color:#89edfc!important;background:linear-gradient(135deg,#127c95,#10394f)!important;
+}
+#matterBoot.matter-dashboard .matter-identity{margin:15px auto 0}
+#matterBoot.matter-dashboard .matter-identity h2{font-size:clamp(24px,3vw,38px);margin:0}
+#matterBoot.matter-dashboard .matter-status-track{margin:6px 0 0}
+#matterBoot.matter-dashboard .matter-footer{display:none}
+@media(max-width:1040px){
+ #matterBoot.matter-dashboard .matter-scene{
+  grid-template-columns:minmax(250px,1fr) minmax(250px,1fr);
+ }
+ #matterBoot.matter-dashboard .matter-stage{grid-column:1;grid-row:1;width:min(100%,355px)!important}
+ #matterBoot.matter-dashboard .jarvis-hud-left{grid-column:2;grid-row:1}
+ #matterBoot.matter-dashboard .jarvis-hud-right{grid-column:1/-1;grid-row:2}
+}
+@media(max-width:670px){
+ #matterBoot.matter-dashboard .matter-scene{display:flex!important;flex-direction:column;align-items:stretch;gap:16px}
+ #matterBoot.matter-dashboard .matter-stage{
+  order:0;width:min(80vw,300px)!important;align-self:center;
+ }
+ #matterBoot.matter-dashboard .jarvis-hud-left{order:1;padding:22px 16px 16px}
+ #matterBoot.matter-dashboard .jarvis-hud-right{order:2;padding:22px 16px 16px}
+ #matterBoot.matter-dashboard .jarvis-hud-actions{flex-direction:column;align-items:stretch}
+ #matterBoot.matter-dashboard .jarvis-hud-actions .welcome-footer-actions{justify-content:stretch}
+ #matterBoot.matter-dashboard .jarvis-hud-actions .welcome-enter,
+ #matterBoot.matter-dashboard .jarvis-hud-actions .welcome-command{flex:1 1 140px}
+}
+
 </style>
 </head>
 <body class="jarvis-ui">
@@ -4220,15 +4366,30 @@
     let introAudioContext=null,introEnvelope=null,introMeterFrame=0,introVolume=0;
     // The existing welcome components now live inside the holographic HUD.
     // This retains all their data bindings, countdowns and recent-note actions.
-    const hudShell=document.querySelector('#welcomeDialog .welcome-shell');
-    if(hudShell){
-      dlg.querySelector('.matter-scene').append(hudShell);
-      hudShell.setAttribute('aria-label','Dashboard JARVIS');
-      // Put the live countdown into the left holographic telemetry panel.
-      // Keep the original IDs so existing timetable updates still work.
-      const heading=hudShell.querySelector('.welcome-copy');
-      const countdown=hudShell.querySelector('#welcomeCountdown');
-      if(heading&&countdown)heading.append(countdown);
+    // Construct genuine HUD telemetry panels around the existing particle reactor.
+    // Reuse existing DOM data targets, rather than putting the old welcome page in the HUD.
+    const scene=dlg.querySelector('.matter-scene');
+    const content=dlg.querySelector('.matter-boot-content');
+    const welcome=document.querySelector('#welcomeDialog .welcome-shell');
+    const hudCopy=welcome?.querySelector('.welcome-copy');
+    const hudPanel=welcome?.querySelector('.welcome-panel');
+    const hudFooter=welcome?.querySelector('.welcome-footer');
+    if(scene&&content&&hudCopy&&hudPanel&&hudFooter){
+      const left=document.createElement('section');
+      left.className='jarvis-hud-telemetry jarvis-hud-left';
+      left.setAttribute('aria-label','Missione universitaria e prossima lezione');
+      const right=document.createElement('section');
+      right.className='jarvis-hud-telemetry jarvis-hud-right';
+      right.setAttribute('aria-label','Lezioni, esami e materiali recenti');
+      left.append(hudCopy);
+      right.append(hudPanel);
+      const reactor=scene.querySelector('#matterStage');
+      reactor.before(left);
+      reactor.after(right);
+      hudFooter.classList.add('jarvis-hud-actions');
+      content.append(hudFooter);
+      const countdown=document.getElementById('welcomeCountdown');
+      if(countdown)hudCopy.append(countdown);
     }
     const openWelcome=()=>{
       renderWelcome();
