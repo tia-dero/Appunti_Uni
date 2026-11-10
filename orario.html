@@ -352,6 +352,28 @@ function date(w,i){var s=WEEKS[w].start;return new Date(s.getFullYear(),s.getMon
 function mlab(w,full){var a=date(w,0),b=date(w,6),L=full?MON:MS;return a.getMonth()===b.getMonth()?L[a.getMonth()]:L[a.getMonth()]+'\u2013'+L[b.getMonth()];}
 function dim(l){return flt&&l.n!==flt?' dim':'';}
 
+/* Aggiunge gli incontri ufficiali di Biologia una sola volta, anche
+   se la pagina Orario viene aperta direttamente senza passare dall'archivio. */
+var MICHELONI_LESSONS=[["2026-11-05","14:00","16:00","06PA - Aula 06"],["2026-11-09","14:00","16:00","7PM - Aula 7 PM"],["2026-11-12","13:30","15:00","MTG09 - Aula 9 MTG"],["2026-11-16","13:00","15:30","01_0TM - Aula 1 TM"],["2026-11-19","13:00","15:00","MTG08 - Aula 8 MTG"],["2026-11-23","13:00","15:00","01_0TM - Aula 1 TM"],["2026-11-26","11:30","13:30","MTG06 - Aula 6 MTG"],["2026-12-01","11:00","13:00","MTG08 - Aula 8 MTG"]];
+function ensureMicheloniSchedule(){
+  var key='appunti-universita-v1',marker='appunti-micheloni-biologia-2026-v1';
+  try{
+    if(localStorage.getItem(marker)==='1')return;
+    var d=JSON.parse(localStorage.getItem(key)||'{}');
+    if(!d||typeof d!=='object'||Array.isArray(d))return;
+    if(!d.schedule||typeof d.schedule!=='object'||Array.isArray(d.schedule))d.schedule={};
+    MICHELONI_LESSONS.forEach(function(item){
+      var date=item[0],start=item[1],end=item[2],place=item[3];
+      if(!Array.isArray(d.schedule[date]))d.schedule[date]=[];
+      var exists=d.schedule[date].some(function(x){return String(x.start)===start&&String(x.end)===end&&/biolog/i.test(String(x.subject||''));});
+      if(!exists)d.schedule[date].push({subject:'Biologia',start:start,end:end,place:place});
+      d.schedule[date].sort(function(a,b){return String(a.start).localeCompare(String(b.start));});
+    });
+    localStorage.setItem(key,JSON.stringify(d));
+    localStorage.setItem(marker,'1');
+  }catch(error){console.warn('Impossibile importare lezioni di Biologia',error);}
+}
+
 /* --- dati: legge le lezioni dall'archivio dell'app --- */
 function load(){
   var schedule={},SUBJ=[];try{var d=JSON.parse(localStorage.getItem(DATA_KEY)||'{}');schedule=d.schedule||{};SUBJ=Array.isArray(d.subjects)?d.subjects:[];}catch(e){}
@@ -487,6 +509,7 @@ function go(d){var w=sel+d;if(w>=0&&w<WEEKS.length){sel=w;todayFocus=false;today
 
 (function(){var rb=document.getElementById('ribbon'),cols=['#FF8A6B','#FFD166','#C6DC57','#7BE495','#3DD6C0','#5CB8FF','#6C7BFF','#B79CFF','#FF7BB5','#D4B483'];rb.innerHTML=cols.map(function(c){return '<span style="background:'+c+'"></span>';}).join('');})();
 (function(){var t=null;try{t=localStorage.getItem(THEME_KEY);}catch(e){}if(!t)t='dark';theme(t);document.getElementById('th').onclick=function(){theme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');};})();
+ensureMicheloniSchedule();
 load();
 document.getElementById('ics').onclick=ics;
 document.getElementById('todayBtn').onclick=goToday;
