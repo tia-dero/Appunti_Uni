@@ -2198,6 +2198,82 @@
 }
 @media(prefers-reduced-motion:reduce){#matterBoot .matter-boot-content::after{animation:none}}
 
+
+/* Startup side panels now match the established JARVIS app cards and welcome panels. */
+#matterBoot .matter-side{
+ position:relative;
+ overflow:hidden;
+ background:linear-gradient(145deg,#11242bdc,#0a151cef);
+ border:1px solid #38cde04a;
+ border-radius:13px;
+ padding:20px;
+ box-shadow:0 25px 70px #0006,0 0 30px #20b8d20c,inset 0 1px #66efff22;
+ backdrop-filter:blur(13px);
+ -webkit-backdrop-filter:blur(13px);
+ max-width:285px;
+}
+#matterBoot .matter-side::before{
+ content:"";position:absolute;top:0;left:20px;width:68px;height:2px;
+ background:#64edfc;box-shadow:0 0 14px #43e5f7;
+}
+#matterBoot .matter-side .matter-mini-head{
+ color:#92b7bf;font-size:10px;font-weight:750;
+ letter-spacing:.15em;padding:0 0 15px;border-bottom:1px solid #58e7f420;
+}
+#matterBoot .matter-side .matter-mini-head span{
+ display:grid;place-items:center;width:27px;height:27px;padding:0;
+ border:1px solid #58e7f435;border-radius:8px;
+ background:#58e7f40c;color:#58e7f4;
+ font-size:10px;
+}
+#matterBoot .matter-system-line{
+ padding:13px 7px;border-bottom:1px solid #ffffff0c;
+ grid-template-columns:9px minmax(0,1fr) auto;
+}
+#matterBoot .matter-system-line:last-of-type{border-bottom:0}
+#matterBoot .matter-system-indicator{
+ background:#58e7f4;border:0;box-shadow:0 0 11px #58e7f470;
+}
+#matterBoot .matter-system-line strong{color:#e0f4f5;font-size:9px}
+#matterBoot .matter-system-line small{color:#819da4;font-size:8px}
+#matterBoot .matter-system-line > b{color:#58e7f4;font-weight:700}
+#matterBoot .matter-side .matter-side-section{
+ margin-top:16px;padding:13px;border:1px solid #263e46;
+ border-radius:10px;background:linear-gradient(145deg,#101f27,#0a151c);
+ gap:11px;
+}
+#matterBoot .matter-side-section > span{color:#8bb7c2;font-weight:750}
+#matterBoot .matter-side-section > div{color:#8ca7ae}
+#matterBoot .matter-side-section > div b{color:#c7e8ed}
+#matterBoot .matter-voice-heading{
+ padding:17px 4px 0;gap:12px;
+}
+#matterBoot .matter-voice-icon{
+ width:39px;height:39px;border-radius:11px;
+ background:#58e7f40d;border:1px solid #58e7f438;color:#58e7f4;
+ box-shadow:inset 0 0 13px #58e7f407;
+}
+#matterBoot .matter-voice-heading strong{color:#e1f7f9;font-size:13px}
+#matterBoot .matter-voice-heading small{color:#58e7f4;font-weight:700}
+#matterBoot .matter-voice-spectrum{
+ margin:15px 0 0;border:1px solid #58e7f424;border-radius:10px;
+ height:83px;background:radial-gradient(ellipse at center,#58e7f412,transparent 78%);
+}
+#matterBoot .matter-voice-spectrum i{background:#58e7f4;box-shadow:0 0 7px #58e7f440}
+#matterBoot .matter-voice-connection{
+ padding:15px 4px;border-bottom:1px solid #ffffff12;
+ color:#94aeb7;
+}
+#matterBoot .matter-voice-connection b{color:#58e7f4}
+#matterBoot .matter-corner-notch{display:none}
+@media (max-width:1150px) and (min-width:781px){
+ #matterBoot .matter-side{padding:14px 11px;border-radius:12px}
+ #matterBoot .matter-side::before{left:11px;width:50px}
+ #matterBoot .matter-system-line{padding:9px 2px;grid-template-columns:7px minmax(0,1fr)}
+ #matterBoot .matter-system-line > b{grid-column:2}
+ #matterBoot .matter-side .matter-side-section{padding:10px}
+}
+
 </style>
 </head>
 <body class="jarvis-ui">
