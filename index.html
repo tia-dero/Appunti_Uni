@@ -4026,10 +4026,36 @@
         if(!response.ok){useBrowserVoice();return;}
         audio=new Audio('./jarvis-intro.m4a');
         audio.preload='auto';
+        // Playback-only audio cleanup: clearer dialogue, less rumble and
+        // more consistent volume. Original recording stays unchanged.
+        let introAudioContext=null;
+        try{
+          const Ctx=window.AudioContext||window.webkitAudioContext;
+          if(Ctx){
+            introAudioContext=new Ctx();
+            const source=introAudioContext.createMediaElementSource(audio);
+            const highpass=introAudioContext.createBiquadFilter();
+            highpass.type='highpass';highpass.frequency.value=100;
+            const presence=introAudioContext.createBiquadFilter();
+            presence.type='peaking';presence.frequency.value=2500;
+            presence.Q.value=.9;presence.gain.value=2;
+            const lowpass=introAudioContext.createBiquadFilter();
+            lowpass.type='lowpass';lowpass.frequency.value=9000;
+            const compressor=introAudioContext.createDynamicsCompressor();
+            compressor.threshold.value=-25;compressor.knee.value=20;
+            compressor.ratio.value=2.4;compressor.attack.value=.008;
+            compressor.release.value=.2;
+            const gain=introAudioContext.createGain();gain.gain.value=1.06;
+            source.connect(highpass);highpass.connect(presence);
+            presence.connect(lowpass);lowpass.connect(compressor);
+            compressor.connect(gain);gain.connect(introAudioContext.destination);
+          }
+        }catch(filterError){console.warn('JARVIS: elaborazione audio non disponibile',filterError);}
         audio.onended=()=>finish(false,true);
         audio.onerror=()=>{if(!finished&&!speaking)useBrowserVoice();else if(!finished)finish(false);};
         const start=async()=>{
           if(finished)return;
+          if(introAudioContext?.state==='suspended')await introAudioContext.resume();
           await audio.play();
           if(finished){audio.pause();return;}
           playButton.hidden=true;clearTimeout(waitTimer);
