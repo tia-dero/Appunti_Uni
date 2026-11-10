@@ -2314,6 +2314,66 @@
  #matterBoot.matter-dashboard .welcome-main{grid-template-columns:1fr;padding:12px 0;gap:14px}
  #matterBoot.matter-dashboard .welcome-shell{margin-top:4px}
 }
+
+/* Unified HUD: actual university information beside the living particle core. */
+#matterBoot.matter-dashboard .matter-boot-content{
+  justify-content:flex-start;min-height:100%;height:auto;
+  padding:clamp(12px,2vh,24px) clamp(12px,2.7vw,40px) 28px;
+}
+#matterBoot.matter-dashboard .matter-scene{
+  width:min(1280px,100%);max-width:100%;
+  display:grid;grid-template-columns:minmax(250px,.88fr) minmax(360px,1.12fr);
+  align-items:start;gap:clamp(14px,2.5vw,36px);margin:10px auto 0;
+}
+#matterBoot.matter-dashboard .matter-side{display:none}
+#matterBoot.matter-dashboard .matter-stage{
+  grid-column:1;grid-row:1;position:sticky;top:30px;
+  width:min(460px,40vw);max-width:100%;height:auto;aspect-ratio:1;
+  align-self:start;margin:auto;
+}
+#matterBoot.matter-dashboard .welcome-shell{
+  grid-column:2;grid-row:1;display:flex!important;flex-direction:column;
+  width:100%;min-width:0;max-width:none;padding:0;margin:0;
+  border:0;background:transparent;text-align:left;min-height:0;
+}
+#matterBoot.matter-dashboard .welcome-top{display:none}
+#matterBoot.matter-dashboard .welcome-main{
+  display:flex;flex-direction:column;gap:14px;
+  align-items:stretch;flex:initial;padding:0;
+}
+#matterBoot.matter-dashboard .welcome-copy{max-width:100%;padding:0}
+#matterBoot.matter-dashboard .welcome-eyebrow{margin:0 0 5px;font-size:10px}
+#matterBoot.matter-dashboard .welcome-copy h1{font-size:clamp(23px,3vw,38px);margin:0 0 7px}
+#matterBoot.matter-dashboard .welcome-date{margin:0 0 6px}
+#matterBoot.matter-dashboard .welcome-intro{font-size:13px;line-height:1.5;margin:0}
+#matterBoot.matter-dashboard .welcome-panel{
+  width:100%;max-height:none;padding:16px;
+  background:linear-gradient(145deg,rgba(12,35,48,.94),rgba(5,18,27,.96));
+}
+#matterBoot.matter-dashboard .welcome-lessons{max-height:230px;overflow:auto}
+#matterBoot.matter-dashboard .welcome-recent{margin-top:10px}
+#matterBoot.matter-dashboard .welcome-footer{
+  display:block;width:100%;padding:12px 0 0;margin:0;
+  border-top:1px solid rgba(92,236,255,.16);
+}
+#matterBoot.matter-dashboard .welcome-footer-note{display:none}
+#matterBoot.matter-dashboard .welcome-footer-actions{display:flex;flex-wrap:wrap;gap:8px}
+#matterBoot.matter-dashboard .welcome-enter,
+#matterBoot.matter-dashboard #hudScheduleBtn,
+#matterBoot.matter-dashboard #hudAnatomyLink{flex:1 1 130px}
+#matterBoot.matter-dashboard .matter-identity{margin:8px auto 0}
+#matterBoot.matter-dashboard .matter-status-track{margin:0}
+@media(max-width:820px){
+ #matterBoot.matter-dashboard .matter-scene{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+ }
+ #matterBoot.matter-dashboard .matter-stage{
+  position:relative;top:auto;width:min(280px,64vw);max-width:100%;
+  flex-shrink:0;
+ }
+ #matterBoot.matter-dashboard .welcome-shell{width:100%;max-width:650px;align-self:center}
+ #matterBoot.matter-dashboard .welcome-main{gap:12px}
+}
 </style>
 </head>
 <body class="jarvis-ui">
@@ -4004,7 +4064,7 @@
     // This retains all their data bindings, countdowns and recent-note actions.
     const hudShell=document.querySelector('#welcomeDialog .welcome-shell');
     if(hudShell){
-      dlg.querySelector('.matter-boot-content').append(hudShell);
+      dlg.querySelector('.matter-scene').append(hudShell);
       hudShell.setAttribute('aria-label','Dashboard JARVIS');
     }
     const openWelcome=()=>{
