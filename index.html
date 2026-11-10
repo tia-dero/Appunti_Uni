@@ -2313,6 +2313,39 @@
  #matterBoot .matter-side-left{grid-column:1;grid-row:2}
  #matterBoot .matter-side-right{grid-column:2;grid-row:2}
 }
+
+/* Cinematic details — non-layout overlays that preserve original centering */
+#matterBoot .matter-micro-tag{position:absolute;z-index:5;pointer-events:none;display:flex;align-items:center;gap:7px;
+ padding:7px 9px;border:1px solid rgba(102,218,241,.28);
+ background:linear-gradient(125deg,rgba(4,28,41,.87),rgba(5,21,32,.6));
+ box-shadow:0 0 15px #1cbbe517;min-width:96px;text-align:left;letter-spacing:.1em;
+ font:600 8px ui-monospace,Consolas,monospace;color:#b9eff7}
+#matterBoot .matter-micro-tag strong{display:block;color:#a4effb;font-size:9px;letter-spacing:.13em}
+#matterBoot .matter-micro-tag small{display:block;margin-top:3px;color:#679faf;font-size:8px;letter-spacing:.08em}
+#matterBoot .matter-micro-dot{height:5px;width:5px;flex:none;border-radius:50%;background:#7ce8fc;box-shadow:0 0 8px #70e8fb}
+#matterBoot .matter-micro-tag-top{top:19%;right:0;transform:translateX(14%)}
+#matterBoot .matter-micro-tag-bottom{bottom:17%;left:0;transform:translateX(-13%)}
+#matterBoot.matter-speaking .matter-micro-dot{animation:matterMicroBlink .85s ease-in-out infinite alternate}
+@keyframes matterMicroBlink{to{opacity:.5;box-shadow:0 0 15px #81ebff}}
+#matterBoot .matter-energy-link{--pulse:.08;position:absolute;z-index:2;pointer-events:none;height:1px;width:0;opacity:.43;
+ background:linear-gradient(90deg,transparent,#55cce8aa,transparent);
+ box-shadow:0 0 calc(3px + var(--pulse) * 13px) #40cae9;transition:opacity .18s ease}
+#matterBoot .matter-energy-link::before{content:"";position:absolute;inset:-9px 0;background:linear-gradient(90deg,transparent 10%,#8feaff 49%,transparent 55%);
+ background-size:300% 100%;opacity:var(--pulse);animation:matterEnergyFlow 2.4s linear infinite}
+#matterBoot .matter-energy-link::after{content:"";position:absolute;right:-2px;top:-2px;width:5px;height:5px;
+ border-radius:50%;background:#7be3f5;box-shadow:0 0 12px #49e4f7}
+@keyframes matterEnergyFlow{from{background-position:180% 0}to{background-position:-120% 0}}
+#matterBoot .matter-spectrum-live i{animation:none!important;transition:none!important;height:9%;opacity:.35;
+ background:linear-gradient(180deg,#bcfaff,#47b9d1);box-shadow:0 0 7px #38cbeb48}
+#matterBoot .matter-spectrum-live{isolation:isolate}
+@media(max-width:780px){#matterBoot .matter-energy-link{display:none!important}
+ #matterBoot .matter-micro-tag{padding:5px 6px;min-width:auto;gap:5px}
+ #matterBoot .matter-micro-tag strong{font-size:8px}
+ #matterBoot .matter-micro-tag small{font-size:7px}
+ #matterBoot .matter-micro-tag-top{right:5%;top:14%;transform:none}
+ #matterBoot .matter-micro-tag-bottom{left:5%;bottom:14%;transform:none}
+}
+@media(prefers-reduced-motion:reduce){#matterBoot .matter-energy-link::before,#matterBoot .matter-micro-dot{animation:none!important}}
 </style>
 </head>
 <body class="jarvis-ui">
@@ -2368,6 +2401,8 @@
     <div class="matter-topline" aria-hidden="true"><span><b>◈</b> JARVIS <em>UNIVERSITY INTELLIGENCE SYSTEM</em></span><span class="matter-topline-live"><i></i> SYSTEM ONLINE <time id="matterClock">--:--</time></span></div>
     <p class="matter-kicker"><span aria-hidden="true">●</span> NEURAL PARTICLE ENGINE / 01</p>
     <div class="matter-scene">
+      <div class="matter-energy-link matter-energy-link-left" aria-hidden="true"><i></i></div>
+      <div class="matter-energy-link matter-energy-link-right" aria-hidden="true"><i></i></div>
       
 <aside class="matter-side matter-side-left" aria-label="Stato dei moduli JARVIS">
         <div class="matter-mini-head"><span>01</span> SYSTEM OVERVIEW</div>
@@ -2389,11 +2424,13 @@
         <div class="matter-axis-text matter-axis-top" aria-hidden="true">CORE / N.01</div>
         <div class="matter-axis-text matter-axis-bottom" aria-hidden="true">PARTICLE FIELD · STABLE</div>
         <div class="matter-fallback" aria-hidden="true"></div>
+        <div class="matter-micro-tag matter-micro-tag-top" aria-hidden="true"><span class="matter-micro-dot"></span><div><strong>CORE 01</strong><small>PARTICLE SYNC</small></div></div>
+        <div class="matter-micro-tag matter-micro-tag-bottom" aria-hidden="true"><span class="matter-micro-dot"></span><div><strong>NEURAL LINK</strong><small id="matterMicroState">STANDBY</small></div></div>
       </div>
 <aside class="matter-side matter-side-right" aria-label="Interfaccia vocale e connessione">
         <div class="matter-mini-head"><span>02</span> VOICE INTERFACE</div>
         <div class="matter-voice-heading"><span class="matter-voice-icon" aria-hidden="true">◉</span><div><strong>VOICE CORE</strong><small id="matterVoiceState">READY</small></div></div>
-        <div class="matter-voice-spectrum" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="matter-voice-spectrum matter-spectrum-live" aria-label="Livello audio della voce JARVIS" role="img"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <div class="matter-voice-connection"><span>CONNESSIONE</span><b id="matterNetworkState">CHECKING</b></div>
         <div class="matter-side-section"><span>CORE LINK</span><div><span>RISPOSTA VOCALE</span><b>ATTIVA</b></div><div><span>MATERIA DIGITALE</span><b>STABILE</b></div></div>
       </aside>
@@ -3988,6 +4025,45 @@
     const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
     let finished=false,core=null,speaking=false,attemptedLocal=false,waitTimer=0,watchdog=0,exitTimer=0,audio=null;
     let introAudioContext=null,introEnvelope=null,introMeterFrame=0,introVolume=0;
+    const liveBars=Array.from(dlg.querySelectorAll('.matter-spectrum-live i'));
+    const energyLinks=Array.from(dlg.querySelectorAll('.matter-energy-link'));
+    let linkObserver=null;
+    const microState=$('matterMicroState');
+    const showAudioLevel=(level,index=0)=>{
+      const volume=Math.max(0,Math.min(1,Number(level)||0));
+      dlg.style.setProperty('--jarvis-voice-level',volume.toFixed(3));
+      energyLinks.forEach(link=>{
+        link.style.setProperty('--pulse',(.08+volume*.85).toFixed(3));
+        link.style.opacity=(.20+volume*.67).toFixed(3);
+      });
+      // Waveform-derived neighbouring windows; no independent animated preset.
+      liveBars.forEach((bar,i)=>{
+        const sample=introEnvelope?introEnvelope[Math.max(0,Math.min(introEnvelope.length-1,index+(i-7)*2))]||0:0;
+        const value=introEnvelope?Math.min(1,Math.max(0,(sample-.006)*6.8)):0;
+        const mixed=.58*volume+.42*value;
+        bar.style.height=(9+mixed*84)+'%';
+        bar.style.opacity=(.36+mixed*.64).toFixed(3);
+      });
+    };
+    const alignEnergyLinks=()=>{
+      if(!dlg.open)return;
+      const rect=dlg.querySelector('.matter-scene').getBoundingClientRect();
+      const nucleus=stage.getBoundingClientRect();
+      const left=dlg.querySelector('.matter-side-left')?.getBoundingClientRect();
+      const right=dlg.querySelector('.matter-side-right')?.getBoundingClientRect();
+      if(!left||!right)return;
+      const y=nucleus.top+nucleus.height*.5-rect.top;
+      const nucleusLeft=nucleus.left+nucleus.width*.15-rect.left;
+      const nucleusRight=nucleus.right-nucleus.width*.15-rect.left;
+      const place=(link,x1,x2)=>{
+        const width=Math.max(0,x2-x1);
+        link.style.display=width<10?'none':'block';
+        link.style.left=x1+'px';link.style.top=y+'px';link.style.width=width+'px';
+      };
+      place(energyLinks[0],left.right-rect.left+4,nucleusLeft);
+      place(energyLinks[1],nucleusRight,right.left-rect.left-4);
+    };
+
     // The existing welcome components now live inside the holographic HUD.
     // This retains all their data bindings, countdowns and recent-note actions.
     const openWelcome=()=>{
@@ -4005,6 +4081,7 @@
     const speakingOn=()=>{
       if(finished)return;
       speaking=true;dlg.classList.add('matter-speaking');
+      if(microState)microState.textContent='VOICE SYNC';
       core?.setSpeaking(true);
       $('matterVoiceStatusLeft').textContent='ACTIVE';
       welcomeGreetingAttempted=true;
@@ -4015,6 +4092,8 @@
       playButton.hidden=true;playButton.onclick=null;
       if(introMeterFrame)cancelAnimationFrame(introMeterFrame);
       introMeterFrame=0;introEnvelope=null;
+      linkObserver?.disconnect();linkObserver=null;
+      showAudioLevel(0);
       if(audio){audio.pause();audio.removeAttribute('src');audio.load();audio=null;}
       if(introAudioContext){introAudioContext.close().catch(()=>{});introAudioContext=null;}
       core?.dispose();core=null;
@@ -4030,6 +4109,8 @@
       if(!fromVoice&&window.speechSynthesis){try{window.speechSynthesis.cancel();}catch{}}
       clearTimeout(waitTimer);clearTimeout(watchdog);
       core?.setSpeaking(false);
+      showAudioLevel(0);
+      if(microState)microState.textContent='SYSTEM READY';
       if(introMeterFrame)cancelAnimationFrame(introMeterFrame);
       if(audio){audio.pause();audio.removeAttribute('src');audio.load();audio=null;}
       if(introAudioContext){introAudioContext.close().catch(()=>{});introAudioContext=null;}
@@ -4086,6 +4167,7 @@
           const target=Math.min(1,Math.max(0,(rms-.006)*6.8));
           introVolume+=(target-introVolume)*(target>introVolume?.48:.22);
           core?.setAudioLevel(introVolume);
+          showAudioLevel(introVolume,index);
         }
         introMeterFrame=requestAnimationFrame(meter);
       };
@@ -4132,6 +4214,12 @@
     };
     // Original holographic boot, centered with its original panels.
     dlg.showModal();
+    requestAnimationFrame(alignEnergyLinks);
+    if(window.ResizeObserver){
+      linkObserver=new ResizeObserver(alignEnergyLinks);
+      [dlg.querySelector('.matter-scene'),stage,dlg.querySelector('.matter-side-left'),dlg.querySelector('.matter-side-right')].filter(Boolean).forEach(el=>linkObserver.observe(el));
+    }
+    showAudioLevel(0);
     $('matterClock').textContent=new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
     $('matterNetworkState').textContent=navigator.onLine?'ONLINE':'OFFLINE';
     $('matterVoiceState').textContent=isVoiceMuted()?'MUTED':'READY';
