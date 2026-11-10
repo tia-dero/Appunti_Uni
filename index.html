@@ -2274,6 +2274,14 @@
  #matterBoot .matter-side .matter-side-section{padding:10px}
 }
 
+
+/* Turnstile verification occupies a compact slot inside the intro status row. */
+#matterBoot .matter-status-track{flex-wrap:wrap}
+#matterBoot .matter-turnstile{display:none;max-width:100%;width:100%;justify-content:center;align-items:center}
+#matterBoot .matter-turnstile-visible{display:flex;margin-top:6px}
+#matterBoot .matter-turnstile iframe{max-width:100%}
+@media(max-height:720px){#matterBoot .matter-turnstile-visible{margin-top:2px}}
+
 </style>
 </head>
 <body class="jarvis-ui">
@@ -2364,7 +2372,7 @@
       <p class="matter-identity-sub">NEURAL PARTICLE CORE <span aria-hidden="true">·</span> VOICE RESPONSIVE SYSTEM</p>
       <div class="matter-status-track" role="status" aria-live="polite">
         <span class="matter-status-led" aria-hidden="true"></span>
-        <span id="matterStatus" class="matter-status">SISTEMA IN AVVIO</span>
+        <span id="matterStatus" class="matter-status">SISTEMA IN AVVIO</span><div id="matterTurnstile" class="matter-turnstile" aria-label="Verifica di sicurezza per la voce ElevenLabs"></div>
         <span class="matter-status-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
       </div>
     </div>
@@ -3953,26 +3961,107 @@
      Manteniamo il saluto della schermata di benvenuto già esistente. */
 
   /* Avvio dal nuovo nucleo organico: nessuna esplosione, solo reazione delicata al parlato. */
+  /* ElevenLabs voice is requested only after Turnstile, never with client-side API keys.
+     Browser speech synthesis remains an offline/error/autoplay fallback. */
   function runMatterIntro(){
     const dlg=$('matterBoot'),stage=$('matterStage'),status=$('matterStatus');
+    const verifyBox=$('matterTurnstile');
     const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
+    const VOICE_ENDPOINT='https://jarvis-voice-api.mattiaderosa06.workers.dev/speak';
+    const TURNSTILE_SITE_KEY='0x4AAAAAAF6sWUYRGVbKIuFo';
     let finished=false,core=null,speechStarted=false,waitTimer=0,watchdog=0,exitTimer=0;
+    let audio=null,audioUrl=null,requestAbort=null,verificationWidget=null;
     const openWelcome=()=>{$('welcomeDialog').showModal();startWelcomeFx();};
+    const markSpeaking=()=>{
+      if(finished)return;
+      speechStarted=true;
+      status.textContent='JARVIS STA PARLANDO';
+      $('matterVoiceState').textContent='SPEAKING';
+      $('matterVoiceStatusLeft').textContent='ACTIVE';
+      dlg.classList.add('matter-speaking');
+      core?.setSpeaking(true);
+      welcomeGreetingAttempted=true;welcomeGreetingPending=false;
+    };
     const cleanup=()=>{
       clearTimeout(waitTimer);clearTimeout(watchdog);clearTimeout(exitTimer);
+      requestAbort?.abort();requestAbort=null;
+      if(audio){audio.pause();audio.removeAttribute('src');audio.load();audio=null;}
+      if(audioUrl){URL.revokeObjectURL(audioUrl);audioUrl=null;}
       core?.dispose();core=null;
       dlg.classList.remove('matter-speaking','matter-exit');
       if(dlg.open)dlg.close();
     };
     const finish=(immediate=false,fromVoice=false)=>{
-      if(finished)return;
-      finished=true;
+      if(finished)return;finished=true;
       if(!fromVoice&&window.speechSynthesis){try{window.speechSynthesis.cancel()}catch{}}
       clearTimeout(waitTimer);clearTimeout(watchdog);
       core?.setSpeaking(false);
-      if(immediate||reduced){cleanup();openWelcome();return}
+      if(immediate||reduced){cleanup();openWelcome();return;}
       dlg.classList.add('matter-exit');
       exitTimer=setTimeout(()=>{cleanup();openWelcome()},520);
+    };
+    const browserFallback=()=>{
+      if(finished||speechStarted)return;
+      clearTimeout(waitTimer);clearTimeout(watchdog);
+      verifyBox.classList.remove('matter-turnstile-visible');
+      if(!window.speechSynthesis||!window.SpeechSynthesisUtterance||isVoiceMuted()){
+        status.textContent='SISTEMA PRONTO';
+        waitTimer=setTimeout(()=>finish(false),reduced?350:1250);
+        return;
+      }
+      try{
+        const synth=window.speechSynthesis,voice=speechUtterance(buildWelcomeSpeech());
+        voice.onstart=()=>{
+          if(finished)return;
+          markSpeaking();
+          watchdog=setTimeout(()=>finish(false),35000);
+        };
+        voice.onend=()=>finish(false,true);
+        voice.onerror=()=>{if(!finished)finish(false);};
+        synth.cancel();synth.speak(voice);
+        waitTimer=setTimeout(()=>{if(!speechStarted&&!finished)finish(false);},6500);
+      }catch(error){waitTimer=setTimeout(()=>finish(false),800);}
+    };
+    const playElevenLabs=async token=>{
+      if(finished||speechStarted||isVoiceMuted())return;
+      verifyBox.classList.remove('matter-turnstile-visible');
+      status.textContent='PREPARAZIONE VOCE JARVIS';
+      requestAbort=new AbortController();
+      try{
+        // Avoid sending unlimited text; keep the spoken briefing brief.
+        let phrase=buildWelcomeSpeech();
+        if(phrase.length>640){
+          const head=phrase.slice(0,600);
+          const cut=Math.max(head.lastIndexOf('. '),head.lastIndexOf('; '));
+          phrase=(cut>180?head.slice(0,cut+1):head.trimEnd())+' Il sistema è operativo.';
+        }
+        const response=await fetch(VOICE_ENDPOINT,{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({text:phrase,turnstileToken:token}),
+          signal:requestAbort.signal
+        });
+        if(!response.ok)throw new Error('Voice HTTP '+response.status);
+        const blob=await response.blob();
+        if(finished)return;
+        if(!blob.type.startsWith('audio/')||blob.size===0)throw new Error('Invalid audio response');
+        audioUrl=URL.createObjectURL(blob);
+        audio=new Audio(audioUrl);
+        audio.preload='auto';
+        audio.onended=()=>finish(false,true);
+        audio.onerror=()=>{if(!finished)finish(false);};
+        await audio.play(); // A browser may block autoplay; fallback to its local speech.
+        if(finished)return;
+        clearTimeout(waitTimer);
+        markSpeaking();
+        watchdog=setTimeout(()=>finish(false),45000);
+      }catch(error){
+        if(finished)return;
+        console.warn('JARVIS: ElevenLabs unavailable, using browser voice',error);
+        if(audio){audio.pause();audio.removeAttribute('src');audio.load();audio=null;}
+        if(audioUrl){URL.revokeObjectURL(audioUrl);audioUrl=null;}
+        browserFallback();
+      }
     };
     dlg.showModal();
     $('matterClock').textContent=new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
@@ -3983,26 +4072,42 @@
     dlg.addEventListener('cancel',event=>{event.preventDefault();finish(true)},{once:true});
     import('./matter-core.js').then(module=>{
       if(finished||!dlg.open)return;
-      try{core=module.startMatterCore(stage,{reducedMotion:reduced});stage.classList.add('matter-ready');core.setSpeaking(speechStarted)}
-      catch(e){console.warn('JARVIS: nucleo CSS alternativo',e)}
+      try{core=module.startMatterCore(stage,{reducedMotion:reduced});stage.classList.add('matter-ready');core.setSpeaking(speechStarted);}
+      catch(e){console.warn('JARVIS: nucleo CSS alternativo',e);}
     }).catch(e=>console.warn('JARVIS: rendering 3D non disponibile',e));
-    if(!reduced&&!isVoiceMuted()&&window.speechSynthesis&&window.SpeechSynthesisUtterance){
+    if(reduced||isVoiceMuted()||!navigator.onLine){
+      browserFallback();return;
+    }
+    status.textContent='COLLEGAMENTO VOCE NEURALE';
+    // Do not leave the intro hanging if Turnstile is blocked or requires interaction.
+    waitTimer=setTimeout(browserFallback,14000);
+    function renderTurnstile(){
+      if(finished||speechStarted||!window.turnstile?.render)return;
       try{
-        const synth=window.speechSynthesis,voice=speechUtterance(buildWelcomeSpeech());
-        voice.onstart=()=>{
-          if(finished)return;
-          speechStarted=true;status.textContent='JARVIS STA PARLANDO';$('matterVoiceState').textContent='SPEAKING';$('matterVoiceStatusLeft').textContent='ACTIVE';dlg.classList.add('matter-speaking');
-          core?.setSpeaking(true);clearTimeout(waitTimer);
-          watchdog=setTimeout(()=>finish(false),30000);
-        };
-        voice.onend=()=>finish(false,true);
-        voice.onerror=()=>{if(!finished){status.textContent='SISTEMA PRONTO';waitTimer=setTimeout(()=>finish(false),900)}};
-        synth.cancel();synth.speak(voice);
-        waitTimer=setTimeout(()=>{if(!speechStarted&&!finished)finish(false)},7000);
-      }catch(e){waitTimer=setTimeout(()=>finish(false),4500)}
-    }else{
-      status.textContent='SISTEMA PRONTO';
-      waitTimer=setTimeout(()=>finish(false),reduced?350:3000);
+        verificationWidget=window.turnstile.render(verifyBox,{
+          sitekey:TURNSTILE_SITE_KEY,
+          theme:'dark',
+          size:'compact',
+          callback:token=>{
+            if(finished)return;
+            clearTimeout(waitTimer);
+            waitTimer=setTimeout(browserFallback,14000);
+            playElevenLabs(token);
+          },
+          'error-callback':()=>{if(!finished)browserFallback();},
+          'expired-callback':()=>{if(!finished&&!speechStarted)browserFallback();}
+        });
+        verifyBox.classList.add('matter-turnstile-visible');
+      }catch(error){console.warn('JARVIS: Turnstile unavailable',error);browserFallback();}
+    }
+    if(window.turnstile?.render){renderTurnstile();}
+    else{
+      const script=document.createElement('script');
+      script.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+      script.async=true;
+      script.onload=renderTurnstile;
+      script.onerror=browserFallback;
+      document.head.appendChild(script);
     }
   }
 
