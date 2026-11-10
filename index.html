@@ -4017,7 +4017,6 @@
     };
     const enterArchive=()=>{cleanup();};
     $('enterArchiveBtn').addEventListener('click',enterArchive);
-    $('welcomeSkipBtnHUD')?.addEventListener('click',enterArchive);
     $('hudScheduleBtn')?.addEventListener('click',()=>{enterArchive();$('orarioBtn').click();});
     const welcomeSkip=dlg.querySelector('.welcome-skip');
     if(welcomeSkip)welcomeSkip.addEventListener('click',enterArchive);
@@ -4042,6 +4041,10 @@
       dlg.classList.remove('matter-speaking','matter-exit');
       if(dlg.open)dlg.close();
     };
+    // Closing the HUD from a subject/note link also releases its WebGL renderer.
+    dlg.addEventListener('close',()=>{
+      if(core||audio||introMeterFrame)cleanup();
+    },{once:true});
     const finish=(immediate=false,fromVoice=false)=>{
       if(finished)return;finished=true;
       if(!fromVoice&&window.speechSynthesis){try{window.speechSynthesis.cancel();}catch{}}
