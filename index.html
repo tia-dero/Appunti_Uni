@@ -3966,7 +3966,7 @@
     const dlg=$('matterBoot'),stage=$('matterStage'),status=$('matterStatus'),playButton=$('matterPlayVoice');
     const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
     let finished=false,core=null,speaking=false,attemptedLocal=false,waitTimer=0,watchdog=0,exitTimer=0,audio=null;
-    let introAudioContext=null,introAnalyser=null,introSample=null,introMeterFrame=0,introVolume=0;
+    let introAudioContext=null,introEnvelope=null,introMeterFrame=0,introVolume=0;
     const openWelcome=()=>{$('welcomeDialog').showModal();startWelcomeFx();};
     const speakingOn=()=>{
       if(finished)return;
@@ -3980,7 +3980,7 @@
       clearTimeout(waitTimer);clearTimeout(watchdog);clearTimeout(exitTimer);
       playButton.hidden=true;playButton.onclick=null;
       if(introMeterFrame)cancelAnimationFrame(introMeterFrame);
-      introMeterFrame=0;introAnalyser=null;introSample=null;
+      introMeterFrame=0;introEnvelope=null;
       if(audio){audio.pause();audio.removeAttribute('src');audio.load();audio=null;}
       if(introAudioContext){introAudioContext.close().catch(()=>{});introAudioContext=null;}
       core?.dispose();core=null;
@@ -4008,35 +4008,41 @@
       audio=new Audio(recordingPath);
       audio.preload='auto';
       audio.volume=1;
-      // Read the real output waveform: source -> analyser -> speakers.
-      // This only changes the hologram, not the recorded voice or volume.
-      try{
-        const Context=window.AudioContext||window.webkitAudioContext;
-        if(Context){
-          introAudioContext=new Context();
-          introAnalyser=introAudioContext.createAnalyser();
-          introAnalyser.fftSize=1024;
-          introAnalyser.smoothingTimeConstant=.55;
-          introSample=new Uint8Array(introAnalyser.fftSize);
-          const source=introAudioContext.createMediaElementSource(audio);
-          source.connect(introAnalyser);
-          introAnalyser.connect(introAudioContext.destination);
+      // Decode a separate copy to measure the actual MP3 waveform.
+      // Audio playback remains a plain HTMLAudioElement, so browser autoplay
+      // and audible sound cannot be disrupted by a suspended AudioContext.
+      (async()=>{
+        try{
+          const Context=window.AudioContext||window.webkitAudioContext;
+          if(!Context)return;
+          const response=await fetch(recordingPath);
+          if(!response.ok)return;
+          const encoded=await response.arrayBuffer();
+          const ctx=new Context();
+          if(finished){ctx.close().catch(()=>{});return;}
+          introAudioContext=ctx;
+          const decoded=await ctx.decodeAudioData(encoded);
+          const channel=decoded.getChannelData(0);
+          const step=Math.max(1,Math.floor(decoded.sampleRate*.025));
+          const envelope=new Float32Array(Math.ceil(channel.length/step));
+          for(let n=0;n<envelope.length;n++){
+            let sum=0,count=0;
+            for(let j=n*step;j<Math.min(channel.length,(n+1)*step);j+=2){
+              const x=channel[j];sum+=x*x;count++;
+            }
+            envelope[n]=Math.sqrt(sum/Math.max(1,count));
+          }
+          if(!finished)introEnvelope=envelope;
+        }catch(error){console.warn('JARVIS: analisi MP3 non disponibile',error);}
+        finally{
+          if(introAudioContext){introAudioContext.close().catch(()=>{});introAudioContext=null;}
         }
-      }catch(error){
-        console.warn('JARVIS: visualizzatore audio non disponibile',error);
-        introAnalyser=null;introSample=null;
-      }
+      })();
       const meter=()=>{
         if(finished||!audio||audio.paused||audio.ended)return;
-        if(introAnalyser&&introSample){
-          introAnalyser.getByteTimeDomainData(introSample);
-          let total=0;
-          for(let i=0;i<introSample.length;i++){
-            const sample=(introSample[i]-128)/128;
-            total+=sample*sample;
-          }
-          const rms=Math.sqrt(total/introSample.length);
-          // Voice dynamic range: lift quiet syllables, never clip the 3D core.
+        if(introEnvelope){
+          const index=Math.min(introEnvelope.length-1,Math.floor(audio.currentTime*40));
+          const rms=introEnvelope[Math.max(0,index)]||0;
           const target=Math.min(1,Math.max(0,(rms-.006)*6.8));
           introVolume+=(target-introVolume)*(target>introVolume?.48:.22);
           core?.setAudioLevel(introVolume);
@@ -4054,8 +4060,6 @@
       const startAudio=async()=>{
         if(finished)return;
         try{
-          // Resume from direct user interaction when autoplay requires it.
-          if(introAudioContext?.state==='suspended')introAudioContext.resume().catch(()=>{});
           await audio.play();
           if(finished){audio.pause();return;}
           if(introMeterFrame)cancelAnimationFrame(introMeterFrame);
@@ -4095,7 +4099,7 @@
     dlg.addEventListener('cancel',event=>{event.preventDefault();finish(true);},{once:true});
     import('./matter-core.js').then(module=>{
       if(finished||!dlg.open)return;
-      try{core=module.startMatterCore(stage,{reducedMotion:reduced});stage.classList.add('matter-ready');core.setSpeaking(speaking);if(speaking&&introAnalyser)core.setAudioLevel(introVolume);}
+      try{core=module.startMatterCore(stage,{reducedMotion:reduced});stage.classList.add('matter-ready');core.setSpeaking(speaking);if(speaking&&introEnvelope)core.setAudioLevel(introVolume);}
       catch(error){console.warn('JARVIS: nucleo CSS alternativo',error);}
     }).catch(error=>console.warn('JARVIS: rendering 3D non disponibile',error));
     // The user's MP3 is the sole automatic JARVIS startup voice.
