@@ -2733,6 +2733,7 @@
     <div class="matter-topline" aria-hidden="true"><span><b>◈</b> JARVIS <em>UNIVERSITY INTELLIGENCE SYSTEM</em></span><span class="matter-topline-live"><i></i> SYSTEM ONLINE <time id="matterClock">--:--</time></span></div>
     <p class="matter-kicker"><span aria-hidden="true">●</span> NEURAL PARTICLE ENGINE / 01</p>
     <div class="matter-scene">
+      <section class="jarvis-hud-telemetry jarvis-hud-left" aria-label="Missione universitaria e prossima lezione"><section class="welcome-copy"><div class="welcome-radar" aria-hidden="true"><span class="welcome-radar-core">SM</span></div><p class="welcome-eyebrow">Il tuo piano di oggi</p><h1 id="welcomeTitle">Buongiorno<span></span></h1><p id="welcomeDate" class="welcome-date"></p><p id="welcomeIntro" class="welcome-intro"></p><div id="welcomeCountdown" class="hud-lecture-countdown"></div></section></section>
       <aside class="matter-side matter-side-left" aria-label="Stato dei moduli JARVIS">
         <div class="matter-mini-head"><span>01</span> SYSTEM OVERVIEW</div>
         <div class="matter-system-line"><span class="matter-system-indicator"></span><div><strong>ARCHIVIO UNIVERSITARIO</strong><small>CARICATO E DISPONIBILE</small></div><b>READY</b></div>
@@ -2754,6 +2755,7 @@
         <div class="matter-axis-text matter-axis-bottom" aria-hidden="true">PARTICLE FIELD · STABLE</div>
         <div class="matter-fallback" aria-hidden="true"></div>
       </div>
+<section class="jarvis-hud-telemetry jarvis-hud-right" aria-label="Lezioni, esami e materiali recenti"><section class="welcome-panel" aria-label="Materie di oggi"><div class="welcome-panel-head"><h2 id="welcomePanelTitle">Le tue lezioni</h2><span id="welcomeBadge">OGGI</span></div><div id="welcomeLessons" class="welcome-lessons"></div><details class="welcome-recent"><summary>Ultimi appunti <span>ACCESSO RAPIDO</span></summary><div id="welcomeRecent" class="welcome-recent-list"></div></details></section></section>
       <aside class="matter-side matter-side-right" aria-label="Interfaccia vocale e connessione">
         <div class="matter-mini-head"><span>02</span> VOICE INTERFACE</div>
         <div class="matter-voice-heading"><span class="matter-voice-icon" aria-hidden="true">◉</span><div><strong>VOICE CORE</strong><small id="matterVoiceState">READY</small></div></div>
@@ -2773,10 +2775,11 @@
       </div>
     </div>
     <div class="matter-voice-caption" aria-hidden="true"><span class="matter-voice-caption-line"></span><span>PARTICLE SYNCHRONIZATION</span><span class="matter-voice-caption-line"></span></div>
+<footer class="welcome-footer jarvis-hud-actions"><span class="welcome-footer-note">Archivio locale &#xB7; i tuoi appunti restano sul dispositivo</span><div class="welcome-footer-actions"><button class="welcome-voice" type="button" id="speakBriefingBtn">Ascolta briefing</button><button class="welcome-command" type="button" id="voiceSettingsBtn">Voce</button><button class="welcome-command welcome-mute" type="button" id="voiceMuteBtn" aria-pressed="false" aria-label="Disattiva voce automatica">&#x1F50A; Voce attiva</button><button class="welcome-command" type="button" id="welcomeCommandBtn">Ctrl+K&nbsp; Comandi</button><button class="welcome-enter" type="button" id="enterArchiveBtn">Entra nei miei appunti</button><a class="welcome-command" href="anatomia-realistica.html" id="hudAnatomyLink">◎ Anatomia 3D</a><button class="welcome-command" type="button" id="hudScheduleBtn">▦ Orario</button></div></footer>
     <div class="matter-footer"><span class="matter-footer-brand">◈ SCIENZE MOTORIE <b>/</b> INSUBRIA</span><span class="matter-footer-mid" aria-hidden="true">J.A.R.V.I.S. <i></i> SYSTEM INITIALIZATION</span><button type="button" id="matterSkip">ENTRA NELL'ARCHIVIO <span aria-hidden="true">↗</span></button></div>
   </div>
 </dialog>
-<dialog id="welcomeDialog" aria-labelledby="welcomeTitle"><canvas id="welcomeFx" aria-hidden="true"></canvas><div class="welcome-shell"><header class="welcome-top"><div class="welcome-brand"><span class="welcome-brand-mark"><img src="logo-192.png" alt=""></span><span>APPUNTI &#xB7; INSUBRIA<small>IL TUO SPAZIO PERSONALE</small></span></div><span class="welcome-status"><i></i>SISTEMA ATTIVO &#xB7; <span id="welcomeSystemMsg">ARCHIVIO LOCALE</span><time id="welcomeClock">--:--</time></span><button class="welcome-skip" type="button" data-close="welcomeDialog">Vai all&#x2019;archivio</button></header><main class="welcome-main"><section class="welcome-copy"><div class="welcome-radar" aria-hidden="true"><span class="welcome-radar-core">SM</span></div><p class="welcome-eyebrow">Il tuo piano di oggi</p><h1 id="welcomeTitle">Buongiorno<span></span></h1><p id="welcomeDate" class="welcome-date"></p><p id="welcomeIntro" class="welcome-intro"></p></section><section class="welcome-panel" aria-label="Materie di oggi"><div class="welcome-panel-head"><h2 id="welcomePanelTitle">Le tue lezioni</h2><span id="welcomeBadge">OGGI</span></div><div id="welcomeLessons" class="welcome-lessons"></div><div id="welcomeCountdown"></div><details class="welcome-recent"><summary>Ultimi appunti <span>ACCESSO RAPIDO</span></summary><div id="welcomeRecent" class="welcome-recent-list"></div></details></section></main><footer class="welcome-footer"><span class="welcome-footer-note">Archivio locale &#xB7; i tuoi appunti restano sul dispositivo</span><div class="welcome-footer-actions"><button class="welcome-voice" type="button" id="speakBriefingBtn">Ascolta briefing</button><button class="welcome-command" type="button" id="voiceSettingsBtn">Voce</button><button class="welcome-command welcome-mute" type="button" id="voiceMuteBtn" aria-pressed="false" aria-label="Disattiva voce automatica">&#x1F50A; Voce attiva</button><button class="welcome-command" type="button" id="welcomeCommandBtn">Ctrl+K&nbsp; Comandi</button><button class="welcome-enter" type="button" id="enterArchiveBtn">Entra nei miei appunti</button><a class="welcome-command" href="anatomia-realistica.html" id="hudAnatomyLink">◎ Anatomia 3D</a><button class="welcome-command" type="button" id="hudScheduleBtn">▦ Orario</button></div></footer></div></dialog>
+
   <dialog id="voiceSettingsDialog" class="voice-settings-dialog" aria-labelledby="voiceSettingsTitle"><div class="dialog-head"><div><h2 id="voiceSettingsTitle">Configurazione vocale</h2><p class="voice-settings-subtitle">Regola la voce del briefing</p></div><button class="icon-btn" type="button" data-close="voiceSettingsDialog" aria-label="Chiudi">&#xD7;</button></div><div class="dialog-body voice-settings-body"><label for="speechVoiceSelect">Voce disponibile<select id="speechVoiceSelect"><option value="">Italiano predefinito del dispositivo</option></select><small class="voice-settings-hint">Selezione automatica della migliore voce italiana disponibile. Puoi scegliere manualmente un'altra voce e ascoltarla in anteprima.</small></label><button class="btn voice-preset" id="jarvisVoicePresetBtn" type="button">Preset JARVIS &#xB7; Cinematografica</button><label class="voice-range-label" for="speechPitch"><span>Tono <output id="speechPitchValue">0,91</output></span><input id="speechPitch" type="range" min="0.65" max="1.25" step="0.01" value="0.91"></label><label class="voice-range-label" for="speechRate"><span>Velocit&#xE0; <output id="speechRateValue">0,94&#xD7;</output></span><input id="speechRate" type="range" min="0.75" max="1.15" step="0.01" value="0.94"></label><p class="voice-settings-hint">Il preset usa un tono leggermente pi&#xF9; basso e un ritmo naturale: abbassare troppo il tono pu&#xF2; peggiorare la qualit&#xE0;. Per una voce davvero cinematografica serve un motore vocale dedicato.</p></div><div class="dialog-foot voice-settings-foot"><button class="btn" id="previewVoiceBtn" type="button">Prova la voce</button><div class="foot-right"><button class="btn" type="button" data-close="voiceSettingsDialog">Chiudi</button><button class="btn btn-primary" id="saveVoiceSettingsBtn" type="button">Salva</button></div></div></dialog>
   <dialog id="docxPreviewDialog" aria-labelledby="docxPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="docxPreviewTitle">Anteprima documento</h2><p>Anteprima locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadDocxBtn" type="button">Scarica</button><button class="icon-btn" type="button" data-close="docxPreviewDialog" aria-label="Chiudi anteprima">&#xD7;</button></div></div><div class="docx-preview-scroll"><div id="docxPreviewError" class="docx-preview-error hidden" role="status"></div><article id="docxContent" class="docx-content"></article></div></dialog>
   <dialog id="videoPreviewDialog" aria-labelledby="videoPreviewTitle"><div class="docx-preview-head"><div class="docx-preview-title"><h2 id="videoPreviewTitle">Video lezione</h2><p>Riproduzione locale &#xB7; il file resta sul tuo dispositivo</p></div><div class="docx-preview-actions"><button class="btn" id="downloadVideoBtn" type="button">Scarica</button><button class="icon-btn" type="button" data-close="videoPreviewDialog" aria-label="Chiudi video">&#xD7;</button></div></div><div class="video-stage"><div id="videoPreviewError" class="docx-preview-error hidden" role="status"></div><video id="videoPlayer" controls playsinline preload="metadata"></video></div></dialog>
@@ -2914,8 +2917,8 @@
     $('welcomeBadge').textContent=badge;$('welcomePanelTitle').textContent=panelTitle;$('welcomeIntro').textContent=intro;$('welcomeLessons').innerHTML=rows;
     const nextClass=nextScheduledLesson();$('welcomeCountdown').innerHTML=(nextClass?countdownMarkup(nextClass,'CONTO ALLA PROSSIMA LEZIONE'):'')+examStripMarkup();updateCountdowns();
     const recent=recentlyOpenedNotes().slice(0,3);$('welcomeRecent').innerHTML=recent.length?recent.map(item=>{const note=item.note,subject=data.subjects.find(entry=>entry.id===note.subjectId),title=note.title||fileTitle(note.fileName)||'Appunto senza titolo',type=fileTypeMeta(note.fileName);return '<button class="welcome-recent-item" type="button" data-welcome-note="'+escapeHtml(note.id)+'"><span class="welcome-recent-icon">'+svgIcon('file')+'</span><span class="welcome-recent-text">'+escapeHtml(title)+'<small>'+escapeHtml(subject?.name||'Materia')+' \u00B7 '+escapeHtml(type.label)+'</small></span><span class="welcome-recent-arrow">></span></button>';}).join(''):'<div class="welcome-empty"><strong>Nessun materiale aperto ancora.</strong>Qui compariranno gli ultimi materiali consultati.</div>';
-    $('welcomeLessons').querySelectorAll('[data-welcome-subject]').forEach(button=>button.addEventListener('click',()=>{if($('matterBoot').open)$('matterBoot').close();if($('welcomeDialog').open)$('welcomeDialog').close();activateSubject(button.dataset.welcomeSubject,true);}));
-    $('welcomeRecent').querySelectorAll('[data-welcome-note]').forEach(button=>button.addEventListener('click',()=>{const note=data.notes.find(item=>item.id===button.dataset.welcomeNote);if(!note)return;if($('matterBoot').open)$('matterBoot').close();if($('welcomeDialog').open)$('welcomeDialog').close();recordNoteOpened(note.id);if(note.attachmentId)openAttachmentForNote(note.id);else openNote(note.id);}));
+    $('welcomeLessons').querySelectorAll('[data-welcome-subject]').forEach(button=>button.addEventListener('click',()=>{if($('matterBoot').open)$('matterBoot').close();activateSubject(button.dataset.welcomeSubject,true);}));
+    $('welcomeRecent').querySelectorAll('[data-welcome-note]').forEach(button=>button.addEventListener('click',()=>{const note=data.notes.find(item=>item.id===button.dataset.welcomeNote);if(!note)return;if($('matterBoot').open)$('matterBoot').close();recordNoteOpened(note.id);if(note.attachmentId)openAttachmentForNote(note.id);else openNote(note.id);}));
   }
   /* ===== Aggiunte: messaggi di sistema, consultazione, log accessi, comandi rapidi, sfondo benvenuto ===== */
   const SYSTEM_MESSAGES=['Archivio pronto','Materiali sincronizzati localmente','Sessione di studio attiva','Indice appunti allineato','Canale locale stabile','Archivio locale attivo'];
@@ -2968,7 +2971,7 @@
     return found.length?found:null;
   }
   function startWelcomeFx(){
-    const canvas=$('welcomeFx'),dialog=$('welcomeDialog');if(!canvas||!canvas.getContext)return;const ctx=canvas.getContext('2d');if(!ctx)return;
+    const canvas=$('welcomeFx'),dialog=$('matterBoot');if(!canvas||!canvas.getContext)return;const ctx=canvas.getContext('2d');if(!ctx)return;
     const reduce=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches),LINK=140,POINTER=180;
     let w=0,h=0,nodes=[],pulses=[],raf=0,last=0,nextPulse=0;const pointer={x:0,y:0,on:false};
     const glow=(x,y,radius,rgb,alpha)=>{const g=ctx.createRadialGradient(x,y,0,x,y,radius);g.addColorStop(0,'rgba('+rgb+','+alpha+')');g.addColorStop(1,'rgba('+rgb+',0)');ctx.fillStyle=g;ctx.fillRect(x-radius,y-radius,radius*2,radius*2);};
@@ -3353,7 +3356,7 @@
     if(kind==='subject'){activateSubject(id,true);return;}
     if(kind==='note'){const note=data.notes.find(item=>item.id===id);if(note){recordNoteOpened(note.id);if(note.attachmentId)openAttachmentForNote(note.id);else openNote(note.id);}}
   }
-  function openCommandPalette(){setSystemMessage();if($('welcomeDialog').open)$('welcomeDialog').close();if(!$('commandDialog').open)$('commandDialog').showModal();$('commandInput').value='';renderCommandResults();setTimeout(()=>$('commandInput').focus(),25);}
+  function openCommandPalette(){setSystemMessage();if(!$('commandDialog').open)$('commandDialog').showModal();$('commandInput').value='';renderCommandResults();setTimeout(()=>$('commandInput').focus(),25);}
   function moveCommandFocus(direction){const buttons=Array.from($('commandResults').querySelectorAll('.command-item'));if(!buttons.length)return;let index=buttons.indexOf(document.activeElement);index=(index+direction+buttons.length)%buttons.length;buttons[index].focus();}
   document.addEventListener('keydown',event=>{
     if((event.ctrlKey||event.metaKey)&&event.key.toLocaleLowerCase()==='k'){event.preventDefault();if($('commandDialog').open)$('commandDialog').close();else openCommandPalette();return;}
@@ -3779,7 +3782,7 @@
     if(editingSubjectId){const s=data.subjects.find(s=>s.id===editingSubjectId);if(s){s.name=name;s.color=pickedColor;}}else{const s={id:uid(),name,color:pickedColor};data.subjects.push(s);data.activeSubject=s.id;}recordActivity(editingSubjectId?'Materia rinominata':'Materia aggiunta',name);
     save();$('subjectDialog').close();render();showToast(editingSubjectId?'Materia rinominata.':'Materia aggiunta.');
   });
-  document.querySelectorAll('[data-close]').forEach(button=>button.addEventListener('click',()=>$(button.dataset.close).close())); $('enterArchiveBtn').addEventListener('click',()=>$('welcomeDialog').close());
+  document.querySelectorAll('[data-close]').forEach(button=>button.addEventListener('click',()=>$(button.dataset.close).close())); $('enterArchiveBtn').addEventListener('click',()=>{if($('matterBoot').open)$('matterBoot').close();});
   $('commandButton').addEventListener('click',openCommandPalette);$('welcomeCommandBtn').addEventListener('click',openCommandPalette);$('commandInput').addEventListener('input',renderCommandResults);$('commandDialog').addEventListener('click',event=>{if(event.target===$('commandDialog'))$('commandDialog').close();});
   $('speakBriefingBtn').addEventListener('click',toggleVoiceBriefing);$('voiceSettingsBtn').addEventListener('click',openVoiceSettings);$('voiceMuteBtn').addEventListener('click',toggleVoiceMute);updateVoiceMuteButton();$('speechPitch').addEventListener('input',updateVoiceRangeLabels);$('speechRate').addEventListener('input',updateVoiceRangeLabels);$('jarvisVoicePresetBtn').addEventListener('click',applyJarvisVoicePreset);$('previewVoiceBtn').addEventListener('click',previewVoiceSettings);$('saveVoiceSettingsBtn').addEventListener('click',saveVoiceSettings);
   if(window.speechSynthesis){populateSpeechVoices();window.speechSynthesis.addEventListener?.('voiceschanged',populateSpeechVoices);}
@@ -4366,31 +4369,6 @@
     let introAudioContext=null,introEnvelope=null,introMeterFrame=0,introVolume=0;
     // The existing welcome components now live inside the holographic HUD.
     // This retains all their data bindings, countdowns and recent-note actions.
-    // Construct genuine HUD telemetry panels around the existing particle reactor.
-    // Reuse existing DOM data targets, rather than putting the old welcome page in the HUD.
-    const scene=dlg.querySelector('.matter-scene');
-    const content=dlg.querySelector('.matter-boot-content');
-    const welcome=document.querySelector('#welcomeDialog .welcome-shell');
-    const hudCopy=welcome?.querySelector('.welcome-copy');
-    const hudPanel=welcome?.querySelector('.welcome-panel');
-    const hudFooter=welcome?.querySelector('.welcome-footer');
-    if(scene&&content&&hudCopy&&hudPanel&&hudFooter){
-      const left=document.createElement('section');
-      left.className='jarvis-hud-telemetry jarvis-hud-left';
-      left.setAttribute('aria-label','Missione universitaria e prossima lezione');
-      const right=document.createElement('section');
-      right.className='jarvis-hud-telemetry jarvis-hud-right';
-      right.setAttribute('aria-label','Lezioni, esami e materiali recenti');
-      left.append(hudCopy);
-      right.append(hudPanel);
-      const reactor=scene.querySelector('#matterStage');
-      reactor.before(left);
-      reactor.after(right);
-      hudFooter.classList.add('jarvis-hud-actions');
-      content.append(hudFooter);
-      const countdown=document.getElementById('welcomeCountdown');
-      if(countdown)hudCopy.append(countdown);
-    }
     const openWelcome=()=>{
       renderWelcome();
       dlg.classList.remove('matter-exit');
@@ -4402,8 +4380,6 @@
     const enterArchive=()=>{cleanup();};
     $('enterArchiveBtn').addEventListener('click',enterArchive);
     $('hudScheduleBtn')?.addEventListener('click',()=>{enterArchive();$('orarioBtn').click();});
-    const welcomeSkip=dlg.querySelector('.welcome-skip');
-    if(welcomeSkip)welcomeSkip.addEventListener('click',enterArchive);
     const anatomyLink=$('hudAnatomyLink');
     if(anatomyLink)anatomyLink.addEventListener('click',()=>cleanup());
     const speakingOn=()=>{
