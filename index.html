@@ -2007,6 +2007,100 @@
 }
 @media(prefers-reduced-motion:reduce){#matterBoot .matter-status-bars i{animation:none!important}}
 
+
+/* Cinematic control-room framing for the particle core. All effects scoped to the intro. */
+#matterBoot{
+ background:
+  radial-gradient(ellipse 37% 54% at 50% 41%,rgba(30,121,158,.23),transparent 90%),
+  radial-gradient(ellipse 48% 60% at 91% 0%,rgba(25,83,122,.17),transparent 80%),
+  linear-gradient(125deg,#030c15,#081c29 48%,#030c15);
+}
+#matterBoot .matter-boot-content{position:relative;isolation:isolate;padding:clamp(12px,2vh,23px) 22px}
+#matterBoot .matter-boot-content:before{content:"";position:absolute;inset:0;pointer-events:none;z-index:-1;
+ background:linear-gradient(90deg,#75d5ef08 1px,transparent 1px),linear-gradient(#75d5ef08 1px,transparent 1px);
+ background-size:54px 54px;mask-image:radial-gradient(ellipse at 50% 45%,#000,transparent 83%);opacity:.85}
+#matterBoot .matter-topline{position:absolute;top:clamp(17px,3vh,32px);left:clamp(20px,4vw,66px);right:clamp(20px,4vw,66px);
+ display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #83cbde27;padding-bottom:13px;
+ color:#e1f8fd;font:650 13px ui-monospace,Consolas,monospace;letter-spacing:.20em}
+#matterBoot .matter-topline span:first-child{display:flex;align-items:center;gap:12px}
+#matterBoot .matter-topline span:first-child b{font-size:22px;color:#72e2f1;text-shadow:0 0 17px #59cfe66a}
+#matterBoot .matter-topline em{font-style:normal;font-size:9px;color:#719faa;letter-spacing:.15em;font-weight:400}
+#matterBoot .matter-topline-live{display:flex;align-items:center;gap:9px;color:#84c3ce;font-size:9px;letter-spacing:.17em}
+#matterBoot .matter-topline-live i{width:6px;height:6px;display:block;border-radius:100%;background:#7de0c1;box-shadow:0 0 12px #81f2cc}
+#matterBoot .matter-kicker{margin-top:clamp(28px,5vh,52px);margin-bottom:0}
+#matterBoot .matter-scene{width:min(1350px,100%);grid-template-columns:minmax(155px,1fr) minmax(0,660px) minmax(155px,1fr);gap:clamp(10px,2.5vw,45px)}
+#matterBoot .matter-side{max-width:255px;min-width:0;width:100%;box-sizing:border-box;
+ background:linear-gradient(145deg,rgba(12,46,62,.69),rgba(5,19,31,.43));
+ border:1px solid rgba(100,204,229,.23);border-radius:3px;
+ padding:19px 16px 20px;gap:10px;position:relative;text-align:left;align-items:stretch;backdrop-filter:blur(6px)}
+#matterBoot .matter-side-left,#matterBoot .matter-side-right{justify-self:stretch;text-align:left;align-items:stretch}
+#matterBoot .matter-mini-head{font:600 10px ui-monospace,Consolas,monospace;color:#9bd2de;letter-spacing:.12em;
+ display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid #73c2d52e}
+#matterBoot .matter-mini-head span{color:#5de3ed;border:1px solid #63e6ed42;padding:3px 5px}
+#matterBoot .matter-side strong{font:600 clamp(12px,1.3vw,17px) ui-monospace,Consolas,monospace;color:#dcf8fd;letter-spacing:.10em;margin-top:6px}
+#matterBoot .matter-side small{font:500 9px ui-monospace,Consolas,monospace;color:#76bdcc;letter-spacing:.12em}
+#matterBoot .matter-readout{margin:10px 0 6px;color:#78a8b6;font:500 9px ui-monospace,Consolas,monospace;letter-spacing:.12em}
+#matterBoot .matter-readout-bar{height:4px;border-radius:2px;background:#204755;margin-top:10px;overflow:hidden}
+#matterBoot .matter-readout-bar i{display:block;height:100%;width:70%;background:linear-gradient(90deg,#277d98,#83f1fa);
+ box-shadow:0 0 10px #61eff2;animation:matterReadout 3.5s ease-in-out infinite alternate}
+#matterBoot .matter-mini-grid{display:grid;grid-template-columns:1fr auto;gap:10px 8px;padding-top:15px;border-top:1px solid #73c2d52e;
+ color:#76a2ad;font:500 9px ui-monospace,Consolas,monospace;letter-spacing:.08em}
+#matterBoot .matter-mini-grid b{font-weight:600;color:#9ee6ef;text-align:right}
+#matterBoot .matter-corner-notch{position:absolute;bottom:-1px;right:-1px;width:19px;height:19px;
+ border-bottom:2px solid #60d4ed;border-right:2px solid #60d4ed}
+#matterBoot .matter-side-right .matter-corner-notch{right:auto;left:-1px;border-right:0;border-left:2px solid #60d4ed}
+#matterBoot .matter-voice-spectrum{display:flex;align-items:center;justify-content:center;gap:5px;
+ width:100%;height:52px;padding:9px 0;background:linear-gradient(90deg,transparent,#14627d1c,transparent)}
+#matterBoot .matter-voice-spectrum i{display:block;width:3px;height:20%;border-radius:5px;
+ background:#64c5dc;opacity:.68;transform-origin:center;transition:height .2s}
+#matterBoot .matter-voice-spectrum i:nth-child(3n){height:60%}
+#matterBoot .matter-voice-spectrum i:nth-child(4n){height:83%}
+#matterBoot.matter-speaking .matter-voice-spectrum i{animation:matterSpectrum .66s ease-in-out infinite alternate}
+#matterBoot.matter-speaking .matter-voice-spectrum i:nth-child(3n){animation-delay:-.23s}
+#matterBoot.matter-speaking .matter-voice-spectrum i:nth-child(2n){animation-delay:-.43s}
+#matterBoot .matter-crosshair{position:absolute;width:25px;height:25px;pointer-events:none;opacity:.46}
+#matterBoot .matter-crosshair-tl{left:8%;top:8%;border-top:1px solid #71d7ed;border-left:1px solid #71d7ed}
+#matterBoot .matter-crosshair-tr{right:8%;top:8%;border-top:1px solid #71d7ed;border-right:1px solid #71d7ed}
+#matterBoot .matter-crosshair-bl{left:8%;bottom:8%;border-bottom:1px solid #71d7ed;border-left:1px solid #71d7ed}
+#matterBoot .matter-crosshair-br{right:8%;bottom:8%;border-bottom:1px solid #71d7ed;border-right:1px solid #71d7ed}
+#matterBoot .matter-axis-text{position:absolute;font:500 8px ui-monospace,Consolas,monospace;letter-spacing:.15em;color:#70aab9;opacity:.78}
+#matterBoot .matter-axis-top{top:6%;left:50%;transform:translateX(-50%)}
+#matterBoot .matter-axis-bottom{bottom:6%;left:50%;transform:translateX(-50%)}
+#matterBoot .matter-footer{width:min(1150px,96%);margin-top:clamp(4px,1vh,12px);border-top-color:#78cddd39;gap:12px}
+#matterBoot .matter-footer-brand{color:#a3cbda}
+#matterBoot .matter-footer-brand b{color:#54b4c4;font-weight:400}
+#matterBoot .matter-footer-mid{color:#6592a0;font-size:9px;letter-spacing:.16em}
+#matterBoot .matter-footer-mid i{display:inline-block;width:17px;height:1px;background:#60adbe;margin:0 6px;vertical-align:middle}
+#matterBoot .matter-footer button{background:linear-gradient(100deg,#0c3549,#153e50);
+ padding:12px 18px;font-weight:700;letter-spacing:.10em;box-shadow:inset 0 0 18px #3dc0e012}
+#matterBoot .matter-footer button span{margin-left:12px;color:#74e7f1}
+@keyframes matterReadout{from{width:55%;opacity:.6}to{width:86%;opacity:1}}
+@keyframes matterSpectrum{from{transform:scaleY(.44);opacity:.45}to{transform:scaleY(1.24);opacity:1}}
+@media(max-width:1100px){#matterBoot .matter-scene{grid-template-columns:minmax(125px,1fr) minmax(0,560px) minmax(125px,1fr);gap:14px}
+ #matterBoot .matter-side{padding:13px 10px}#matterBoot .matter-side strong{font-size:12px}
+ #matterBoot .matter-mini-grid{font-size:8px}}
+@media(max-width:780px){
+ #matterBoot .matter-scene{grid-template-columns:1fr;gap:0}
+ #matterBoot .matter-side{display:none}
+ #matterBoot .matter-topline{top:12px;left:17px;right:17px;font-size:11px}
+ #matterBoot .matter-topline em{display:none}
+ #matterBoot .matter-topline-live{font-size:8px}
+ #matterBoot .matter-kicker{margin-top:34px}
+ #matterBoot .matter-stage{width:min(96vw,610px,56vh)}
+ #matterBoot .matter-axis-text{font-size:7px}
+ #matterBoot .matter-footer-mid{display:none}
+}
+@media(max-height:750px) and (min-width:781px){
+ #matterBoot .matter-stage{width:min(530px,50vh)}
+ #matterBoot .matter-kicker{margin-top:32px}
+ #matterBoot .matter-side{padding:11px 12px}
+ #matterBoot .matter-mini-grid{padding-top:8px;gap:6px}
+ #matterBoot .matter-voice-spectrum{height:38px}
+}
+@media(prefers-reduced-motion:reduce){
+ #matterBoot .matter-readout-bar i,#matterBoot .matter-voice-spectrum i{animation:none!important}
+}
+
 </style>
 </head>
 <body class="jarvis-ui">
@@ -2059,18 +2153,37 @@
   
   <dialog id="matterBoot" aria-label="Avvio JARVIS">
   <div class="matter-boot-content">
-    <p class="matter-kicker"><span aria-hidden="true">●</span> JARVIS / CORE SYSTEM</p>
+    <div class="matter-topline" aria-hidden="true"><span><b>◈</b> JARVIS <em>PERSONAL INTELLIGENCE</em></span><span class="matter-topline-live"><i></i> CORE SYSTEM ACTIVE</span></div>
+    <p class="matter-kicker"><span aria-hidden="true">●</span> NEURAL PARTICLE ENGINE / 01</p>
     <div class="matter-scene">
-      <div class="matter-side matter-side-left" aria-hidden="true"><small>PARTICLE FIELD</small><strong>CORE / 01</strong><i></i><span>MATTER STREAM</span></div>
+      <aside class="matter-side matter-side-left" aria-hidden="true">
+        <div class="matter-mini-head"><span>01</span> PARTICLE FIELD</div>
+        <strong>MATTER CORE</strong><small>ORBITAL FLOW / ACTIVE</small>
+        <div class="matter-readout"><span>ENERGY STREAM</span><div class="matter-readout-bar"><i></i></div></div>
+        <div class="matter-mini-grid"><span>PARTICLE ENGINE</span><b>GPU</b><span>FLOW DYNAMICS</span><b>LIVE</b><span>SHAPE</span><b>STABLE</b></div>
+        <div class="matter-corner-notch"></div>
+      </aside>
       <div class="matter-stage" id="matterStage" aria-label="Nucleo di materia tridimensionale">
         <div class="matter-aura" aria-hidden="true"></div>
         <div class="matter-orbit matter-orbit-a" aria-hidden="true"></div>
         <div class="matter-orbit matter-orbit-b" aria-hidden="true"></div>
         <div class="matter-orbit matter-orbit-c" aria-hidden="true"></div>
         <div class="matter-scan-mark" aria-hidden="true"></div>
+        <div class="matter-crosshair matter-crosshair-tl" aria-hidden="true"></div>
+        <div class="matter-crosshair matter-crosshair-tr" aria-hidden="true"></div>
+        <div class="matter-crosshair matter-crosshair-bl" aria-hidden="true"></div>
+        <div class="matter-crosshair matter-crosshair-br" aria-hidden="true"></div>
+        <div class="matter-axis-text matter-axis-top" aria-hidden="true">CORE / N.01</div>
+        <div class="matter-axis-text matter-axis-bottom" aria-hidden="true">PARTICLE FIELD · STABLE</div>
         <div class="matter-fallback" aria-hidden="true"></div>
       </div>
-      <div class="matter-side matter-side-right" aria-hidden="true"><small>JARVIS SYSTEM</small><strong>AI / ONLINE</strong><i></i><span>VOICE REACTIVE</span></div>
+      <aside class="matter-side matter-side-right" aria-hidden="true">
+        <div class="matter-mini-head"><span>02</span> VOICE INTERFACE</div>
+        <strong>JARVIS ONLINE</strong><small>NEURAL RESPONSE / ACTIVE</small>
+        <div class="matter-voice-spectrum"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="matter-mini-grid"><span>SYNTHESIS</span><b id="matterVoiceState">READY</b><span>NETWORK</span><b id="matterNetworkState">CHECKING</b><span>CORE LINK</span><b>ACTIVE</b></div>
+        <div class="matter-corner-notch"></div>
+      </aside>
     </div>
     <div class="matter-identity">
       <div class="matter-identity-rule" aria-hidden="true"><i></i><span>PERSONAL INTELLIGENCE SYSTEM</span><i></i></div>
@@ -2082,7 +2195,7 @@
         <span class="matter-status-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
       </div>
     </div>
-    <div class="matter-footer"><span>SCIENZE MOTORIE · INSUBRIA</span><button type="button" id="matterSkip">ENTRA NELL'APP</button></div>
+    <div class="matter-footer"><span class="matter-footer-brand">◈ SCIENZE MOTORIE <b>/</b> INSUBRIA</span><span class="matter-footer-mid" aria-hidden="true">J.A.R.V.I.S. <i></i> SYSTEM INITIALIZATION</span><button type="button" id="matterSkip">ENTRA NELL'ARCHIVIO <span aria-hidden="true">↗</span></button></div>
   </div>
 </dialog>
 <dialog id="welcomeDialog" aria-labelledby="welcomeTitle"><canvas id="welcomeFx" aria-hidden="true"></canvas><div class="welcome-shell"><header class="welcome-top"><div class="welcome-brand"><span class="welcome-brand-mark"><img src="logo-192.png" alt=""></span><span>APPUNTI &#xB7; INSUBRIA<small>IL TUO SPAZIO PERSONALE</small></span></div><span class="welcome-status"><i></i>SISTEMA ATTIVO &#xB7; <span id="welcomeSystemMsg">ARCHIVIO LOCALE</span><time id="welcomeClock">--:--</time></span><button class="welcome-skip" type="button" data-close="welcomeDialog">Vai all&#x2019;archivio</button></header><main class="welcome-main"><section class="welcome-copy"><div class="welcome-radar" aria-hidden="true"><span class="welcome-radar-core">SM</span></div><p class="welcome-eyebrow">Il tuo piano di oggi</p><h1 id="welcomeTitle">Buongiorno<span></span></h1><p id="welcomeDate" class="welcome-date"></p><p id="welcomeIntro" class="welcome-intro"></p></section><section class="welcome-panel" aria-label="Materie di oggi"><div class="welcome-panel-head"><h2 id="welcomePanelTitle">Le tue lezioni</h2><span id="welcomeBadge">OGGI</span></div><div id="welcomeLessons" class="welcome-lessons"></div><div id="welcomeCountdown"></div><details class="welcome-recent"><summary>Ultimi appunti <span>ACCESSO RAPIDO</span></summary><div id="welcomeRecent" class="welcome-recent-list"></div></details></section></main><footer class="welcome-footer"><span class="welcome-footer-note">Archivio locale &#xB7; i tuoi appunti restano sul dispositivo</span><div class="welcome-footer-actions"><button class="welcome-voice" type="button" id="speakBriefingBtn">Ascolta briefing</button><button class="welcome-command" type="button" id="voiceSettingsBtn">Voce</button><button class="welcome-command welcome-mute" type="button" id="voiceMuteBtn" aria-pressed="false" aria-label="Disattiva voce automatica">&#x1F50A; Voce attiva</button><button class="welcome-command" type="button" id="welcomeCommandBtn">Ctrl+K&nbsp; Comandi</button><button class="welcome-enter" type="button" id="enterArchiveBtn">Entra nei miei appunti</button></div></footer></div></dialog>
@@ -3618,6 +3731,8 @@
       exitTimer=setTimeout(()=>{cleanup();openWelcome()},520);
     };
     dlg.showModal();
+    $('matterNetworkState').textContent=navigator.onLine?'ONLINE':'OFFLINE';
+    $('matterVoiceState').textContent=isVoiceMuted()?'MUTED':'READY';
     $('matterSkip').onclick=()=>finish(true);
     dlg.addEventListener('cancel',event=>{event.preventDefault();finish(true)},{once:true});
     import('./matter-core.js').then(module=>{
@@ -3630,7 +3745,7 @@
         const synth=window.speechSynthesis,voice=speechUtterance(buildWelcomeSpeech());
         voice.onstart=()=>{
           if(finished)return;
-          speechStarted=true;status.textContent='JARVIS STA PARLANDO';dlg.classList.add('matter-speaking');
+          speechStarted=true;status.textContent='JARVIS STA PARLANDO';$('matterVoiceState').textContent='SPEAKING';dlg.classList.add('matter-speaking');
           core?.setSpeaking(true);clearTimeout(waitTimer);
           watchdog=setTimeout(()=>finish(false),30000);
         };
