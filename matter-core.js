@@ -129,7 +129,7 @@ export function startMatterCore(mount,{reducedMotion=false}={}){
   const light=new THREE.Sprite(glowMaterial);
   light.scale.set(2.1,2.1,1);
   scene.add(light);
-  let speaking=false,voiceLevel=0,pulse=0,elapsed=0,dead=false,frame=0,observer;
+  let speaking=false,voiceLevel=0,audioLevel=null,pulse=0,elapsed=0,dead=false,frame=0,observer;
   const resize=()=>{
     if(dead)return;
     const w=Math.max(1,mount.clientWidth),h=Math.max(1,mount.clientHeight);
@@ -148,9 +148,10 @@ export function startMatterCore(mount,{reducedMotion=false}={}){
     frame=requestAnimationFrame(animate);
     const delta=Math.min(clock.getDelta(),.06);
     elapsed+=delta;
-    // The browser speech API doesn't expose voice amplitude: soft synthetic cadence.
-    const target=speaking?.48+.27*(.5+.5*Math.sin(elapsed*6.7))+.07*Math.sin(elapsed*11.0):0;
-    voiceLevel+=(Math.max(0,target)-voiceLevel)*Math.min(1,delta*(speaking?7.0:4.0));
+    // Use measured microphone-free MP3 output amplitude when supplied; otherwise
+    // retain the gentle synthetic motion for environments without Web Audio.
+    const target=speaking?(audioLevel===null?.48+.20*(.5+.5*Math.sin(elapsed*6.7)):audioLevel):0;
+    voiceLevel+=(Math.max(0,target)-voiceLevel)*Math.min(1,delta*(target>voiceLevel?19:9));
     pulse=Math.max(0,pulse-delta*.65);
     uniforms.uTime.value=elapsed;
     uniforms.uVoice.value=voiceLevel;
@@ -168,8 +169,13 @@ export function startMatterCore(mount,{reducedMotion=false}={}){
   if(!reducedMotion)animate();
   else renderer.render(scene,camera);
   return {
+    setAudioLevel(value){
+      audioLevel=value==null?null:THREE.MathUtils.clamp(Number(value)||0,0,1);
+      if(reducedMotion){uniforms.uVoice.value=audioLevel||0;renderer.render(scene,camera);}
+    },
     setSpeaking(value){
       speaking=!!value;
+      if(!speaking)audioLevel=null;
       if(reducedMotion){
         uniforms.uVoice.value=speaking?.32:0;
         renderer.render(scene,camera);
