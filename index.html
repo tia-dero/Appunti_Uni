@@ -3992,98 +3992,56 @@
       dlg.classList.add('matter-exit');
       exitTimer=setTimeout(()=>{cleanup();openWelcome();},520);
     };
-    const useBrowserVoice=()=>{
-      if(finished||speaking)return;
-      clearTimeout(waitTimer);
-      playButton.hidden=true;
-      if(reduced||isVoiceMuted()||!window.speechSynthesis||!window.SpeechSynthesisUtterance){
-        status.textContent='SISTEMA PRONTO';
-        waitTimer=setTimeout(()=>finish(false),reduced?350:1000);
+    // JARVIS startup uses only the supplied MP3. Never substitute Google TTS.
+    const useLocalRecording=()=>{
+      if(finished)return;
+      if(isVoiceMuted()){
+        status.textContent='SISTEMA PRONTO · VOCE DISATTIVATA';
+        waitTimer=setTimeout(()=>finish(false),650);
         return;
       }
-      try{
-        const synth=window.speechSynthesis,voice=speechUtterance(buildWelcomeSpeech());
-        status.textContent='INIZIALIZZAZIONE VOCE';
-        voice.onstart=()=>{
-          if(finished)return;
-          speakingOn();
-          status.textContent='JARVIS STA PARLANDO';
-          $('matterVoiceState').textContent='BROWSER';
-          watchdog=setTimeout(()=>finish(false),35000);
-        };
-        voice.onend=()=>finish(false,true);
-        voice.onerror=()=>{if(!finished)finish(false);};
-        synth.cancel();synth.speak(voice);
-        waitTimer=setTimeout(()=>{if(!finished&&!speaking)finish(false);},7000);
-      }catch(error){console.warn('JARVIS: voce browser non disponibile',error);finish(false);}
-    };
-    const useLocalRecording=async()=>{
-      if(finished||reduced||isVoiceMuted()||attemptedLocal)return;
-      attemptedLocal=true;
-      try{
-        // New TTSMaker intro is preferred, with the previous recording as a fallback.
-        let recordingPath=null;
-        for(const path of ['./ttsmaker-file-2026-11-10-10-58-55.mp3','./jarvis-intro.mp3','./jarvis-intro.m4a']){
-          try{const response=await fetch(path,{method:'HEAD',cache:'no-store'});
-            if(response.ok){recordingPath=path;break;}
-          }catch(error){console.warn('JARVIS: file audio non disponibile',path,error);}
-        }
+      const recordingPath='./ttsmaker-file-2026-11-10-10-58-55.mp3';
+      audio=new Audio(recordingPath);
+      audio.preload='auto';
+      audio.volume=1;
+      const showPlayButton=()=>{
         if(finished)return;
-        if(!recordingPath){useBrowserVoice();return;}
-        audio=new Audio(recordingPath);
-        audio.preload='auto';
-        // Playback-only audio cleanup: clearer dialogue, less rumble and
-        // more consistent volume. Original recording stays unchanged.
-        let introAudioContext=null;
+        clearTimeout(waitTimer);
+        playButton.textContent='▶ ASCOLTA JARVIS';
+        playButton.hidden=false;
+        status.textContent='TOCCA PER ASCOLTARE JARVIS';
+        $('matterVoiceState').textContent='PRONTO';
+      };
+      const startAudio=async()=>{
+        if(finished)return;
         try{
-          const Ctx=window.AudioContext||window.webkitAudioContext;
-          if(Ctx){
-            introAudioContext=new Ctx();
-            const source=introAudioContext.createMediaElementSource(audio);
-            const highpass=introAudioContext.createBiquadFilter();
-            highpass.type='highpass';highpass.frequency.value=100;
-            const presence=introAudioContext.createBiquadFilter();
-            presence.type='peaking';presence.frequency.value=2500;
-            presence.Q.value=.9;presence.gain.value=2;
-            const lowpass=introAudioContext.createBiquadFilter();
-            lowpass.type='lowpass';lowpass.frequency.value=9000;
-            const compressor=introAudioContext.createDynamicsCompressor();
-            compressor.threshold.value=-25;compressor.knee.value=20;
-            compressor.ratio.value=2.4;compressor.attack.value=.008;
-            compressor.release.value=.2;
-            const gain=introAudioContext.createGain();gain.gain.value=1.06;
-            source.connect(highpass);highpass.connect(presence);
-            presence.connect(lowpass);lowpass.connect(compressor);
-            compressor.connect(gain);gain.connect(introAudioContext.destination);
-          }
-        }catch(filterError){console.warn('JARVIS: elaborazione audio non disponibile',filterError);}
-        audio.onended=()=>finish(false,true);
-        audio.onerror=()=>{if(!finished&&!speaking)useBrowserVoice();else if(!finished)finish(false);};
-        const start=async()=>{
-          if(finished)return;
-          if(introAudioContext?.state==='suspended')await introAudioContext.resume();
           await audio.play();
           if(finished){audio.pause();return;}
-          playButton.hidden=true;clearTimeout(waitTimer);
+          clearTimeout(waitTimer);
+          clearTimeout(watchdog);
+          playButton.hidden=true;
           speakingOn();
           status.textContent='JARVIS · VOCE REGISTRATA';
           $('matterVoiceState').textContent='JARVIS';
-          clearTimeout(watchdog);
-          watchdog=setTimeout(()=>finish(false),60000);
-        };
-        try{await start();}
-        catch(error){
-          if(error?.name!=='NotAllowedError')throw error;
-          clearTimeout(waitTimer);
-          status.textContent='PREMI PER ASCOLTARE JARVIS';
-          playButton.hidden=false;
-          playButton.onclick=()=>start().catch(()=>useBrowserVoice());
+          watchdog=setTimeout(()=>finish(false),30000);
+        }catch(error){
+          console.warn('JARVIS: impossibile avviare MP3',error);
+          showPlayButton();
         }
-      }catch(error){
-        console.warn('JARVIS: audio locale non disponibile',error);
-        if(audio){audio.pause();audio=null;}
-        if(!finished)useBrowserVoice();
-      }
+      };
+      audio.onended=()=>finish(false,true);
+      audio.onerror=()=>{
+        if(finished)return;
+        clearTimeout(watchdog);
+        console.warn('JARVIS: MP3 non disponibile',recordingPath,audio.error);
+        status.textContent='AUDIO JARVIS NON DISPONIBILE';
+        $('matterVoiceState').textContent='ERRORE AUDIO';
+        playButton.hidden=true;
+        waitTimer=setTimeout(()=>finish(false),1800);
+      };
+      playButton.onclick=startAudio;
+      showPlayButton();
+      startAudio();
     };
     dlg.showModal();
     $('matterClock').textContent=new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
@@ -4097,8 +4055,8 @@
       try{core=module.startMatterCore(stage,{reducedMotion:reduced});stage.classList.add('matter-ready');core.setSpeaking(speaking);}
       catch(error){console.warn('JARVIS: nucleo CSS alternativo',error);}
     }).catch(error=>console.warn('JARVIS: rendering 3D non disponibile',error));
-    if(reduced||isVoiceMuted()){useBrowserVoice();return;}
-    waitTimer=setTimeout(()=>{if(!finished&&!speaking&&!audio)useBrowserVoice();},6500);
+    // The user's MP3 is the sole automatic JARVIS startup voice.
+    if(window.speechSynthesis)try{window.speechSynthesis.cancel();}catch(error){}
     useLocalRecording();
   }
 
