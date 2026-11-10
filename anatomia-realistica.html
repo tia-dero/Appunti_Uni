@@ -141,7 +141,7 @@ const MUSCLE_STUDY=[
  {name:'Gastrocnemio',alias:['gastrocnemius','gastrocnemio'],region:'gamba',origin:'Superfici posteriori dei condili femorali.',insertion:'Calcagno attraverso il tendine d’Achille.',action:'Flessione plantare della caviglia e aiuto nella flessione del ginocchio.',nerve:'Nervo tibiale (S1–S2).'},
  {name:'Tibiale anteriore',alias:['tibialis anterior','tibiale anteriore'],region:'gamba',origin:'Condilo laterale e porzione prossimale della faccia laterale della tibia; membrana interossea.',insertion:'Cuneiforme mediale e base del primo metatarso.',action:'Dorsiflessione e inversione del piede.',nerve:'Nervo fibulare profondo (L4–L5).'}
 ];
-const normalizeStudy=s=>String(s||'').toLocaleLowerCase('it').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ').replace(/\\s+/g,' ').trim();
+const normalizeStudy=s=>String(s||'').toLocaleLowerCase('it').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
 const studyFor=o=>{
  if(!o)return null;
  const text=normalizeStudy((o.userData?.name||'')+' '+(o.userData?.englishName||'')+' '+o.name+' '+label(o));
