@@ -77,7 +77,7 @@ export function startMatterCore(mount,{reducedMotion=false}={}){
         p.z=rXZ*sin(phi);
         // Brighter, faster bands cross the surface as flowing energy, not rigid rings.
         float helix=sin(phi*3.0+p.y*9.0-uTime*2.4+aSeed.z*2.3);
-        float helixMask=smoothstep(.69,.97,.5+.5*helix);
+        float helixMask=smoothstep(.56,.94,.5+.5*helix);
         float wave=sin(phi*5.0+p.y*7.0+uTime*1.55+aSeed.z*6.283);
         float ripple=sin(p.y*11.0-phi*3.0+uTime*2.05+aSeed.y*6.283);
         // The voice only raises surface ripples and brightness; the cloud never bursts.
@@ -91,11 +91,11 @@ export function startMatterCore(mount,{reducedMotion=false}={}){
         float distanceScale=6.3/max(2.0,-view.z);
         float twinkle=.77+.23*sin(uTime*1.55+aSeed.y*16.0);
         float size=mix(1.0,2.25,pow(aSeed.x,4.0))*uDensity*distanceScale;
-        gl_PointSize=clamp(size*(1.0+.30*uVoice+.12*uPulse+.18*helixMask)*twinkle,1.0,5.0);
+        gl_PointSize=clamp(size*(1.0+.30*uVoice+.12*uPulse+.26*helixMask)*twinkle,1.0,5.0);
         float core=1.0-smoothstep(.12,1.55,radius);
-        float ribbonLight=.31*helixMask*(.55+.45*spiralMix);
+        float ribbonLight=.42*helixMask*(.60+.40*spiralMix);
         vTint=mix(vec3(.05,.48,.78),vec3(.70,.96,1.0),clamp(core*.50+aSeed.y*.23+ribbonLight,0.0,1.0));
-        vAlpha=(.28+.52*core+.16*ribbonLight)*(.72+.28*aSeed.z)*(1.0+.35*uVoice);
+        vAlpha=(.28+.52*core+.27*ribbonLight)*(.72+.28*aSeed.z)*(1.0+.35*uVoice);
       }`,
     fragmentShader:`
       precision mediump float;
