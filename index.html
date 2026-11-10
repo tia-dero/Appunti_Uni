@@ -2374,6 +2374,164 @@
  #matterBoot.matter-dashboard .welcome-shell{width:100%;max-width:650px;align-self:center}
  #matterBoot.matter-dashboard .welcome-main{gap:12px}
 }
+
+/* JARVIS // INTEGRATED TACTICAL HUD — no old-style welcome card layout.
+   Live university telemetry surrounds the original 3D particle core. */
+#matterBoot.matter-dashboard{
+  background:
+    radial-gradient(ellipse 38% 55% at 50% 35%,rgba(22,117,150,.20),transparent 76%),
+    repeating-linear-gradient(0deg,transparent 0 47px,rgba(79,188,217,.035) 48px),
+    repeating-linear-gradient(90deg,transparent 0 47px,rgba(79,188,217,.035) 48px),
+    #030d16;
+}
+#matterBoot.matter-dashboard .matter-boot-content{
+  min-height:100%;height:auto;justify-content:flex-start;
+  padding:clamp(12px,2.2vh,24px) clamp(14px,2.4vw,34px) 24px;
+}
+#matterBoot.matter-dashboard .matter-topline{
+  width:min(1480px,100%);max-width:100%;
+  padding-bottom:13px;border-bottom:1px solid rgba(89,219,247,.2);
+}
+#matterBoot.matter-dashboard .matter-scene{
+  width:min(1480px,100%);max-width:100%;margin:clamp(15px,3vh,34px) auto 0;
+  display:grid;align-items:center;
+  grid-template-columns:minmax(235px,1fr) minmax(290px,1.12fr) minmax(315px,1.3fr);
+  column-gap:clamp(14px,2.5vw,40px);row-gap:20px;
+}
+#matterBoot.matter-dashboard .matter-side{display:none!important}
+#matterBoot.matter-dashboard .welcome-shell,
+#matterBoot.matter-dashboard .welcome-main{display:contents!important}
+#matterBoot.matter-dashboard .welcome-top{display:none!important}
+#matterBoot.matter-dashboard .welcome-copy{
+  grid-column:1;grid-row:1;align-self:stretch;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(16px,2.3vw,28px);min-width:0;max-width:none;
+  background:linear-gradient(110deg,rgba(12,44,60,.75),rgba(5,22,35,.42));
+  border-left:2px solid #71e3f7;border-top:1px solid rgba(120,226,243,.26);
+  border-bottom:1px solid rgba(120,226,243,.11);
+  clip-path:polygon(0 0,calc(100% - 17px) 0,100% 17px,100% 100%,0 100%);
+  box-shadow:inset 20px 0 35px rgba(10,110,150,.06);
+}
+#matterBoot.matter-dashboard .welcome-radar{display:none!important}
+#matterBoot.matter-dashboard .welcome-eyebrow{
+  font:700 10px/1.4 ui-monospace,Consolas,monospace;
+  letter-spacing:.23em;color:#6cddf1;margin:0 0 18px;
+}
+#matterBoot.matter-dashboard .welcome-copy h1{
+  font-size:clamp(26px,2.8vw,45px);line-height:1.14;
+  letter-spacing:-.035em;color:#edffff;margin:0 0 12px;
+  text-shadow:0 0 28px rgba(80,218,246,.13);
+}
+#matterBoot.matter-dashboard .welcome-date{
+  font:600 11px ui-monospace,Consolas,monospace;
+  letter-spacing:.08em;text-transform:uppercase;color:#7fc8d9;margin:0 0 14px;
+}
+#matterBoot.matter-dashboard .welcome-intro{
+  max-width:36ch;color:#a7c7d1;font-size:12px;line-height:1.55;margin:0;
+}
+#matterBoot.matter-dashboard .welcome-copy #welcomeCountdown{
+  margin-top:22px;padding-top:14px;border-top:1px dashed rgba(110,218,240,.25);
+}
+#matterBoot.matter-dashboard .welcome-copy .welcome-countdown,
+#matterBoot.matter-dashboard .welcome-copy .exam-strip{
+  border-color:rgba(99,223,243,.25);background:rgba(7,34,48,.65);
+}
+#matterBoot.matter-dashboard .matter-stage{
+  grid-column:2;grid-row:1;position:relative;top:auto;
+  width:min(100%,510px);height:auto;aspect-ratio:1;max-width:none;align-self:center;
+  filter:drop-shadow(0 0 45px rgba(44,181,219,.16));
+}
+#matterBoot.matter-dashboard .matter-stage::after{
+  content:"NEURAL CORE  /  SYNCHRONIZED";
+  position:absolute;left:50%;bottom:-13px;transform:translateX(-50%);
+  white-space:nowrap;color:#75b5c6;letter-spacing:.19em;
+  font:600 9px ui-monospace,Consolas,monospace;pointer-events:none;
+}
+#matterBoot.matter-dashboard .welcome-panel{
+  grid-column:3;grid-row:1;align-self:stretch;min-width:0;
+  width:100%;display:flex;flex-direction:column;justify-content:flex-start;
+  padding:clamp(14px,2vw,22px);border:1px solid rgba(97,217,239,.27);
+  border-right:2px solid #6de8f6;border-radius:0;
+  background:linear-gradient(260deg,rgba(14,47,62,.85),rgba(5,22,32,.80));
+  box-shadow:inset 0 1px rgba(173,248,255,.09),0 0 30px rgba(28,157,190,.07);
+  clip-path:polygon(0 0,100% 0,100% 100%,18px 100%,0 calc(100% - 18px));
+}
+#matterBoot.matter-dashboard .welcome-panel-head{
+  padding-bottom:12px;border-bottom:1px solid rgba(105,230,245,.20);margin-bottom:12px;
+}
+#matterBoot.matter-dashboard .welcome-panel-head h2{
+  color:#b6f6ff;font:700 12px ui-monospace,Consolas,monospace;letter-spacing:.12em;
+}
+#matterBoot.matter-dashboard .welcome-lessons{max-height:clamp(155px,26vh,305px);overflow:auto}
+#matterBoot.matter-dashboard .welcome-lesson{
+  grid-template-columns:56px minmax(0,1fr);gap:7px;
+  border-radius:2px;border-color:rgba(95,194,218,.16);
+  background:rgba(4,21,30,.69);padding:10px;
+}
+#matterBoot.matter-dashboard .welcome-lesson .btn{grid-column:1/-1;justify-self:start}
+#matterBoot.matter-dashboard .welcome-lesson-name{font-size:12px}
+#matterBoot.matter-dashboard .welcome-lesson-time{font-size:10px;color:#89deed}
+#matterBoot.matter-dashboard .welcome-recent{
+  margin-top:14px;padding-top:12px;border-top:1px solid rgba(105,230,245,.18);
+}
+#matterBoot.matter-dashboard .welcome-recent summary{
+  color:#95e8f3;letter-spacing:.09em;
+}
+#matterBoot.matter-dashboard .welcome-recent-item{border-radius:2px}
+#matterBoot.matter-dashboard .welcome-footer{
+  grid-column:1/-1;grid-row:2;margin:0;padding:14px 0 0;width:100%;
+  border-top:1px solid rgba(91,213,241,.25);
+  background:transparent;box-shadow:none;
+}
+#matterBoot.matter-dashboard .welcome-footer-note{
+  display:block;color:#759da9;text-transform:uppercase;
+  font:600 10px ui-monospace,Consolas,monospace;letter-spacing:.12em;
+}
+#matterBoot.matter-dashboard .welcome-footer-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+#matterBoot.matter-dashboard .welcome-footer-actions .welcome-command,
+#matterBoot.matter-dashboard .welcome-footer-actions .welcome-enter{
+  flex:0 1 auto;min-height:41px;border-radius:3px;padding:10px 18px;
+  background:linear-gradient(125deg,rgba(16,60,76,.94),rgba(6,28,40,.94));
+  border:1px solid rgba(107,218,239,.4);color:#d1faff;
+  font:700 11px ui-monospace,Consolas,monospace;letter-spacing:.08em;
+  box-shadow:inset 0 1px rgba(161,245,255,.08);
+}
+#matterBoot.matter-dashboard .welcome-footer-actions .welcome-enter{
+  border-color:#65e9f4;background:linear-gradient(125deg,#12657a,#103849);
+  color:white;
+}
+#matterBoot.matter-dashboard .matter-identity{margin:13px auto 0}
+#matterBoot.matter-dashboard .matter-identity h2{
+  font-size:clamp(25px,3vw,40px);letter-spacing:.25em;
+}
+#matterBoot.matter-dashboard .matter-identity-sub{font-size:9px}
+#matterBoot.matter-dashboard .matter-status-track{margin-top:6px}
+#matterBoot.matter-dashboard .matter-footer{display:none!important}
+@media(max-width:1060px){
+ #matterBoot.matter-dashboard .matter-scene{
+  grid-template-columns:minmax(240px,1fr) minmax(270px,1fr);gap:18px;
+ }
+ #matterBoot.matter-dashboard .matter-stage{grid-column:1;grid-row:1;width:min(100%,340px)}
+ #matterBoot.matter-dashboard .welcome-copy{grid-column:2;grid-row:1}
+ #matterBoot.matter-dashboard .welcome-panel{grid-column:1/-1;grid-row:2}
+ #matterBoot.matter-dashboard .welcome-footer{grid-column:1/-1;grid-row:3}
+}
+@media(max-width:650px){
+ #matterBoot.matter-dashboard .matter-scene{display:flex;flex-direction:column;align-items:stretch;gap:14px}
+ #matterBoot.matter-dashboard .matter-stage{order:0;width:min(78vw,300px);align-self:center}
+ #matterBoot.matter-dashboard .welcome-copy{order:1;padding:17px}
+ #matterBoot.matter-dashboard .welcome-panel{order:2;padding:16px}
+ #matterBoot.matter-dashboard .welcome-footer{order:3}
+ #matterBoot.matter-dashboard .welcome-footer-actions{justify-content:stretch}
+ #matterBoot.matter-dashboard .welcome-footer-actions .welcome-command,
+ #matterBoot.matter-dashboard .welcome-footer-actions .welcome-enter{flex:1 1 140px}
+ #matterBoot.matter-dashboard .welcome-footer-note{display:none}
+ #matterBoot.matter-dashboard .matter-identity-rule{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+ #matterBoot.matter-dashboard .welcome-copy,
+ #matterBoot.matter-dashboard .welcome-panel{transition:none;animation:none}
+}
 </style>
 </head>
 <body class="jarvis-ui">
@@ -4066,6 +4224,11 @@
     if(hudShell){
       dlg.querySelector('.matter-scene').append(hudShell);
       hudShell.setAttribute('aria-label','Dashboard JARVIS');
+      // Put the live countdown into the left holographic telemetry panel.
+      // Keep the original IDs so existing timetable updates still work.
+      const heading=hudShell.querySelector('.welcome-copy');
+      const countdown=hudShell.querySelector('#welcomeCountdown');
+      if(heading&&countdown)heading.append(countdown);
     }
     const openWelcome=()=>{
       renderWelcome();
