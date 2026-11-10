@@ -2,7 +2,7 @@
    - Pagina, manifest e script: prima la rete (versione piu' recente), la copia salvata solo se offline o rete lenta.
    - Immagini e pdf.js: dalla copia salvata (non cambiano quasi mai).
    Cambia VERSION se vuoi forzare la pulizia della cache. */
-const VERSION = 'appunti-v66-centered-jarvis-restored';
+const VERSION = 'appunti-v67-anatomy-immersive';
 const CORE = ['./', 'index.html', 'manifest.json', 'logo-48.png', 'logo-96.png', 'logo-128.png', 'logo-192.png', 'logo-256.png', 'logo-384.png', 'logo-512.png', 'logo-maskable-512.png',
   'matter-core.js', 'ttsmaker-file-2026-11-10-10-58-55.mp3', 'pdf.min.js', 'pdf.worker.min.js', 'orario.html', 'anatomia.html', 'font-bricolage-800.woff2', 'font-dmsans-400.woff2', 'font-dmsans-500.woff2', 'font-dmsans-700.woff2'];
 const STATIC = /\.(png|jpe?g|ico|webp|woff2)$|pdf(\.worker)?\.min\.js$/;
