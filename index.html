@@ -3969,7 +3969,7 @@
     const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
     const VOICE_ENDPOINT='https://jarvis-voice-api.mattiaderosa06.workers.dev/speak';
     const TURNSTILE_SITE_KEY='0x4AAAAAAF6sWUYRGVbKIuFo';
-    let finished=false,core=null,speechStarted=false,waitTimer=0,watchdog=0,exitTimer=0;
+    let finished=false,core=null,speechStarted=false,fallbackStarted=false,waitTimer=0,watchdog=0,exitTimer=0;
     let audio=null,audioUrl=null,requestAbort=null,verificationWidget=null;
     const openWelcome=()=>{$('welcomeDialog').showModal();startWelcomeFx();};
     const markSpeaking=()=>{
@@ -4001,7 +4001,9 @@
       exitTimer=setTimeout(()=>{cleanup();openWelcome()},520);
     };
     const browserFallback=()=>{
-      if(finished||speechStarted)return;
+      if(finished||speechStarted||fallbackStarted)return;
+      fallbackStarted=true;
+      requestAbort?.abort();
       clearTimeout(waitTimer);clearTimeout(watchdog);
       verifyBox.classList.remove('matter-turnstile-visible');
       if(!window.speechSynthesis||!window.SpeechSynthesisUtterance||isVoiceMuted()){
@@ -4023,7 +4025,7 @@
       }catch(error){waitTimer=setTimeout(()=>finish(false),800);}
     };
     const playElevenLabs=async token=>{
-      if(finished||speechStarted||isVoiceMuted())return;
+      if(finished||speechStarted||fallbackStarted||isVoiceMuted())return;
       verifyBox.classList.remove('matter-turnstile-visible');
       status.textContent='PREPARAZIONE VOCE JARVIS';
       requestAbort=new AbortController();
@@ -4043,7 +4045,7 @@
         });
         if(!response.ok)throw new Error('Voice HTTP '+response.status);
         const blob=await response.blob();
-        if(finished)return;
+        if(finished||fallbackStarted)return;
         if(!blob.type.startsWith('audio/')||blob.size===0)throw new Error('Invalid audio response');
         audioUrl=URL.createObjectURL(blob);
         audio=new Audio(audioUrl);
@@ -4051,7 +4053,7 @@
         audio.onended=()=>finish(false,true);
         audio.onerror=()=>{if(!finished)finish(false);};
         await audio.play(); // A browser may block autoplay; fallback to its local speech.
-        if(finished)return;
+        if(finished||fallbackStarted){audio.pause();return;}
         clearTimeout(waitTimer);
         markSpeaking();
         watchdog=setTimeout(()=>finish(false),45000);
