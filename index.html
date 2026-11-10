@@ -4023,7 +4023,7 @@
       try{
         // New TTSMaker intro is preferred, with the previous recording as a fallback.
         let recordingPath=null;
-        for(const path of ['./jarvis-intro.mp3','./jarvis-intro.m4a']){
+        for(const path of ['./ttsmaker-file-2026-11-10-10-58-55.mp3','./jarvis-intro.mp3','./jarvis-intro.m4a']){
           try{const response=await fetch(path,{method:'HEAD',cache:'no-store'});
             if(response.ok){recordingPath=path;break;}
           }catch(error){console.warn('JARVIS: file audio non disponibile',path,error);}
