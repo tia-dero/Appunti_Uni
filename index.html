@@ -2282,6 +2282,13 @@
 #matterBoot .matter-turnstile iframe{max-width:100%}
 @media(max-height:720px){#matterBoot .matter-turnstile-visible{margin-top:2px}}
 
+
+/* Accessible play affordance for browser autoplay restrictions. */
+#matterBoot .matter-play-voice{border:1px solid #58e7f48c;border-radius:7px;background:#123743;color:#b7f8ff;
+ padding:9px 14px;font:700 10px ui-monospace,Consolas,monospace;letter-spacing:.11em;box-shadow:0 0 16px #58e7f41b;cursor:pointer}
+#matterBoot .matter-play-voice:hover{background:#1d4f5b}
+#matterBoot .matter-play-voice[hidden]{display:none!important}
+
 </style>
 </head>
 <body class="jarvis-ui">
@@ -2372,7 +2379,7 @@
       <p class="matter-identity-sub">NEURAL PARTICLE CORE <span aria-hidden="true">·</span> VOICE RESPONSIVE SYSTEM</p>
       <div class="matter-status-track" role="status" aria-live="polite">
         <span class="matter-status-led" aria-hidden="true"></span>
-        <span id="matterStatus" class="matter-status">SISTEMA IN AVVIO</span><div id="matterTurnstile" class="matter-turnstile" aria-label="Verifica di sicurezza per la voce ElevenLabs"></div>
+        <span id="matterStatus" class="matter-status">SISTEMA IN AVVIO</span><button type="button" id="matterPlayVoice" class="matter-play-voice" hidden>▶ ASCOLTA VOCE ELEVENLABS</button><div id="matterTurnstile" class="matter-turnstile" aria-label="Verifica di sicurezza per la voce ElevenLabs"></div>
         <span class="matter-status-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
       </div>
     </div>
@@ -3965,7 +3972,7 @@
      Browser speech synthesis remains an offline/error/autoplay fallback. */
   function runMatterIntro(){
     const dlg=$('matterBoot'),stage=$('matterStage'),status=$('matterStatus');
-    const verifyBox=$('matterTurnstile');
+    const verifyBox=$('matterTurnstile'),playButton=$('matterPlayVoice');
     const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
     const VOICE_ENDPOINT='https://jarvis-voice-api.mattiaderosa06.workers.dev/speak';
     const TURNSTILE_SITE_KEY='0x4AAAAAAF6sWUYRGVbKIuFo';
@@ -3985,6 +3992,7 @@
     const cleanup=()=>{
       clearTimeout(waitTimer);clearTimeout(watchdog);clearTimeout(exitTimer);
       requestAbort?.abort();requestAbort=null;
+      playButton.hidden=true;playButton.onclick=null;
       if(audio){audio.pause();audio.removeAttribute('src');audio.load();audio=null;}
       if(audioUrl){URL.revokeObjectURL(audioUrl);audioUrl=null;}
       core?.dispose();core=null;
@@ -4003,9 +4011,12 @@
     const browserFallback=()=>{
       if(finished||speechStarted||fallbackStarted)return;
       fallbackStarted=true;
+      playButton.hidden=true;
       requestAbort?.abort();
       clearTimeout(waitTimer);clearTimeout(watchdog);
       verifyBox.classList.remove('matter-turnstile-visible');
+      status.textContent='VOCE LOCALE DI RISERVA';
+      $('matterVoiceState').textContent='BROWSER';
       if(!window.speechSynthesis||!window.SpeechSynthesisUtterance||isVoiceMuted()){
         status.textContent='SISTEMA PRONTO';
         waitTimer=setTimeout(()=>finish(false),reduced?350:1250);
@@ -4016,6 +4027,8 @@
         voice.onstart=()=>{
           if(finished)return;
           markSpeaking();
+          status.textContent='VOCE BROWSER IN RIPRODUZIONE';
+          $('matterVoiceState').textContent='BROWSER';
           watchdog=setTimeout(()=>finish(false),35000);
         };
         voice.onend=()=>finish(false,true);
@@ -4043,7 +4056,10 @@
           body:JSON.stringify({text:phrase,turnstileToken:token}),
           signal:requestAbort.signal
         });
-        if(!response.ok)throw new Error('Voice HTTP '+response.status);
+        if(!response.ok){
+          let detail='';try{const info=await response.json();detail=info.error||'';}catch{}
+          throw new Error('ElevenLabs HTTP '+response.status+(detail?' - '+detail:''));
+        }
         const blob=await response.blob();
         if(finished||fallbackStarted)return;
         if(!blob.type.startsWith('audio/')||blob.size===0)throw new Error('Invalid audio response');
@@ -4052,14 +4068,35 @@
         audio.preload='auto';
         audio.onended=()=>finish(false,true);
         audio.onerror=()=>{if(!finished)finish(false);};
-        await audio.play(); // A browser may block autoplay; fallback to its local speech.
-        if(finished||fallbackStarted){audio.pause();return;}
-        clearTimeout(waitTimer);
-        markSpeaking();
-        watchdog=setTimeout(()=>finish(false),45000);
+        const startElevenAudio=async()=>{
+          if(finished||fallbackStarted)return;
+          await audio.play();
+          if(finished||fallbackStarted){audio.pause();return;}
+          playButton.hidden=true;
+          clearTimeout(waitTimer);
+          markSpeaking();
+          status.textContent='ELEVENLABS · VOCE SELEZIONATA';
+          $('matterVoiceState').textContent='ELEVENLABS';
+          clearTimeout(watchdog);
+          watchdog=setTimeout(()=>finish(false),60000);
+        };
+        try{await startElevenAudio();}
+        catch(playError){
+          if(playError?.name!=='NotAllowedError')throw playError;
+          // Audio was generated but automatic playback was blocked. A user tap can unlock it.
+          clearTimeout(waitTimer);
+          status.textContent='AUDIO PRONTO · PREMI RIPRODUCI';
+          $('matterVoiceState').textContent='TAP TO PLAY';
+          playButton.hidden=false;
+          playButton.onclick=()=>startElevenAudio().catch(error=>{
+            console.warn('JARVIS: audio playback error',error);
+            browserFallback();
+          });
+        }
       }catch(error){
         if(finished)return;
         console.warn('JARVIS: ElevenLabs unavailable, using browser voice',error);
+        status.textContent='ELEVENLABS NON DISPONIBILE';
         if(audio){audio.pause();audio.removeAttribute('src');audio.load();audio=null;}
         if(audioUrl){URL.revokeObjectURL(audioUrl);audioUrl=null;}
         browserFallback();
@@ -4082,7 +4119,7 @@
     }
     status.textContent='COLLEGAMENTO VOCE NEURALE';
     // Do not leave the intro hanging if Turnstile is blocked or requires interaction.
-    waitTimer=setTimeout(browserFallback,14000);
+    waitTimer=setTimeout(browserFallback,25000);
     function renderTurnstile(){
       if(finished||speechStarted||!window.turnstile?.render)return;
       try{
@@ -4093,7 +4130,7 @@
           callback:token=>{
             if(finished)return;
             clearTimeout(waitTimer);
-            waitTimer=setTimeout(browserFallback,14000);
+            waitTimer=setTimeout(browserFallback,25000);
             playElevenLabs(token);
           },
           'error-callback':()=>{if(!finished)browserFallback();},
