@@ -56,6 +56,14 @@ input[type=search]{border-radius:6px;background:rgba(4,17,24,.84);border-color:r
 #details h3{font-weight:570;letter-spacing:-.018em}
 @media(max-width:860px){main{padding:10px;gap:10px}#viewport{min-height:450px}header{padding:12px}}
 
+
+#anatomyQuizChoices{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+#anatomyQuizChoices button{white-space:normal;text-align:left}
+#anatomyQuizChoices button.correct{border-color:#5deaba;background:#17483e;color:#d4fff0}
+#anatomyQuizChoices button.wrong{border-color:#ed8691;background:#512630;color:#ffe6e9}
+#anatomyQuizQuestion{font-size:13px;color:#e8faff;min-height:39px}
+#anatomyQuizScore{display:inline-flex;align-items:center}
+#anatomyStudyPanel .row button{flex:0 1 auto}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/"}}</script>
 </head><body>
@@ -64,6 +72,8 @@ input[type=search]{border-radius:6px;background:rgba(4,17,24,.84);border-color:r
 <aside><section class="panel" id="jarvisPanel"><h2>◈ JARVIS · ASSISTENTE ANATOMICO</h2><p class="small">Quale muscolo, osso o altra struttura vuoi osservare?</p><form id="jarvisAnatomyForm"><input type="search" id="jarvisQuery" placeholder="Es. bicipite brachiale destro, femore sinistro…" autocomplete="off" aria-label="Struttura anatomica da cercare"><div class="row" style="margin-top:9px"><button type="submit" id="jarvisShow">◎ Evidenzia</button><button type="button" id="jarvisIsolate">◉ Isola</button><button type="button" id="jarvisSpeak">🎙 Parla</button></div></form><div class="row" style="margin-top:8px"><button type="button" id="jarvisLocate">↻ Ruota verso</button><button type="button" id="jarvisContext">↶ Corpo intero</button></div><p id="jarvisStatus" role="status" aria-live="polite" class="small">Pronto: digita o pronuncia il nome della struttura.</p></section>
 <section class="panel"><h2>STRATI ANATOMICI</h2><div class="row"><button data-mode="both" class="active">Tutte</button><button data-mode="muscles">Muscoli</button><button data-mode="bones">Ossa</button><button data-mode="cartilage">Cartilagini</button><button data-mode="eyes">Occhi</button><button data-mode="teeth">Denti</button><button data-mode="organs">Organi</button><button data-mode="arteries">Arterie</button><button data-mode="veins">Vene</button><button data-mode="circulatory">Circolatorio</button><button data-mode="all">Tutti i sistemi</button></div><label for="depth">Visibilità dei muscoli superficiali: <output id="depthLabel">100%</output></label><input id="depth" type="range" min="0" max="100" value="100"><p class="small">A 0% osservi i muscoli profondi e le altre strutture selezionate.</p></section>
 <section class="panel"><h2>ORGANI E VASI SANGUIGNI</h2><p class="small">Attiva i modelli aggiuntivi quando ti servono.</p><div class="row"><button id="loadOrgans" type="button">＋ Carica organi</button><button id="loadVessels" type="button">＋ Carica circolatorio</button></div><p id="systemsStatus" class="small" role="status">Connessione internet richiesta per i nuovi modelli 3D.</p></section>
+<section class="panel" id="anatomyStudyPanel"><h2>◈ STUDIO MUSCOLARE · JARVIS</h2><p class="small">Seleziona un muscolo nel modello per leggere origine, inserzione, azione e innervazione, quando disponibili nel database didattico.</p><div class="row" id="anatomyQuickRegions"><button type="button" data-anatomy-region="braccio">Braccio</button><button type="button" data-anatomy-region="spalla">Spalla</button><button type="button" data-anatomy-region="tronco">Tronco</button><button type="button" data-anatomy-region="coscia">Coscia</button><button type="button" data-anatomy-region="gamba">Gamba</button></div><p class="small" id="anatomyRegionStatus" aria-live="polite">Scegli una regione per esplorare i muscoli.</p></section>
+<section class="panel" id="anatomyQuizPanel"><h2>◈ QUIZ ANATOMICO</h2><p class="small">Quale muscolo corrisponde alla funzione indicata?</p><p id="anatomyQuizQuestion" aria-live="polite">Premi «Nuova domanda» per iniziare.</p><div id="anatomyQuizChoices" class="row"></div><p id="anatomyQuizFeedback" class="small" role="status"></p><div class="row"><button type="button" id="anatomyQuizNext">Nuova domanda</button><span class="small" id="anatomyQuizScore">0 corrette su 0</span></div></section>
 <section class="panel"><h2>STRUTTURA SELEZIONATA</h2><div id="details"><p>Seleziona un muscolo o un osso cliccando sul modello oppure cerca una struttura nell'elenco.</p></div></section>
 <section class="panel"><h2>RICERCA ANATOMICA</h2><input id="search" type="search" placeholder="Cerca: deltoide, bicipite, femore…" aria-label="Cerca una struttura"><div id="results"></div></section>
 <section class="panel"><h2>CONTROLLI</h2><p class="small">Trascina per ruotare · Rotella per zoom · ↑ Su / ↓ Giù per salire e scendere lungo il corpo (anche con le frecce della tastiera) · Clic per selezionare · Clic destro e trascina per spostare. Il modello è didattico, non clinico.</p><a class="small" href="anatomia.html">Torna al precedente modello procedurale</a></section></aside></main>
@@ -117,11 +127,41 @@ function categoriaIT(o){return ({bones:'Osso',cartilage:'Cartilagine',eyes:'Part
 function livelloIT(o){const l=layer(o);return l.includes('deep')?'Muscolatura profonda':l.includes('superficial')?'Muscolatura superficiale':'Scheletro e strutture associate'}
 function latoIT(o){return ({left:'Sinistro',right:'Destro',midline:'Linea mediana'})[String(o.userData.side||'').toLowerCase()]||'Non specificato'}
 function updateVisibility(){for(const o of objects){const cat=categoria(o),isSuper=layer(o).includes('superficial');o.visible=(mode==='all'||(mode==='both'&&!o.userData.extraSystem)||(mode==='circulatory'&&['arteries','veins','heart'].includes(cat))||mode===cat||(mode==='organs'&&cat==='heart'))&&(!isSuper||outer>0);const mat=originalMaterials.get(o);if(mat){mat.opacity=isSuper?outer/100:1;mat.transparent=isSuper&&outer<100;mat.depthWrite=!isSuper||outer===100;mat.needsUpdate=true}}$('counter').textContent=objects.filter(x=>x.visible).length+' STRUTTURE VISIBILI'}
+
+// Compact, reviewed study notes for selected major muscles.
+// Anatomical variants and individual differences exist; use a textbook for examination detail.
+const MUSCLE_STUDY=[
+ {name:'Bicipite brachiale',alias:['biceps brachii','bicipite brachiale'],region:'braccio',origin:'Capo lungo: tubercolo sopraglenoideo della scapola; capo breve: processo coracoideo.',insertion:'Tuberosità del radio e aponeurosi bicipitale.',action:'Supinazione dell’avambraccio e flessione del gomito.',nerve:'Nervo muscolocutaneo (C5–C6).'},
+ {name:'Tricipite brachiale',alias:['triceps brachii','tricipite brachiale'],region:'braccio',origin:'Capo lungo: tubercolo infraglenoideo; capi laterale e mediale: superficie posteriore dell’omero.',insertion:'Olecrano dell’ulna.',action:'Estensione del gomito; il capo lungo contribuisce all’estensione e adduzione della spalla.',nerve:'Nervo radiale (C6–C8).'},
+ {name:'Deltoide',alias:['deltoid','deltoide'],region:'spalla',origin:'Terzo laterale della clavicola, acromion e spina della scapola.',insertion:'Tuberosità deltoidea dell’omero.',action:'Abduzione del braccio; fasci anteriori: flessione; posteriori: estensione.',nerve:'Nervo ascellare (C5–C6).'},
+ {name:'Grande pettorale',alias:['pectoralis major','grande pettorale'],region:'tronco',origin:'Metà mediale della clavicola, sterno e cartilagini costali superiori; aponeurosi dell’obliquo esterno.',insertion:'Labbro laterale del solco intertubercolare dell’omero.',action:'Adduzione e rotazione mediale del braccio; contribuisce alla flessione.',nerve:'Nervi pettorali laterale e mediale (C5–T1).'},
+ {name:'Trapezio',alias:['trapezius','trapezio'],region:'tronco',origin:'Osso occipitale, legamento nucale e processi spinosi C7–T12.',insertion:'Clavicola laterale, acromion e spina della scapola.',action:'Elevazione, retrazione, depressione e rotazione superiore della scapola.',nerve:'Nervo accessorio (XI) per la componente motoria; C3–C4 per la propriocezione.'},
+ {name:'Retto dell’addome',alias:['rectus abdominis','retto dell addome','retto dell’addome'],region:'tronco',origin:'Cresta e sinfisi pubica.',insertion:'Processo xifoideo e cartilagini costali 5–7.',action:'Flessione del tronco e stabilizzazione della parete addominale.',nerve:'Nervi toracoaddominali (T7–T12).'},
+ {name:'Bicipite femorale',alias:['biceps femoris','bicipite femorale'],region:'coscia',origin:'Capo lungo: tuberosità ischiatica; capo breve: linea aspra e linea sopracondilare laterale del femore.',insertion:'Testa della fibula.',action:'Flessione del ginocchio e rotazione laterale della gamba; il capo lungo estende l’anca.',nerve:'Nervo sciatico: divisione tibiale (capo lungo), fibulare comune (capo breve).'},
+ {name:'Gastrocnemio',alias:['gastrocnemius','gastrocnemio'],region:'gamba',origin:'Superfici posteriori dei condili femorali.',insertion:'Calcagno attraverso il tendine d’Achille.',action:'Flessione plantare della caviglia e aiuto nella flessione del ginocchio.',nerve:'Nervo tibiale (S1–S2).'},
+ {name:'Tibiale anteriore',alias:['tibialis anterior','tibiale anteriore'],region:'gamba',origin:'Condilo laterale e porzione prossimale della faccia laterale della tibia; membrana interossea.',insertion:'Cuneiforme mediale e base del primo metatarso.',action:'Dorsiflessione e inversione del piede.',nerve:'Nervo fibulare profondo (L4–L5).'}
+];
+const normalizeStudy=s=>String(s||'').toLocaleLowerCase('it').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ').replace(/\\s+/g,' ').trim();
+const studyFor=o=>{
+ if(!o)return null;
+ const text=normalizeStudy((o.userData?.name||'')+' '+(o.userData?.englishName||'')+' '+o.name+' '+label(o));
+ return MUSCLE_STUDY.find(m=>m.alias.some(alias=>text.includes(normalizeStudy(alias))))||null;
+};
+
 function select(o){if(selected&&originalMaterials.has(selected)){selected.material=originalMaterials.get(selected)}selected=o;selectedName=o?label(o):'';if(!o){$('details').innerHTML='<p>Nessuna struttura selezionata.</p>';return}o.material=accent;const d=$('details');d.replaceChildren();
 const h=document.createElement('h3');h.textContent=selectedName;d.append(h);
 const p=document.createElement('p');p.textContent=categoriaIT(o);d.append(p);
 const dl=document.createElement('dl');
 for(const [k,v] of [['Livello',livelloIT(o)],['Lato',latoIT(o)],['Codice FMA',o.userData.fma||'—'],['Archivio di provenienza',o.userData.source||'Écorché']]){const dt=document.createElement('dt');dt.textContent=k;const dd=document.createElement('dd');dd.textContent=v;dl.append(dt,dd)}d.append(dl);
+const study=studyFor(o);
+if(study){
+ const heading=document.createElement('h4');heading.textContent='SCHEDA DI STUDIO';heading.style.color='#91e8f1';d.append(heading);
+ const info=document.createElement('dl');
+ for(const [k,v] of [['Origine',study.origin],['Inserzione',study.insertion],['Azione',study.action],['Innervazione',study.nerve]]){
+  const dt=document.createElement('dt');dt.textContent=k;const dd=document.createElement('dd');dd.textContent=v;info.append(dt,dd);
+ }
+ d.append(info);
+}
 const actions=document.createElement('div');actions.className='row';
 const iso=document.createElement('button');iso.textContent='Isola';iso.onclick=()=>{objects.forEach(x=>x.visible=x===o)};
 const hide=document.createElement('button');hide.textContent='Nascondi';hide.onclick=()=>{o.visible=false;select(null)};
@@ -334,6 +374,46 @@ document.addEventListener('keydown',e=>{
 $('show').onclick=()=>{select(null);updateVisibility()};
 document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=async()=>{if(['organs','arteries','veins','circulatory','all'].includes(b.dataset.mode)){if(['organs','all'].includes(b.dataset.mode)&&!extraModels.visceral)await loadAdditional('visceral',false).catch(()=>{});if(['arteries','veins','circulatory','all'].includes(b.dataset.mode)&&!extraModels.cardiovascular)await loadAdditional('cardiovascular',false).catch(()=>{});}mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('active',x===b));select(null);updateVisibility()});
 $('depth').oninput=e=>{outer=Number(e.target.value);$('depthLabel').textContent=outer+'%';updateVisibility()};
+
+let quizAnswer=null,quizCorrect=0,quizTotal=0;
+const quizChoices=$('anatomyQuizChoices'),quizFeedback=$('anatomyQuizFeedback');
+function locateStudyMuscle(muscle){
+ const matching=objects.find(o=>studyFor(o)?.name===muscle.name);
+ if(matching){mode='muscles';document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode==='muscles'));updateVisibility();select(matching);inquadraStruttura(matching);}
+}
+$('anatomyQuickRegions').addEventListener('click',event=>{
+ const btn=event.target.closest('[data-anatomy-region]');if(!btn)return;
+ const region=btn.dataset.anatomyRegion,found=MUSCLE_STUDY.filter(m=>m.region===region);
+ $('anatomyRegionStatus').replaceChildren(document.createTextNode('Muscoli disponibili: '));
+ for(const m of found){
+  const b=document.createElement('button');b.type='button';b.textContent=m.name;
+  b.style.margin='4px';b.onclick=()=>locateStudyMuscle(m);
+  $('anatomyRegionStatus').append(b);
+ }
+});
+$('anatomyQuizNext').onclick=()=>{
+ quizFeedback.textContent='';
+ const answer=MUSCLE_STUDY[Math.floor(Math.random()*MUSCLE_STUDY.length)];
+ quizAnswer=answer;
+ const incorrect=MUSCLE_STUDY.filter(x=>x!==answer).sort(()=>Math.random()-.5).slice(0,3);
+ const choices=[answer,...incorrect].sort(()=>Math.random()-.5);
+ $('anatomyQuizQuestion').textContent='Quale muscolo svolge questa azione? '+answer.action;
+ quizChoices.replaceChildren();
+ for(const choice of choices){
+  const button=document.createElement('button');button.type='button';button.textContent=choice.name;
+  button.onclick=()=>{
+   if(!quizAnswer)return;
+   quizTotal++;
+   const correct=choice===quizAnswer;if(correct)quizCorrect++;
+   quizChoices.querySelectorAll('button').forEach(b=>{b.disabled=true;if(b.textContent===quizAnswer.name)b.classList.add('correct');else if(b===button)b.classList.add('wrong')});
+   quizFeedback.textContent=correct?'Corretto!':'La risposta corretta è '+quizAnswer.name+'.';
+   $('anatomyQuizScore').textContent=quizCorrect+' corrette su '+quizTotal;
+   locateStudyMuscle(quizAnswer);quizAnswer=null;
+  };
+  quizChoices.append(button);
+ }
+};
+
 $('search').oninput=search;
 renderer.domElement.addEventListener('pointerdown',e=>{startX=e.clientX;startY=e.clientY;dragging=false});
 renderer.domElement.addEventListener('pointerup',e=>{if(Math.hypot(e.clientX-startX,e.clientY-startY)>5)return;const rect=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1);picker.setFromCamera(pointer,camera);const hits=picker.intersectObjects(objects.filter(o=>o.visible),false);if(hits.length)select(hits[0].object)});
