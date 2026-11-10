@@ -2678,6 +2678,50 @@
  #matterBoot.matter-dashboard .jarvis-hud-actions .welcome-command{flex:1 1 140px}
 }
 
+
+/* V61: ONE HOLOGRAPHIC SCREEN FROM FIRST FRAME.
+   University panels permanently replace the old system status sidebars. */
+#matterBoot.matter-dashboard .matter-voice-telemetry{display:none!important}
+#matterBoot.matter-dashboard .matter-scene{
+  display:grid!important;grid-template-columns:minmax(230px,.90fr) minmax(350px,1.55fr) minmax(280px,1.10fr)!important;
+  align-items:center!important;gap:clamp(14px,2vw,32px)!important;
+  width:min(1570px,100%)!important;margin:clamp(10px,2vh,25px) auto 0!important;
+}
+#matterBoot.matter-dashboard .jarvis-hud-telemetry{
+  display:flex!important;min-width:0!important;
+  height:auto!important;align-self:center!important;
+}
+#matterBoot.matter-dashboard .jarvis-hud-left{grid-column:1!important;grid-row:1!important;}
+#matterBoot.matter-dashboard .matter-stage{
+ grid-column:2!important;grid-row:1!important;position:relative!important;
+ width:min(100%,620px)!important;max-width:100%!important;
+ aspect-ratio:1!important;align-self:center!important;
+}
+#matterBoot.matter-dashboard .jarvis-hud-right{
+ grid-column:3!important;grid-row:1!important;max-height:min(68vh,650px);overflow:auto;
+}
+#matterBoot.matter-dashboard .jarvis-hud-actions{display:flex!important;}
+#matterBoot.matter-dashboard .welcome-panel,#matterBoot.matter-dashboard .welcome-copy{
+  display:flex!important;min-width:0!important;
+}
+#matterBoot.matter-dashboard .matter-identity{margin-top:8px!important;}
+#matterBoot.matter-dashboard .matter-kicker{display:none!important}
+#matterBoot.matter-dashboard .matter-voice-caption{display:none!important}
+#matterBoot.matter-dashboard .matter-footer{display:none!important}
+@media(max-width:1110px){
+ #matterBoot.matter-dashboard .matter-scene{grid-template-columns:minmax(200px,1fr) minmax(280px,1.2fr)!important}
+ #matterBoot.matter-dashboard .matter-stage{grid-column:2!important;grid-row:1!important;width:min(100%,450px)!important}
+ #matterBoot.matter-dashboard .jarvis-hud-left{grid-column:1!important;grid-row:1!important}
+ #matterBoot.matter-dashboard .jarvis-hud-right{grid-column:1/-1!important;grid-row:2!important;max-height:none}
+}
+@media(max-width:680px){
+ #matterBoot.matter-dashboard .matter-scene{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:14px!important}
+ #matterBoot.matter-dashboard .matter-stage{order:0;width:min(78vw,310px)!important;align-self:center!important}
+ #matterBoot.matter-dashboard .jarvis-hud-left{order:1}
+ #matterBoot.matter-dashboard .jarvis-hud-right{order:2}
+ #matterBoot.matter-dashboard .jarvis-hud-right{max-height:none}
+}
+
 </style>
 </head>
 <body class="jarvis-ui">
@@ -2734,13 +2778,6 @@
     <p class="matter-kicker"><span aria-hidden="true">●</span> NEURAL PARTICLE ENGINE / 01</p>
     <div class="matter-scene">
       <section class="jarvis-hud-telemetry jarvis-hud-left" aria-label="Missione universitaria e prossima lezione"><section class="welcome-copy"><div class="welcome-radar" aria-hidden="true"><span class="welcome-radar-core">SM</span></div><p class="welcome-eyebrow">Il tuo piano di oggi</p><h1 id="welcomeTitle">Buongiorno<span></span></h1><p id="welcomeDate" class="welcome-date"></p><p id="welcomeIntro" class="welcome-intro"></p><div id="welcomeCountdown" class="hud-lecture-countdown"></div></section></section>
-      <aside class="matter-side matter-side-left" aria-label="Stato dei moduli JARVIS">
-        <div class="matter-mini-head"><span>01</span> SYSTEM OVERVIEW</div>
-        <div class="matter-system-line"><span class="matter-system-indicator"></span><div><strong>ARCHIVIO UNIVERSITARIO</strong><small>CARICATO E DISPONIBILE</small></div><b>READY</b></div>
-        <div class="matter-system-line"><span class="matter-system-indicator"></span><div><strong>NUCLEO PARTICELLARE</strong><small>FLUSSO ORBITALE ATTIVO</small></div><b>ACTIVE</b></div>
-        <div class="matter-system-line"><span class="matter-system-indicator"></span><div><strong>INTERFACCIA VOCALE</strong><small>SINTESI DI JARVIS</small></div><b id="matterVoiceStatusLeft">READY</b></div>
-        <div class="matter-side-section"><span>SYSTEM PROFILE</span><div><span>EDIZIONE</span><b>UNIVERSITÀ</b></div><div><span>INTERFACCIA</span><b>PARTICLE CORE</b></div></div>
-      </aside>
       <div class="matter-stage" id="matterStage" aria-label="Nucleo di materia tridimensionale">
         <div class="matter-aura" aria-hidden="true"></div>
         <div class="matter-orbit matter-orbit-a" aria-hidden="true"></div>
@@ -2756,14 +2793,8 @@
         <div class="matter-fallback" aria-hidden="true"></div>
       </div>
 <section class="jarvis-hud-telemetry jarvis-hud-right" aria-label="Lezioni, esami e materiali recenti"><section class="welcome-panel" aria-label="Materie di oggi"><div class="welcome-panel-head"><h2 id="welcomePanelTitle">Le tue lezioni</h2><span id="welcomeBadge">OGGI</span></div><div id="welcomeLessons" class="welcome-lessons"></div><details class="welcome-recent"><summary>Ultimi appunti <span>ACCESSO RAPIDO</span></summary><div id="welcomeRecent" class="welcome-recent-list"></div></details></section></section>
-      <aside class="matter-side matter-side-right" aria-label="Interfaccia vocale e connessione">
-        <div class="matter-mini-head"><span>02</span> VOICE INTERFACE</div>
-        <div class="matter-voice-heading"><span class="matter-voice-icon" aria-hidden="true">◉</span><div><strong>VOICE CORE</strong><small id="matterVoiceState">READY</small></div></div>
-        <div class="matter-voice-spectrum" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <div class="matter-voice-connection"><span>CONNESSIONE</span><b id="matterNetworkState">CHECKING</b></div>
-        <div class="matter-side-section"><span>CORE LINK</span><div><span>RISPOSTA VOCALE</span><b>ATTIVA</b></div><div><span>MATERIA DIGITALE</span><b>STABILE</b></div></div>
-      </aside>
     </div>
+    <div class="matter-voice-telemetry" aria-hidden="true"><span id="matterVoiceStatusLeft">READY</span><span id="matterVoiceState">READY</span><span id="matterNetworkState">ONLINE</span></div>
     <div class="matter-identity">
       <div class="matter-identity-rule" aria-hidden="true"><i></i><span>PERSONAL INTELLIGENCE SYSTEM</span><i></i></div>
       <h2>JARVIS</h2>
@@ -4372,7 +4403,6 @@
     const openWelcome=()=>{
       renderWelcome();
       dlg.classList.remove('matter-exit');
-      dlg.classList.add('matter-dashboard');
       $('matterStatus').textContent='SISTEMA OPERATIVO · DASHBOARD PRONTA';
       core?.setSpeaking(false);
       core?.setAudioLevel(0);
@@ -4510,6 +4540,9 @@
       showPlayButton();
       startAudio();
     };
+    // Make all university panels visible inside the hologram from its first frame.
+    dlg.classList.add('matter-dashboard');
+    renderWelcome();
     dlg.showModal();
     $('matterClock').textContent=new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
     $('matterNetworkState').textContent=navigator.onLine?'ONLINE':'OFFLINE';
