@@ -2337,6 +2337,22 @@
  #matterBoot .matter-micro-tag-bottom{left:5%;bottom:14%;transform:none}
 }
 @media(prefers-reduced-motion:reduce){#matterBoot .matter-micro-dot{animation:none!important}}
+/* HUD v75: align the two existing diagnostic panels to the same top edge.
+   This does not alter the nucleus, its grid column, or any panel contents. */
+@media(min-width:781px){
+  #matterBoot .matter-scene > .matter-side-left,
+  #matterBoot .matter-scene > .matter-side-right{
+    align-self:start;
+    margin-top:clamp(45px,10vh,105px);
+  }
+}
+@media(max-width:780px){
+  #matterBoot .matter-scene > .matter-side-left,
+  #matterBoot .matter-scene > .matter-side-right{
+    align-self:start;
+    margin-top:0;
+  }
+}
 </style>
 </head>
 <body class="jarvis-ui">
@@ -4207,7 +4223,7 @@
     $('matterVoiceStatusLeft').textContent=isVoiceMuted()?'MUTED':'READY';
     $('matterSkip').onclick=()=>{finished=true;cleanup();};
     dlg.addEventListener('cancel',event=>{event.preventDefault();finished=true;cleanup();},{once:true});
-    import('./matter-core.js').then(module=>{
+    import('./matter-core.js?v=75').then(module=>{
       if(finished||!dlg.open)return;
       try{core=module.startMatterCore(stage,{reducedMotion:reduced});stage.classList.add('matter-ready');core.setSpeaking(speaking);if(speaking&&introEnvelope)core.setAudioLevel(introVolume);}
       catch(error){console.warn('JARVIS: nucleo CSS alternativo',error);}
