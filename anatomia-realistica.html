@@ -143,8 +143,8 @@ body.lab-immersive #labFocusMode{border-color:#8becf8;background:#1a4b58}
 <div id="labOriginLabel" class="lab-point-label lab-origin-label" aria-hidden="true">A* · ESTREMITÀ</div>
 <div id="labInsertionLabel" class="lab-point-label lab-insertion-label" aria-hidden="true">B* · ESTREMITÀ</div><div id="load"><strong>INIZIALIZZAZIONE ATLANTE</strong><p id="loading">Caricamento modello anatomico dettagliato…</p></div><div id="toolbar"><button type="button" id="labFocusMode" aria-pressed="false">⛶ Focus 3D</button><button type="button" id="labAutoRotate" aria-pressed="false">◎ Rotazione</button><button id="front">Anteriore</button><button id="rear">Posteriore</button><button id="reset">Reset</button><button id="zoomIn">＋</button><button id="zoomOut">－</button><button id="moveUp" title="Sposta la visuale verso la testa">↑ Su</button><button id="moveDown" title="Sposta la visuale verso i piedi">↓ Giù</button><button id="show">Mostra tutti</button></div></section>
 <aside><section class="panel" id="jarvisPanel"><h2>◈ JARVIS · ASSISTENTE ANATOMICO</h2><p class="small">Quale muscolo, osso o altra struttura vuoi osservare?</p><form id="jarvisAnatomyForm"><input type="search" id="jarvisQuery" placeholder="Es. bicipite brachiale destro, femore sinistro…" autocomplete="off" aria-label="Struttura anatomica da cercare"><div class="row" style="margin-top:9px"><button type="submit" id="jarvisShow">◎ Evidenzia</button><button type="button" id="jarvisIsolate">◉ Isola</button><button type="button" id="jarvisSpeak">🎙 Parla</button></div></form><div class="row" style="margin-top:8px"><button type="button" id="jarvisLocate">↻ Ruota verso</button><button type="button" id="jarvisContext">↶ Corpo intero</button></div><p id="jarvisStatus" role="status" aria-live="polite" class="small">Pronto: digita o pronuncia il nome della struttura.</p></section>
-<section class="panel"><h2>STRATI ANATOMICI</h2><div class="row"><button data-mode="both" class="active">Tutte</button><button data-mode="muscles">Muscoli</button><button data-mode="bones">Ossa</button><button data-mode="cartilage">Cartilagini</button><button data-mode="eyes">Occhi</button><button data-mode="teeth">Denti</button><button data-mode="organs">Organi</button><button data-mode="arteries">Arterie</button><button data-mode="veins">Vene</button><button data-mode="circulatory">Circolatorio</button><button data-mode="all">Tutti i sistemi</button></div><label for="depth">Visibilità dei muscoli superficiali: <output id="depthLabel">100%</output></label><input id="depth" type="range" min="0" max="100" value="100"><p class="small">A 0% osservi i muscoli profondi e le altre strutture selezionate.</p></section>
-<section class="panel"><h2>ORGANI E VASI SANGUIGNI</h2><p class="small">Attiva i modelli aggiuntivi quando ti servono.</p><div class="row"><button id="loadOrgans" type="button">＋ Carica organi</button><button id="loadVessels" type="button">＋ Carica circolatorio</button></div><p id="systemsStatus" class="small" role="status">Connessione internet richiesta per i nuovi modelli 3D.</p></section>
+<section class="panel"><h2>STRATI ANATOMICI</h2><div class="row"><button data-mode="both" class="active">Tutte</button><button data-mode="muscles">Muscoli</button><button data-mode="bones">Ossa</button><button data-mode="cartilage">Cartilagini</button><button data-mode="eyes">Occhi</button><button data-mode="teeth">Denti</button><button data-mode="organs">Organi</button><button data-mode="nervous">Sistema nervoso</button><button data-mode="arteries">Arterie</button><button data-mode="veins">Vene</button><button data-mode="circulatory">Circolatorio</button><button data-mode="all">Tutti i sistemi</button></div><label for="depth">Visibilità dei muscoli superficiali: <output id="depthLabel">100%</output></label><input id="depth" type="range" min="0" max="100" value="100"><p class="small">A 0% osservi i muscoli profondi e le altre strutture selezionate.</p></section>
+<section class="panel"><h2>ORGANI E VASI SANGUIGNI</h2><p class="small">Attiva i modelli aggiuntivi quando ti servono.</p><div class="row"><button id="loadOrgans" type="button">＋ Carica organi</button><button id="loadVessels" type="button">＋ Carica circolatorio</button><button id="loadNervous" type="button">＋ Carica cervello e nervi</button></div><p id="systemsStatus" class="small" role="status">Connessione internet richiesta per i nuovi modelli 3D.</p></section>
 <section class="panel lab-quick-panel"><h2>◈ ACCESSO RAPIDO · SCANSIONE</h2><div class="lab-quick-grid">
 <button type="button" data-lab-quick="Bicipite brachiale">BICIPITE</button>
 <button type="button" data-lab-quick="Deltoide">DELTOIDE</button>
@@ -355,8 +355,8 @@ return (result||original)+(side?' • lato '+side:'');
 }
 function label(o){return convertIT(o.userData.name||o.name)}
 function layer(o){return String(o.userData.layer||'').toLowerCase()}
-function categoria(o){const t=String(o.userData.tissue||'').toLowerCase();return ({bone:'bones',cartilage:'cartilage',eye:'eyes',tooth:'teeth',organ:'organs',artery:'arteries',vein:'veins',heart:'heart'})[t]||(layer(o).includes('muscles')?'muscles':'other')}
-function categoriaIT(o){return ({bones:'Osso',cartilage:'Cartilagine',eyes:'Parte dell’occhio',teeth:'Dente',muscles:'Muscolo',organs:'Organo',arteries:'Arteria',veins:'Vena',heart:'Struttura cardiaca',other:'Struttura anatomica'})[categoria(o)]}
+function categoria(o){const t=String(o.userData.tissue||'').toLowerCase();return ({bone:'bones',cartilage:'cartilage',eye:'eyes',tooth:'teeth',organ:'organs',nerve:'nervous',artery:'arteries',vein:'veins',heart:'heart'})[t]||(layer(o).includes('muscles')?'muscles':'other')}
+function categoriaIT(o){return ({bones:'Osso',cartilage:'Cartilagine',eyes:'Parte dell’occhio',teeth:'Dente',muscles:'Muscolo',organs:'Organo',nervous:'Sistema nervoso',arteries:'Arteria',veins:'Vena',heart:'Struttura cardiaca',other:'Struttura anatomica'})[categoria(o)]}
 function livelloIT(o){const l=layer(o);return l.includes('deep')?'Muscolatura profonda':l.includes('superficial')?'Muscolatura superficiale':'Scheletro e strutture associate'}
 function latoIT(o){return ({left:'Sinistro',right:'Destro',midline:'Linea mediana'})[String(o.userData.side||'').toLowerCase()]||'Non specificato'}
 function updateVisibility(){for(const o of objects){const cat=categoria(o),isSuper=layer(o).includes('superficial');o.visible=(searchMatches.has(o)||(mode==='all'||(mode==='both'&&!o.userData.extraSystem)||(mode==='circulatory'&&['arteries','veins','heart'].includes(cat))||mode===cat||(mode==='organs'&&cat==='heart'))&&(!isSuper||outer>0));const mat=originalMaterials.get(o);if(mat){const opacity=searchMatches.has(o)?1:isSuper?outer/100:1;mat.opacity=opacity;mat.transparent=isSuper&&opacity<1;mat.depthWrite=!isSuper||opacity===1;mat.needsUpdate=true}}$('counter').textContent=objects.filter(x=>x.visible).length+' STRUTTURE VISIBILI';updateAnatomyMarkers();updateCompareMaterials();}
@@ -530,11 +530,15 @@ $('jarvisSpeak').onclick=()=>{
 };
 
 /* Modelli aggiuntivi Z-Anatomy / BodyParts3D (uso non commerciale). */
-const extraModels={visceral:null,cardiovascular:null};
+const extraModels={visceral:null,cardiovascular:null,nervous:null};
 const dracoDecoder=new DRACOLoader();
 dracoDecoder.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
 const extraGLTFLoader=new GLTFLoader();extraGLTFLoader.setDRACOLoader(dracoDecoder);
 const namesIT={
+'brain':'Cervello','cerebrum':'Cervello','cerebellum':'Cervelletto','brain stem':'Tronco encefalico','brainstem':'Tronco encefalico',
+'frontal lobe':'Lobo frontale','parietal lobe':'Lobo parietale','temporal lobe':'Lobo temporale','occipital lobe':'Lobo occipitale',
+'thalamus':'Talamo','hypothalamus':'Ipotalamo','corpus callosum':'Corpo calloso','spinal cord':'Midollo spinale',
+'medulla oblongata':'Midollo allungato','pons':'Ponte','midbrain':'Mesencefalo',
 'liver':'Fegato','stomach':'Stomaco','kidney':'Rene','pancreas':'Pancreas','urinary bladder':'Vescica urinaria','gallbladder':'Cistifellea',
 'duodenum':'Duodeno','jejunum':'Digiuno','ascending colon':'Colon ascendente','descending colon':'Colon discendente','transverse colon':'Colon trasverso','sigmoid colon':'Colon sigmoideo',
 'left ventricle':'Ventricolo sinistro','right ventricle':'Ventricolo destro','left atrium':'Atrio sinistro','right atrium':'Atrio destro',
@@ -563,7 +567,7 @@ function registerAdditional(model,system){
   o.userData.extraSystem=system;
   o.userData.side=/\.l$|\bleft\b/i.test(part)?'left':/\.r$|\bright\b/i.test(part)?'right':'midline';
   const str=part.toLowerCase();
-  o.userData.tissue=system==='visceral'?'organ':/artery|aorta|arterial|pulmonary trunk/.test(str)?'artery':/vein|vena cava|venous|azygos/.test(str)?'vein':'heart';
+  o.userData.tissue=system==='nervous'?'nerve':system==='visceral'?'organ':/artery|aorta|arterial|pulmonary trunk/.test(str)?'artery':/vein|vena cava|venous|azygos/.test(str)?'vein':'heart';
   if(o.material){o.material=o.material.clone();o.material.side=THREE.DoubleSide;
    if(o.userData.tissue==='artery')o.material.color.set(0xd9565b);
    if(o.userData.tissue==='vein')o.material.color.set(0x568fe0);
@@ -572,33 +576,36 @@ function registerAdditional(model,system){
  });return count;
 }
 function alignAdditional(){
- if(!extraModels.cardiovascular||!root)return;
- const ref=new THREE.Box3().setFromObject(root),cardio=new THREE.Box3().setFromObject(extraModels.cardiovascular);
- const h=cardio.getSize(new THREE.Vector3()).y,refH=ref.getSize(new THREE.Vector3()).y;
+ if(!root)return;
+ // Align using a full-body Z-Anatomy system, never the small brain alone.
+ const base=extraModels.cardiovascular||extraModels.nervous;
+ if(!base)return;
+ const ref=new THREE.Box3().setFromObject(root),frame=new THREE.Box3().setFromObject(base);
+ const h=frame.getSize(new THREE.Vector3()).y,refH=ref.getSize(new THREE.Vector3()).y;
  if(!h||!refH)return;
- const scale=refH/h,origin=cardio.getCenter(new THREE.Vector3()),dest=ref.getCenter(new THREE.Vector3());
+ const scale=refH/h,origin=frame.getCenter(new THREE.Vector3()),dest=ref.getCenter(new THREE.Vector3());
  for(const model of Object.values(extraModels)){
   if(!model)continue;model.scale.setScalar(scale);model.position.copy(dest).sub(origin.clone().multiplyScalar(scale));
  }
 }
 function setSystemMode(system){
- mode=system==='visceral'?'organs':'circulatory';
+ mode=system==='visceral'?'organs':system==='nervous'?'nervous':'circulatory';
  document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
  select(null);updateVisibility();
 }
 function loadAdditional(system,activate=true){
  if(extraModels[system]){if(activate)setSystemMode(system);return Promise.resolve();}
- const btn=$(system==='visceral'?'loadOrgans':'loadVessels');btn.disabled=true;
- $('systemsStatus').textContent='Caricamento '+(system==='visceral'?'organi':'sistema cardiovascolare')+'…';
+ const btn=$(system==='visceral'?'loadOrgans':system==='nervous'?'loadNervous':'loadVessels');btn.disabled=true;
+ $('systemsStatus').textContent='Caricamento '+(system==='visceral'?'organi':system==='nervous'?'cervello e sistema nervoso':'sistema cardiovascolare')+'…';
  return new Promise((resolve,reject)=>extraGLTFLoader.load(
   'https://raw.githubusercontent.com/nqwrc/3d-anatomy/master/public/models/'+system+'.glb',
   gltf=>{
    const model=gltf.scene;scene.add(model);extraModels[system]=model;
    const count=registerAdditional(model,system);
-   if(extraModels.cardiovascular)alignAdditional();
+   if(extraModels.cardiovascular||extraModels.nervous)alignAdditional();
    else if(root){const ref=new THREE.Box3().setFromObject(root),box=new THREE.Box3().setFromObject(model);
     model.position.copy(ref.getCenter(new THREE.Vector3())).sub(box.getCenter(new THREE.Vector3()));}
-   btn.textContent=system==='visceral'?'✓ Organi caricati':'✓ Circolatorio caricato';
+   btn.textContent=system==='visceral'?'✓ Organi caricati':system==='nervous'?'✓ Cervello e nervi caricati':'✓ Circolatorio caricato';
    $('systemsStatus').textContent=count+' elementi caricati. Puoi cercarli e isolarli.';
    if(activate)setSystemMode(system);else updateVisibility();search();resolve();
   },
@@ -608,13 +615,16 @@ function loadAdditional(system,activate=true){
 }
 $('loadOrgans').onclick=()=>loadAdditional('visceral').catch(()=>{});
 $('loadVessels').onclick=()=>loadAdditional('cardiovascular').catch(()=>{});
+$('loadNervous').onclick=()=>loadAdditional('nervous').catch(()=>{});
 
 async function cercaModelliAggiuntivi(input){
  const q=normalizzaRicerca(input);
  const organs=/cuore|polmon|fegato|stomaco|ren[ei]|pancreas|vescica|intestin|colon|duodeno|esofago|milza|trachea|tiroide|cistifellea/;
  const blood=/arteria|arterie|vena|vene|aorta|vas[oi]|cardiovascolar|circolator|carotide/;
+ const neural=/cervell|encefal|cerebr|cervellett|nervos|nervi|nervo|midollo spinale|talamo|ipotalamo|frontale|parietale|temporale|occipitale/;
  try{
   if(organs.test(q)&&!extraModels.visceral)await loadAdditional('visceral',false);
+  if(neural.test(q)&&!extraModels.nervous)await loadAdditional('nervous',false);
   if((blood.test(q)||/cuore/.test(q))&&!extraModels.cardiovascular)await loadAdditional('cardiovascular',false);
  }catch(e){statusAnatomia('Impossibile caricare uno dei modelli: '+String(e.message||e))}
  return cercaStruttura(input);
@@ -636,7 +646,7 @@ document.addEventListener('keydown',e=>{
  if(e.key==='ArrowUp'||e.key==='ArrowDown'){e.preventDefault();spostaVistaVerticale(e.key==='ArrowUp'?1:-1)}
 });
 $('show').onclick=()=>{select(null);updateVisibility()};
-document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=async()=>{if(['organs','arteries','veins','circulatory','all'].includes(b.dataset.mode)){if(['organs','all'].includes(b.dataset.mode)&&!extraModels.visceral)await loadAdditional('visceral',false).catch(()=>{});if(['arteries','veins','circulatory','all'].includes(b.dataset.mode)&&!extraModels.cardiovascular)await loadAdditional('cardiovascular',false).catch(()=>{});}mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('active',x===b));select(null);updateVisibility()});
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=async()=>{if(['organs','arteries','veins','circulatory','nervous','all'].includes(b.dataset.mode)){if(['nervous','all'].includes(b.dataset.mode)&&!extraModels.nervous)await loadAdditional('nervous',false).catch(()=>{});if(['organs','all'].includes(b.dataset.mode)&&!extraModels.visceral)await loadAdditional('visceral',false).catch(()=>{});if(['arteries','veins','circulatory','all'].includes(b.dataset.mode)&&!extraModels.cardiovascular)await loadAdditional('cardiovascular',false).catch(()=>{});}mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('active',x===b));select(null);updateVisibility()});
 $('depth').oninput=e=>{outer=Number(e.target.value);$('depthLabel').textContent=outer+'%';updateVisibility()};
 
 let quizAnswer=null,quizCorrect=0,quizTotal=0;
@@ -712,9 +722,11 @@ $('search').oninput=()=>{
   const q=normalizzaRicerca(query);
   const needsOrg=/cuore|polmon|fegat|stomac|ren[ei]|pancreas|vescic|intestin|colon|duoden|esofag|milza|trachea|tiroide|cistifellea/.test(q);
   const needsBlood=/arteri|ven[ae]|aorta|vas[oi]|cardiovascolar|circolator|carotide|cuore/.test(q);
+  const needsNervous=/cervell|encefal|cerebr|cervellett|nervos|nervi|nervo|midollo spinale|talamo|ipotalamo|frontale|parietale|temporale|occipitale/.test(q);
   try{
    if(needsOrg&&!extraModels.visceral)await loadAdditional('visceral',false);
    if(needsBlood&&!extraModels.cardiovascular)await loadAdditional('cardiovascular',false);
+   if(needsNervous&&!extraModels.nervous)await loadAdditional('nervous',false);
    if(stamp===searchSequence)search();
   }catch(e){if(stamp===searchSequence)$('searchHighlightStatus').textContent='Impossibile caricare altri sistemi: '+String(e.message||e)}
  },380);
