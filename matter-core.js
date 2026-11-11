@@ -111,7 +111,18 @@ export function startMatterCore(mount,{reducedMotion=false}={}){
         float core=1.0-smoothstep(.12,1.55,radius);
         float ribbonLight=.42*helixMask*(.60+.40*spiralMix);
         float depthLight=mix(.64,1.12,nearDepth);
-        vTint=mix(vec3(.035,.36,.63),vec3(.69,.96,1.0),clamp(core*.48+aSeed.y*.22+ribbonLight+nearDepth*.10,0.0,1.0));
+        // Cyan stays dominant. A few isolated streams catch faint violet and
+        // warm amber reflections; color shifts are stable and never flash.
+        vec3 cyan=mix(vec3(.035,.36,.63),vec3(.69,.96,1.0),
+          clamp(core*.48+aSeed.y*.22+ribbonLight+nearDepth*.10,0.0,1.0));
+        float violetCluster=smoothstep(.76,.97,aSeed.z)
+          *smoothstep(.30,.85,.5+.5*sin(phi*2.0+p.y*3.6+uTime*.12));
+        float amberCluster=smoothstep(.965,.997,aSeed.y)
+          *smoothstep(.55,.94,.5+.5*sin(phi*2.8-p.y*2.4-uTime*.09));
+        vec3 violet=vec3(.43,.39,.91);
+        vec3 amber=vec3(1.0,.57,.24);
+        vTint=mix(cyan,violet,.29*violetCluster);
+        vTint=mix(vTint,amber,.28*amberCluster);
         vAlpha=(.28+.49*core+.24*ribbonLight)*(.72+.28*aSeed.z)*depthLight*shimmer*(1.0+.30*uVoice);
       }`,
     fragmentShader:`
@@ -137,8 +148,9 @@ export function startMatterCore(mount,{reducedMotion=false}={}){
   if(ctx){
     const gradient=ctx.createRadialGradient(48,48,1,48,48,48);
     gradient.addColorStop(0,'rgba(220,255,255,.93)');
-    gradient.addColorStop(.16,'rgba(79,220,248,.50)');
-    gradient.addColorStop(.50,'rgba(16,123,197,.12)');
+    gradient.addColorStop(.16,'rgba(96,215,250,.50)');
+    gradient.addColorStop(.36,'rgba(91,108,209,.17)');
+    gradient.addColorStop(.50,'rgba(25,104,184,.10)');
     gradient.addColorStop(1,'rgba(9,58,110,0)');
     ctx.fillStyle=gradient;ctx.fillRect(0,0,96,96);
   }
