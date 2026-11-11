@@ -126,6 +126,10 @@ body.lab-immersive #labFocusMode{border-color:#8becf8;background:#1a4b58}
 .lab-origin-label{border-color:#56f5ff;color:#aaf8ff;font-size:10px}
 .lab-insertion-label{border-color:#ffbf6c;color:#ffe0a8;font-size:10px}
 .lab-compare-panel button[aria-pressed=true],.lab-landmark-panel button[aria-pressed=true]{border-color:#77e7f4;background:#175063}
+
+/* Live search across all available anatomical systems. */
+#searchHighlightStatus{font-size:11px;line-height:1.4;color:#ffd18d;margin:8px 0 9px;border-left:2px solid #e5a84a;padding-left:8px}
+#results .result:hover{border-color:#f3b862}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/"}}</script>
 </head><body>
@@ -167,7 +171,7 @@ body.lab-immersive #labFocusMode{border-color:#8becf8;background:#1a4b58}
 <section class="panel" id="anatomyStudyPanel"><h2>◈ STUDIO MUSCOLARE · JARVIS</h2><p class="small">Seleziona un muscolo nel modello per leggere origine, inserzione, azione e innervazione, quando disponibili nel database didattico.</p><div class="row" id="anatomyQuickRegions"><button type="button" data-anatomy-region="braccio">Braccio</button><button type="button" data-anatomy-region="spalla">Spalla</button><button type="button" data-anatomy-region="tronco">Tronco</button><button type="button" data-anatomy-region="coscia">Coscia</button><button type="button" data-anatomy-region="gamba">Gamba</button></div><p class="small" id="anatomyRegionStatus" aria-live="polite">Scegli una regione per esplorare i muscoli.</p></section>
 <section class="panel" id="anatomyQuizPanel"><h2>◈ QUIZ ANATOMICO</h2><p class="small">Quale muscolo corrisponde alla funzione indicata?</p><p id="anatomyQuizQuestion" aria-live="polite">Premi «Nuova domanda» per iniziare.</p><div id="anatomyQuizChoices" class="row"></div><p id="anatomyQuizFeedback" class="small" role="status"></p><div class="row"><button type="button" id="anatomyQuizNext">Nuova domanda</button><span class="small" id="anatomyQuizScore">0 corrette su 0</span></div></section>
 <section class="panel"><h2>STRUTTURA SELEZIONATA</h2><div id="details"><p>Seleziona un muscolo o un osso cliccando sul modello oppure cerca una struttura nell'elenco.</p></div></section>
-<section class="panel"><h2>RICERCA ANATOMICA</h2><input id="search" type="search" placeholder="Cerca: deltoide, bicipite, femore…" aria-label="Cerca una struttura"><div id="results"></div></section>
+<section class="panel"><h2>RICERCA ANATOMICA</h2><input id="search" type="search" placeholder="Cerca: deltoide, bicipite, femore…" aria-label="Cerca una struttura"><p class="small" id="searchHighlightStatus" role="status" aria-live="polite">Scrivi un nome: i risultati verranno illuminati sul modello, senza selezione.</p><div id="results"></div></section>
 <section class="panel"><h2>CONTROLLI</h2><p class="small">Trascina per ruotare · Rotella per zoom · ↑ Su / ↓ Giù per salire e scendere lungo il corpo (anche con le frecce della tastiera) · Clic per selezionare · Clic destro e trascina per spostare. Il modello è didattico, non clinico.</p><a class="small" href="anatomia.html">Torna al precedente modello procedurale</a></section></aside></main>
 <p id="attribution">Modello Écorché, <a href="https://github.com/Charleeh/ecorche" target="_blank" rel="noopener">CC BY-SA 4.0</a>, derivato da BodyParts3D e Z-Anatomy di Gauthier Kervyn. Geometrie anatomiche esterne caricate da GitHub all'avvio; il visualizzatore resta integrato in JARVIS. Organi e vasi: Z-Anatomy / BodyParts3D tramite <a href="https://github.com/nqwrc/3d-anatomy" target="_blank" rel="noopener">3D Anatomy</a>, licenza complessiva CC BY-NC-SA 4.0 (alcune componenti non commerciali). Three.js è distribuito sotto licenza MIT.</p>
 <script type="module">
@@ -205,11 +209,15 @@ const markerMaterialB=new THREE.MeshBasicMaterial({color:0xffbc65,depthTest:fals
 const originMarker=new THREE.Mesh(markerGeometry,markerMaterialA),insertionMarker=new THREE.Mesh(markerGeometry,markerMaterialB);
 markerGroup.add(originMarker,insertionMarker);markerGroup.visible=false;
 const markerPoints=[new THREE.Vector3(),new THREE.Vector3()];
+const searchGlow=new THREE.MeshStandardMaterial({color:0xf9c765,emissive:0xbb6900,emissiveIntensity:.62,metalness:.08,roughness:.4,side:THREE.DoubleSide});
+const searchMatches=new Set();
+let searchSequence=0,searchDelay=null;
 function updateCompareMaterials(){
  for(const o of objects){
   if(!originalMaterials.has(o))continue;
   const index=comparisonVisible?comparison.indexOf(o):-1;
-  o.material=index>=0?compareMaterials[index]:o===selected?accent:originalMaterials.get(o);
+  // Manual selection and two-muscle comparison take priority over search.
+  o.material=index>=0?compareMaterials[index]:o===selected?accent:searchMatches.has(o)?searchGlow:originalMaterials.get(o);
  }
 }
 function updateComparisonPanel(){
@@ -351,7 +359,7 @@ function categoria(o){const t=String(o.userData.tissue||'').toLowerCase();return
 function categoriaIT(o){return ({bones:'Osso',cartilage:'Cartilagine',eyes:'Parte dell’occhio',teeth:'Dente',muscles:'Muscolo',organs:'Organo',arteries:'Arteria',veins:'Vena',heart:'Struttura cardiaca',other:'Struttura anatomica'})[categoria(o)]}
 function livelloIT(o){const l=layer(o);return l.includes('deep')?'Muscolatura profonda':l.includes('superficial')?'Muscolatura superficiale':'Scheletro e strutture associate'}
 function latoIT(o){return ({left:'Sinistro',right:'Destro',midline:'Linea mediana'})[String(o.userData.side||'').toLowerCase()]||'Non specificato'}
-function updateVisibility(){for(const o of objects){const cat=categoria(o),isSuper=layer(o).includes('superficial');o.visible=(mode==='all'||(mode==='both'&&!o.userData.extraSystem)||(mode==='circulatory'&&['arteries','veins','heart'].includes(cat))||mode===cat||(mode==='organs'&&cat==='heart'))&&(!isSuper||outer>0);const mat=originalMaterials.get(o);if(mat){mat.opacity=isSuper?outer/100:1;mat.transparent=isSuper&&outer<100;mat.depthWrite=!isSuper||outer===100;mat.needsUpdate=true}}$('counter').textContent=objects.filter(x=>x.visible).length+' STRUTTURE VISIBILI';updateAnatomyMarkers();updateCompareMaterials();}
+function updateVisibility(){for(const o of objects){const cat=categoria(o),isSuper=layer(o).includes('superficial');o.visible=(searchMatches.has(o)||(mode==='all'||(mode==='both'&&!o.userData.extraSystem)||(mode==='circulatory'&&['arteries','veins','heart'].includes(cat))||mode===cat||(mode==='organs'&&cat==='heart'))&&(!isSuper||outer>0));const mat=originalMaterials.get(o);if(mat){const opacity=searchMatches.has(o)?1:isSuper?outer/100:1;mat.opacity=opacity;mat.transparent=isSuper&&opacity<1;mat.depthWrite=!isSuper||opacity===1;mat.needsUpdate=true}}$('counter').textContent=objects.filter(x=>x.visible).length+' STRUTTURE VISIBILI';updateAnatomyMarkers();updateCompareMaterials();}
 
 // Compact, reviewed study notes for selected major muscles.
 // Anatomical variants and individual differences exist; use a textbook for examination detail.
@@ -406,7 +414,24 @@ if(categoria(o)==='muscles'){
  actions.append(landmarks);
 }
 d.append(actions);for(const b of $('results').children)b.classList.toggle('active',b.dataset.name===selectedName)}
-function search(){const q=$('search').value.trim().toLowerCase();filtered=objects.filter(o=>!q||label(o).toLowerCase().includes(q)||(o.userData.name||'').toLowerCase().includes(q)).slice(0,100);$('results').replaceChildren();for(const o of filtered){const b=document.createElement('button');b.className='result';b.dataset.name=label(o);b.textContent=label(o);b.onclick=()=>select(o);$('results').append(b)}}
+function search(){
+ const raw=$('search').value.trim(),q=normalizzaRicerca(raw);
+ const all=q?objects.filter(o=>[label(o),o.userData.name,o.userData.englishName,o.name].some(name=>normalizzaRicerca(name||'').includes(q))):[];
+ filtered=(q?all:objects).slice(0,100);
+ searchMatches.clear();
+ // Highlight matched meshes immediately, without selecting them or changing tabs.
+ if(q)for(const o of all.slice(0,80))searchMatches.add(o);
+ const results=$('results');results.replaceChildren();
+ for(const o of filtered){
+  const b=document.createElement('button');b.className='result';b.dataset.name=label(o);
+  b.textContent=label(o)+' · '+categoriaIT(o);
+  b.onclick=()=>{searchMatches.clear();select(o);updateVisibility();inquadraStruttura(o);$('searchHighlightStatus').textContent='Struttura selezionata: '+label(o)};
+  results.append(b);
+ }
+ const status=$('searchHighlightStatus');
+ status.textContent=q?(all.length?all.length+' strutture evidenziate in ambra nel corpo 3D. Seleziona un risultato per inquadrarlo.':'Nessuna struttura trovata tra i sistemi caricati.'): 'Scrivi un nome: i risultati verranno illuminati sul modello, senza selezione.';
+ updateVisibility();
+}
 /* Comando ricevuto dalla voce JARVIS, per esempio: muscolo=bicipite brachiale destro. */
 function normalizzaRicerca(t){return String(t||'').toLocaleLowerCase('it').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\b(jarvis|il|lo|la|muscolo|mostrami|mostra|del|della|di)\b/g,' ').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim()}
 function apriMuscoloRichiesto(){
@@ -677,7 +702,23 @@ document.querySelectorAll('[data-lab-quick]').forEach(button=>button.addEventLis
  $('jarvisQuery').value=name;
  apriAssistente(false,name);
 }));
-$('search').oninput=search;
+$('search').oninput=()=>{
+ search();
+ clearTimeout(searchDelay);
+ const query=$('search').value.trim(),stamp=++searchSequence;
+ if(query.length<3)return;
+ searchDelay=setTimeout(async()=>{
+  // Auxiliary organ and cardiovascular models are lazy-loaded only if needed.
+  const q=normalizzaRicerca(query);
+  const needsOrg=/cuore|polmon|fegat|stomac|ren[ei]|pancreas|vescic|intestin|colon|duoden|esofag|milza|trachea|tiroide|cistifellea/.test(q);
+  const needsBlood=/arteri|ven[ae]|aorta|vas[oi]|cardiovascolar|circolator|carotide|cuore/.test(q);
+  try{
+   if(needsOrg&&!extraModels.visceral)await loadAdditional('visceral',false);
+   if(needsBlood&&!extraModels.cardiovascular)await loadAdditional('cardiovascular',false);
+   if(stamp===searchSequence)search();
+  }catch(e){if(stamp===searchSequence)$('searchHighlightStatus').textContent='Impossibile caricare altri sistemi: '+String(e.message||e)}
+ },380);
+};
 renderer.domElement.addEventListener('pointermove',e=>{
  const box=viewport.getBoundingClientRect();
  hoverX=e.clientX-box.left;hoverY=e.clientY-box.top-10;
