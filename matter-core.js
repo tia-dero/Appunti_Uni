@@ -115,14 +115,16 @@ export function startMatterCore(mount,{reducedMotion=false}={}){
         // warm amber reflections; color shifts are stable and never flash.
         vec3 cyan=mix(vec3(.035,.36,.63),vec3(.69,.96,1.0),
           clamp(core*.48+aSeed.y*.22+ribbonLight+nearDepth*.10,0.0,1.0));
-        float violetCluster=smoothstep(.76,.97,aSeed.z)
-          *smoothstep(.30,.85,.5+.5*sin(phi*2.0+p.y*3.6+uTime*.12));
-        float amberCluster=smoothstep(.965,.997,aSeed.y)
-          *smoothstep(.55,.94,.5+.5*sin(phi*2.8-p.y*2.4-uTime*.09));
-        vec3 violet=vec3(.43,.39,.91);
-        vec3 amber=vec3(1.0,.57,.24);
-        vTint=mix(cyan,violet,.29*violetCluster);
-        vTint=mix(vTint,amber,.28*amberCluster);
+        // More visible but still selective violet/amber streams.
+        // Broad stable seed bands guarantee color on any camera angle.
+        float violetCluster=smoothstep(.47,.73,aSeed.z)
+          *smoothstep(.10,.69,.5+.5*sin(phi*2.0+p.y*3.6+uTime*.12));
+        float amberCluster=smoothstep(.885,.975,aSeed.y)
+          *smoothstep(.22,.76,.5+.5*sin(phi*2.8-p.y*2.4-uTime*.09));
+        vec3 violet=vec3(.64,.32,1.0);
+        vec3 amber=vec3(1.0,.55,.12);
+        vTint=mix(cyan,violet,.70*violetCluster);
+        vTint=mix(vTint,amber,.85*amberCluster);
         vAlpha=(.28+.49*core+.24*ribbonLight)*(.72+.28*aSeed.z)*depthLight*shimmer*(1.0+.30*uVoice);
       }`,
     fragmentShader:`
