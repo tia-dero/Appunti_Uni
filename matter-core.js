@@ -87,15 +87,32 @@ export function startMatterCore(mount,{reducedMotion=false}={}){
         p.y+=sin(phi*3.0+uTime*1.20+aSeed.x*7.0)*(.052+.075*uVoice);
         p.x+=sin(uTime*1.0+p.y*4.0+aSeed.z*6.283)*(.031+.045*uVoice);
         vec4 view=modelViewMatrix*vec4(p,1.0);
+        // Subtle independent micro-drift gives each particle its own 3D path.
+        // Deterministic seed-based motion keeps the spherical silhouette intact.
+        float driftPhase=uTime*(.22+.24*aSeed.z)+aSeed.y*6.283185;
+        vec3 drift=vec3(
+          sin(driftPhase*1.13+aSeed.x*9.0),
+          cos(driftPhase*.89+aSeed.z*7.0),
+          sin(driftPhase*1.31+aSeed.y*8.0)
+        )*(.010+.018*aSeed.x);
+        p+=drift;
+        view=modelViewMatrix*vec4(p,1.0);
         gl_Position=projectionMatrix*view;
-        float distanceScale=6.3/max(2.0,-view.z);
-        float twinkle=.77+.23*sin(uTime*1.55+aSeed.y*16.0);
-        float size=mix(1.0,2.25,pow(aSeed.x,4.0))*uDensity*distanceScale;
-        gl_PointSize=clamp(size*(1.0+.30*uVoice+.12*uPulse+.26*helixMask)*twinkle,1.0,5.0);
+        // Perspective and camera-space depth: foreground specks feel closer,
+        // while those behind the center are smaller and more subdued.
+        float nearDepth=smoothstep(-1.45,1.45,p.z);
+        float perspective=6.3/max(2.0,-view.z);
+        float twinklePhase=uTime*(.85+1.25*aSeed.x)+aSeed.y*37.7;
+        float twinkle=.81+.19*sin(twinklePhase);
+        float shimmer=.92+.08*sin(twinklePhase*.39+aSeed.z*19.0);
+        float size=mix(.85,2.1,pow(aSeed.x,4.0))*uDensity*perspective;
+        float depthSize=mix(.76,1.19,nearDepth);
+        gl_PointSize=clamp(size*depthSize*(1.0+.24*uVoice+.10*uPulse+.22*helixMask)*twinkle,1.0,4.8);
         float core=1.0-smoothstep(.12,1.55,radius);
         float ribbonLight=.42*helixMask*(.60+.40*spiralMix);
-        vTint=mix(vec3(.05,.48,.78),vec3(.70,.96,1.0),clamp(core*.50+aSeed.y*.23+ribbonLight,0.0,1.0));
-        vAlpha=(.28+.52*core+.27*ribbonLight)*(.72+.28*aSeed.z)*(1.0+.35*uVoice);
+        float depthLight=mix(.64,1.12,nearDepth);
+        vTint=mix(vec3(.035,.36,.63),vec3(.69,.96,1.0),clamp(core*.48+aSeed.y*.22+ribbonLight+nearDepth*.10,0.0,1.0));
+        vAlpha=(.28+.49*core+.24*ribbonLight)*(.72+.28*aSeed.z)*depthLight*shimmer*(1.0+.30*uVoice);
       }`,
     fragmentShader:`
       precision mediump float;
@@ -103,9 +120,12 @@ export function startMatterCore(mount,{reducedMotion=false}={}){
       varying float vAlpha;
       void main(){
         float d=length(gl_PointCoord-vec2(.5));
-        float feather=1.0-smoothstep(.16,.49,d);
+        // Soft particle disks with a tiny luminous heart: no harsh square pixels.
+        float feather=1.0-smoothstep(.11,.49,d);
+        float inner=1.0-smoothstep(.02,.22,d);
         if(feather<.025)discard;
-        gl_FragColor=vec4(vTint,feather*vAlpha);
+        float luminosity=feather*(.82+.18*inner);
+        gl_FragColor=vec4(vTint,luminosity*vAlpha);
       }`
   });
   const points=new THREE.Points(geometry,material);
