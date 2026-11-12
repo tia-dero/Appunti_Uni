@@ -2579,6 +2579,36 @@
     return changed;
   }
   try{mergeMicheloniSchedule(data);}catch(error){console.warn('Importazione lezioni Biologia non completata',error);}
+/* Aggiornamento mirato del venerdì: lascia invariati Chimica e Antropologia.
+   Sostituisce esclusivamente vecchie lezioni di Teoria del movimento. */
+function adjustFridayTheory2026(){
+ const storageKey='appunti-universita-v1',marker='appunti-friday-theory-1530-1730-v1';
+ try{
+  if(localStorage.getItem(marker)==='1')return;
+  const state=JSON.parse(localStorage.getItem(storageKey)||'{}');
+  if(!state||typeof state!=='object'||Array.isArray(state))return;
+  if(!state.schedule||typeof state.schedule!=='object'||Array.isArray(state.schedule))state.schedule={};
+  const dates=["2026-11-13","2026-11-20","2026-11-27","2026-12-04","2026-12-11","2026-12-18"];
+  const theory=subject=>/^(teoria(?: e metodologia)? del movimento(?: umano)?|teoria del movimento umano)$/i.test(String(subject||'').trim());
+  const normalized=subject=>String(subject||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();
+  const matches=subject=>theory(normalized(subject));
+  for(const date of dates){
+   const list=Array.isArray(state.schedule[date])?state.schedule[date]:[];
+   const prior=list.filter(lesson=>matches(lesson?.subject));
+   const others=list.filter(lesson=>!matches(lesson?.subject));
+   const place=prior.find(lesson=>lesson?.place)?.place||'';
+   others.push({subject:'Teoria del movimento',start:'15:30',end:'17:30',place});
+   others.sort((a,b)=>String(a.start||'').localeCompare(String(b.start||'')));
+   state.schedule[date]=others;
+  }
+  localStorage.setItem(storageKey,JSON.stringify(state));
+  localStorage.setItem(marker,'1');
+ }catch(error){console.warn('Non è stato possibile correggere il venerdì',error);}
+}
+
+  // Applica la correzione solo al primo caricamento e rilegge i dati aggiornati.
+  adjustFridayTheory2026();
+  try{const current=JSON.parse(localStorage.getItem('appunti-universita-v1')||'{}');if(current.schedule)data.schedule=current.schedule;}catch(error){console.warn('Orario del venerdì non riletto',error);}
   const scheduleMap = () => data.schedule||{};
   const allLessons = () => {const map=scheduleMap();return Object.keys(map).sort().flatMap(date=>(map[date]||[]).map(lesson=>({...lesson,date})));};
   const userName=()=>{try{return (localStorage.getItem('appunti-user-name')||'').trim();}catch{return '';}};
