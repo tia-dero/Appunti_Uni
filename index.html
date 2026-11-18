@@ -2517,7 +2517,30 @@
   let editingNoteId = null, editingSubjectId = null, editingFolderId = null, activeFolderId = null, showArchive = false, toastTimer, moduleLoaderTimer, pendingFiles = [], activeDocxBlob = null, activeDocxName = '', docxObjectUrls = [];
   const $ = id => document.getElementById(id);
   const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(data)); } catch { showToast('Spazio non disponibile: esporta un backup.'); } };
+  function readArchive(value) {
+    try { return JSON.parse(value)||{}; }
+    catch { return {}; }
+  }
+  const save = () => {
+    try {
+      const current = readArchive(localStorage.getItem(KEY));
+      if (current.archiveRestoreId !== data.archiveRestoreId) {
+        showToast('Archivio ripristinato in un’altra scheda. Ricarica questa pagina.');
+        return false;
+      }
+      localStorage.setItem(KEY, JSON.stringify(data));
+      return true;
+    } catch {
+      showToast('Spazio non disponibile: esporta un backup.');
+      return false;
+    }
+  };
+  window.addEventListener('storage', event => {
+    if (event.key !== KEY || !event.newValue) return;
+    try {
+      if (readArchive(event.newValue).archiveRestoreId !== data.archiveRestoreId) location.reload();
+    } catch {}
+  });
   let fileDbPromise;
   const openFileDb = () => {
     if(!window.indexedDB)return Promise.reject(new Error('Archivio file non disponibile in questo browser.'));
@@ -2530,7 +2553,14 @@
   const getAttachment = id => dbOperation('readonly',store=>store.get(id));
   const deleteAttachment = id => id?Promise.all([dbOperation('readwrite',store=>store.delete(id)),deleteText(id).catch(()=>{})]).then(()=>{textIndex.delete(id);}):Promise.resolve();
   const listAttachments = () => dbOperation('readonly',store=>store.getAll());
-  const cleanupAttachments = async () => { const used=new Set(data.notes.map(n=>n.attachmentId).filter(Boolean)); for(const item of await listAttachments())if(!used.has(item.id))await deleteAttachment(item.id); for(const item of await listTexts().catch(()=>[]))if(!used.has(item.id)){await deleteText(item.id).catch(()=>{});textIndex.delete(item.id);} };
+  const attachmentIds = notes => new Set(notes.map(note => note.attachmentId).filter(Boolean));
+  async function removeUnusedAttachments(ids) {
+    const saved = readArchive(localStorage.getItem(KEY));
+    const used = attachmentIds(Array.isArray(saved.notes) ? saved.notes : []);
+    for (const id of ids) {
+      if (!used.has(id)) await deleteAttachment(id).catch(() => {});
+    }
+  }
   const fileTitle = name => String(name||'Appunti').replace(/\.[^/.]+$/,'').replace(/[_-]+/g,' ').trim()||'Appunti';
   const fileTypeMeta = name => {const ext=String(name||'').split('.').pop().toLocaleLowerCase('it');if(ext==='pdf')return{label:'PDF',icon:'P',className:'file-pdf'};if(['doc','docx','odt','rtf'].includes(ext))return{label:'WORD',icon:'W',className:'file-word'};if(['ppt','pptx','odp'].includes(ext))return{label:'SLIDE',icon:'S',className:'file-slides'};if(['png','jpg','jpeg','webp','gif'].includes(ext))return{label:'IMG',icon:'I',className:'file-image'};if(['mp4','m4v','mov','webm','mkv','avi','ogv','3gp'].includes(ext))return{label:'VIDEO',icon:'V',className:'file-video'};return{label:ext?ext.toUpperCase():'FILE',icon:'F',className:'file-generic'};};
   const fileTypeBadge = name => {const file=fileTypeMeta(name);return '<span class="file-type-badge '+file.className+'">'+file.label+'</span>';};
@@ -2542,7 +2572,10 @@
   const recentlyOpenedNotes = () => (data.recentlyOpened||[]).map(item=>({note:data.notes.find(note=>note.id===item.noteId),openedAt:Number(item.openedAt)||0})).filter(item=>item.note);
   function recordNoteOpened(noteId){if(!data.notes.some(note=>note.id===noteId))return;data.recentlyOpened=(data.recentlyOpened||[]).filter(item=>item.noteId!==noteId);data.recentlyOpened.unshift({noteId,openedAt:Date.now()});data.recentlyOpened=data.recentlyOpened.slice(0,8);recordView(data.notes.find(note=>note.id===noteId)?.subjectId);setSystemMessage();save();renderLogStrip();}
   const showToast = (message,ms=2600) => { const el=$('toast'); el.textContent=message; el.classList.remove('hidden'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.add('hidden'),ms); };
-  function recordActivity(action,detail='',subject=''){data.activityLog.unshift({id:uid(),action,detail,subject,at:Date.now()});data.activityLog=data.activityLog.slice(0,30);}
+  function recordActivity(action, detail='', subject='', archive=data) {
+    archive.activityLog.unshift({id:uid(),action,detail,subject,at:Date.now()});
+    archive.activityLog=archive.activityLog.slice(0,30);
+  }
   function renderActivity(){const root=$('activityList');if(!root)return;const items=(data.activityLog||[]).slice(0,7);root.innerHTML=items.length?items.map(item=>'<div class="activity-item"><span class="activity-node"></span><span class="activity-text">'+escapeHtml(item.action||'Attivit\u00E0')+' \u00B7 '+escapeHtml(item.detail||'')+(item.subject?'<small>'+escapeHtml(item.subject)+'</small>':'')+'</span><time class="activity-time">'+new Date(Number(item.at)||Date.now()).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})+'</time></div>').join(''):'<div class="activity-empty">In attesa della prima attivit\u00E0 nell\u2019archivio.</div>';}
   const dateLabel = value => { const d=new Date(Number(value)||Date.now()); return Number.isNaN(d.getTime())?'Data non disponibile':d.toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'}); };
   const dayKey = () => { const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
@@ -3477,7 +3510,7 @@ function adjustFridayTheory2026(){
   $('goalDoneBtn').addEventListener('click',()=>{const goal=ensureGoal();if(!goal.text){showToast('Scegli un piccolo passo, se ti va.');return;}goal.done=true;recordActivity('Micro-obiettivo completato',goal.text);save();renderGoal();});
   $('focusButton').addEventListener('click',()=>setFocusMode(true)); $('exitFocus').addEventListener('click',()=>setFocusMode(false));  $('newNoteBtn').addEventListener('click',()=>openNote()); $('newNoteSubjectBtn').addEventListener('click',()=>openNote()); $('addSubjectBtn').addEventListener('click',()=>openSubject()); $('dashboardAddSubject').addEventListener('click',()=>openSubject());
   $('toggleArchive').addEventListener('click',()=>{showArchive=!showArchive;render();}); $('renameSubjectBtn').addEventListener('click',()=>openSubject(data.activeSubject));
-  $('deleteSubjectBtn').addEventListener('click',async()=>{const subject=activeSubject();if(!subject)return;const count=data.notes.filter(n=>n.subjectId===subject.id).length;if(confirm('Eliminare \u201C'+subject.name+'\u201D'+(count?' e i suoi '+count+' appunti':'')+'?')){recordActivity('Materia eliminata',subject.name);data.subjects=data.subjects.filter(s=>s.id!==subject.id);data.folders=data.folders.filter(f=>f.subjectId!==subject.id);data.notes=data.notes.filter(n=>n.subjectId!==subject.id);data.activeSubject='all';activeFolderId=null;save();await cleanupAttachments().catch(()=>{});render();showToast('Materia eliminata.');}});
+  $('deleteSubjectBtn').addEventListener('click',async()=>{const subject=activeSubject();if(!subject)return;const removed=data.notes.filter(n=>n.subjectId===subject.id),count=removed.length;if(confirm('Eliminare \u201C'+subject.name+'\u201D'+(count?' e i suoi '+count+' appunti':'')+'?')){recordActivity('Materia eliminata',subject.name);data.subjects=data.subjects.filter(s=>s.id!==subject.id);data.folders=data.folders.filter(f=>f.subjectId!==subject.id);data.notes=data.notes.filter(n=>n.subjectId!==subject.id);data.activeSubject='all';activeFolderId=null;save();await removeUnusedAttachments(attachmentIds(removed)).catch(()=>{});render();showToast('Materia eliminata.');}});
   $('noteForm').addEventListener('submit',async event=>{
     event.preventDefault();const title=$('noteTitle').value.trim(),subjectId=$('noteSubject').value,folderId=$('noteFolder').value||'',kind=$('noteKind').value,files=pendingFiles,tags=parseTags($('noteTags').value),status=$('noteStatus').value;
     if(!subjectId){showToast('Scegli la materia per questi appunti.');$('noteSubject').focus();return;}
@@ -3494,7 +3527,7 @@ function adjustFridayTheory2026(){
     }
     recordActivity(editingNoteId?'Appunto aggiornato':'Appunti caricati',files.length?files.map(file=>file.name).join(', '):title||'Scheda materiale',data.subjects.find(subject=>subject.id===subjectId)?.name||'');save();$('noteDialog').close();pendingFiles=[];render();showToast(files.length?'Appunti caricati nell\u2019archivio.':'Modifiche salvate.');if(files.length){runIndexer();updateStorageStatus();}
   });
-  $('deleteNoteBtn').addEventListener('click',async()=>{if(!editingNoteId)return;if(confirm('Eliminare questo appunto?')){const removed=data.notes.find(note=>note.id===editingNoteId);recordActivity('Appunto eliminato',removed?.title||removed?.fileName||'Appunto',data.subjects.find(subject=>subject.id===removed?.subjectId)?.name||'');data.notes=data.notes.filter(n=>n.id!==editingNoteId);save();await cleanupAttachments().catch(()=>{});$('noteDialog').close();render();showToast('Appunto eliminato.');}});
+  $('deleteNoteBtn').addEventListener('click',async()=>{if(!editingNoteId)return;if(confirm('Eliminare questo appunto?')){const removed=data.notes.find(note=>note.id===editingNoteId);recordActivity('Appunto eliminato',removed?.title||removed?.fileName||'Appunto',data.subjects.find(subject=>subject.id===removed?.subjectId)?.name||'');data.notes=data.notes.filter(n=>n.id!==editingNoteId);save();if(removed)await removeUnusedAttachments(attachmentIds([removed])).catch(()=>{});$('noteDialog').close();render();showToast('Appunto eliminato.');}});
   $('addFolderBtn').addEventListener('click',()=>openFolder()); $('renameFolderBtn').addEventListener('click',()=>{if(activeFolderId)openFolder(activeFolderId);});
   $('backToFolders').addEventListener('click',()=>{activeFolderId=null;render();}); $('uploadFolderBtn').addEventListener('click',()=>openNote());
   $('deleteFolderBtn').addEventListener('click',()=>{const folder=data.folders.find(f=>f.id===activeFolderId);if(!folder)return;if(confirm('Eliminare la cartella \u201C'+folder.name+'\u201D? Le slide resteranno nella materia senza cartella.')){recordActivity('Cartella eliminata',folder.name,data.subjects.find(subject=>subject.id===folder.subjectId)?.name||'');data.folders=data.folders.filter(f=>f.id!==folder.id);data.notes.forEach(n=>{if(n.folderId===folder.id)n.folderId='';});activeFolderId=null;save();render();showToast('Cartella eliminata; le slide sono rimaste nella materia.');}});
@@ -3545,7 +3578,8 @@ function adjustFridayTheory2026(){
     for(let index=0;index<count;index++){
       if(cursor+46>directory.byteLength||directory.getUint32(cursor,true)!==0x02014b50)throw new Error('Struttura ZIP non riconosciuta.');
       const method=directory.getUint16(cursor+10,true),compressed=directory.getUint32(cursor+20,true),nameLength=directory.getUint16(cursor+28,true),extraLength=directory.getUint16(cursor+30,true),commentLength=directory.getUint16(cursor+32,true),localOffset=directory.getUint32(cursor+42,true),name=decoder.decode(new Uint8Array(directory.buffer,cursor+46,nameLength));
-      entries.set(name,{method,compressed,localOffset});cursor+=46+nameLength+extraLength+commentLength;
+      const crc=directory.getUint32(cursor+16,true),size=directory.getUint32(cursor+24,true);
+      entries.set(name,{method,compressed,localOffset,crc,size});cursor+=46+nameLength+extraLength+commentLength;
     }
     return entries;
   }
@@ -3592,21 +3626,27 @@ function adjustFridayTheory2026(){
     return null;
   }
   const pendingIndexNotes=()=>data.notes.filter(note=>note.attachmentId&&!textIndex.has(note.attachmentId)&&!indexState.failed.has(note.attachmentId));
+  let indexAgain=false;
   async function runIndexer(){
-    if(indexState.running)return;const todo=pendingIndexNotes();if(!todo.length)return;
+    if(indexState.running){indexAgain=true;return;}
+    const archive=data,todo=pendingIndexNotes();if(!todo.length)return;
     indexState.running=true;indexState.total=todo.length;indexState.done=0;
     for(const note of todo){
+      if(data!==archive)break;
       try{
         const record=await getAttachment(note.attachmentId);
         if(!record?.blob)indexState.failed.add(note.attachmentId);
         else{
           const text=await extractText(record),clean=String(text||'').normalize('NFC').replace(/[ \t]+/g,' ').replace(/\n\s*\n+/g,'\n').slice(0,MAX_TEXT);
-          await putText({id:note.attachmentId,text:clean,ver:INDEX_VER,at:Date.now()});setIndexEntry(note.attachmentId,clean);
+          if(data!==archive)break;
+          await putText({id:note.attachmentId,text:clean,ver:INDEX_VER,at:Date.now()});
+          if(data===archive)setIndexEntry(note.attachmentId,clean);
         }
       }catch{indexState.failed.add(note.attachmentId);}
       indexState.done++;if($('search').value.trim()&&indexState.done%4===0)render();
     }
     indexState.running=false;if($('search').value.trim())render();
+    if(indexAgain){indexAgain=false;runIndexer();}
   }
   const loadTextIndex=async()=>{for(const item of await listTexts())setIndexEntry(item.id,item.text||'');};
   const indexStatusText=()=>indexState.running?' · sto leggendo i file ('+indexState.done+'/'+indexState.total+')':'';
@@ -3899,49 +3939,228 @@ function adjustFridayTheory2026(){
     $('backupLaterBtn').addEventListener('click',()=>{data.backupSnooze=dayKey();save();renderBackupBanner();});
   }
   const safeName=value=>String(value||'file').replace(/[\\/:*?"<>|\u0000-\u001f]/g,'_').replace(/^\.+/,'').slice(0,120)||'file';
-  async function buildBackupZip(){
-      const referenced=new Set(data.notes.map(note=>note.attachmentId).filter(Boolean)),entries=[],manifest=[],used=new Set();
-      for(const record of await listAttachments()){
-        if(!referenced.has(record.id))continue;
-        const note=data.notes.find(item=>item.attachmentId===record.id),subject=data.subjects.find(item=>item.id===note?.subjectId),folder='materiali/'+safeName(subject?.name||'Senza materia')+'/';
-        let path=folder+safeName(record.name),n=2;while(used.has(path.toLowerCase())){const dot=safeName(record.name).lastIndexOf('.');const nm=safeName(record.name);path=folder+(dot>0?nm.slice(0,dot)+' ('+n+')'+nm.slice(dot):nm+' ('+n+')');n++;}
-        used.add(path.toLowerCase());entries.push({name:path,blob:record.blob});manifest.push({id:record.id,name:record.name,type:record.type,size:record.size,path});
+  async function buildBackupZip(archive){
+    const createdAt = Date.now();
+    const saved=readArchive(localStorage.getItem(KEY));
+    if (saved.archiveRestoreId!==archive.archiveRestoreId) {
+      throw new Error('Archivio ripristinato in un’altra scheda. Ricarica questa pagina.');
+    }
+    const snapshot = cloneJson({...archive, studyPlans:saved.studyPlans??archive.studyPlans, lastBackupAt:createdAt});
+    const referenced = attachmentIds(snapshot.notes);
+    const entries = [], manifest = [], used = new Set();
+    for (const record of await listAttachments()) {
+      if (!referenced.has(record.id) || !record.blob) continue;
+      const note = snapshot.notes.find(item => item.attachmentId === record.id);
+      const subject = snapshot.subjects.find(item => item.id === note.subjectId);
+      const folder = 'materiali/'+safeName(subject?.name||'Senza materia')+'/';
+      const name = safeName(record.name);
+      const dot = name.lastIndexOf('.');
+      let path = folder+name, n = 2;
+      while (used.has(path.toLowerCase())) {
+        path = folder+(dot>0?name.slice(0,dot)+' ('+n+')'+name.slice(dot):name+' ('+n+')');
+        n++;
       }
-      
-      const payload={...data,files:manifest,backupCreatedAt:new Date().toISOString(),format:2};
-      entries.unshift({name:'LEGGIMI.txt',blob:new Blob(['Backup di Appunti università\r\n\r\ndati.json  -> materie, cartelle, orario, esami e impostazioni (serve per reimportare)\r\nmateriali/ -> i tuoi file, ordinati per materia: li puoi aprire anche senza l’app\r\n\r\nPer ripristinare: nell’app premi "Importa" e scegli questo file .zip.\r\n'],{type:'text/plain'})});
-      entries.unshift({name:'dati.json',blob:new Blob([JSON.stringify(payload)],{type:'application/json'})});
-      return buildZip(entries);
+      used.add(path.toLowerCase());
+      entries.push({name:path,blob:record.blob});
+      manifest.push({id:record.id,name:record.name,type:record.type,size:record.blob.size,path});
+      referenced.delete(record.id);
+    }
+    if (referenced.size) {
+      const missing = snapshot.notes.find(note => referenced.has(note.attachmentId));
+      throw new Error('Backup interrotto: nell’archivio manca il file «'+(missing.fileName||missing.title||'Appunti')+'».');
+    }
+    const payload = {...snapshot,files:manifest,backupCreatedAt:new Date(createdAt).toISOString(),format:2};
+    entries.unshift({name:'LEGGIMI.txt',blob:new Blob(['Backup di Appunti università\r\n\r\ndati.json  -> materie, cartelle, orario, esami e impostazioni (serve per reimportare)\r\nmateriali/ -> i tuoi file, ordinati per materia: li puoi aprire anche senza l’app\r\n\r\nPer ripristinare: nell’app premi "Importa" e scegli questo file .zip.\r\n'],{type:'text/plain'})});
+    entries.unshift({name:'dati.json',blob:new Blob([JSON.stringify(payload)],{type:'application/json'})});
+    return buildZip(entries);
   }
+
+  function markBackup(archive, action, detail) {
+    if (data !== archive) return false;
+    try {
+      const current=readArchive(localStorage.getItem(KEY));
+      if (current.archiveRestoreId!==archive.archiveRestoreId) return false;
+      const saved=Array.isArray(current.notes)&&Array.isArray(current.subjects)?current:archive;
+      const updated={...saved,lastBackupAt:Date.now(),activityLog:[...(saved.activityLog||[])]};
+      recordActivity(action,detail,'',updated);
+      localStorage.setItem(KEY,JSON.stringify(updated));
+      archive.lastBackupAt=updated.lastBackupAt;
+      archive.activityLog=updated.activityLog;
+    } catch {
+      return false;
+    }
+    renderActivity();
+    renderBackupBanner();
+    return true;
+  }
+
   $('exportBtn').addEventListener('click',async()=>{
     const button=$('exportBtn');if(button.disabled)return;button.disabled=true;
-    try{
+    const archive=data;
+    try {
       showToast('Preparo il backup…');
-      data.lastBackupAt=Date.now();recordActivity('Backup esportato',data.notes.length+' appunti');save();const zip=await buildBackupZip();
-      const url=URL.createObjectURL(zip),a=document.createElement('a');a.href=url;a.download='backup-appunti-'+new Date().toISOString().slice(0,10)+'.zip';a.click();setTimeout(()=>URL.revokeObjectURL(url),120000);
-      renderActivity();renderBackupBanner();showToast('Backup scaricato ('+formatSize(zip.size)+').');
-    }catch(error){showToast(error?.message||'Non riesco a creare il backup.');}
-    finally{button.disabled=false;}
+      const zip=await buildBackupZip(archive);
+      const url=URL.createObjectURL(zip);
+      const link=document.createElement('a');
+      link.href=url;
+      link.download='backup-appunti-'+new Date().toISOString().slice(0,10)+'.zip';
+      setTimeout(()=>URL.revokeObjectURL(url),120000);
+      link.click();
+      const saved=markBackup(archive,'Backup esportato',archive.notes.length+' appunti');
+      showToast('Download del backup avviato ('+formatSize(zip.size)+').'+(saved?'':' Data dell’ultimo backup non aggiornata.'));
+    } catch(error) {
+      showToast(error?.message||'Non riesco a creare il backup.');
+    } finally {
+      button.disabled=false;
+    }
   });
+
+  async function readBackupEntry(zip, entry, name) {
+    if (!entry) throw new Error('Nel backup manca «'+name+'».');
+    const blob=await zipEntryBlob(zip,entry);
+    if (blob.size!==entry.size || await crc32Blob(blob)!==entry.crc) {
+      throw new Error('Il file «'+name+'» nel backup è danneggiato.');
+    }
+    return blob;
+  }
+
+  async function openBackup(file) {
+    if (/\.zip$/i.test(file.name)||file.type==='application/zip') {
+      const entries=await zipList(file);
+      const manifest=await readBackupEntry(file,entries.get('dati.json'),'dati.json');
+      return {
+        imported:JSON.parse(await manifest.text()),
+        readAttachment:async item=>new Blob(
+          [await readBackupEntry(file,entries.get(item.path),item.name||item.path||'allegato')],
+          {type:item.type||'application/octet-stream'}
+        )
+      };
+    }
+    return {
+      imported:JSON.parse(await file.text()),
+      readAttachment:item=>typeof item.data==='string' ? base64Blob(item.data,item.type) : null
+    };
+  }
+
+  function validateBackup(imported) {
+    const isRecord=value=>value && typeof value==='object' && !Array.isArray(value);
+    if (!isRecord(imported) || !Array.isArray(imported.subjects) || !Array.isArray(imported.notes)) {
+      throw new Error('Il file non contiene un archivio di Appunti valido.');
+    }
+    const optionalLists=['folders','activityLog','recentlyOpened','viewLog','exams','studyPlans','files'];
+    const lists=[imported.subjects,imported.notes,...optionalLists.map(key=>imported[key]).filter(Array.isArray)];
+    if (lists.some(list=>list.some(item=>!isRecord(item))) ||
+        imported.subjects.some(subject=>typeof subject.name!=='string') ||
+        imported.notes.some(note=>(note.tags!=null && !Array.isArray(note.tags)) ||
+          (note.attachmentId && typeof note.attachmentId!=='string'))) {
+      throw new Error('Il backup contiene dati dell’archivio non validi.');
+    }
+    if (isRecord(imported.schedule) && Object.values(imported.schedule).some(
+      lessons=>!Array.isArray(lessons) || lessons.some(lesson=>!isRecord(lesson) ||
+        typeof lesson.start!=='string' || typeof lesson.end!=='string')
+    )) {
+      throw new Error('Il backup contiene un orario non valido.');
+    }
+  }
+
+  async function prepareBackupRestore(imported, readAttachment) {
+    const {files,backupCreatedAt,format,...rest}=imported;
+    const restored=normalizeData({...rest,activeSubject:'all',archiveRestoreId:uid()});
+    const manifest=new Map(), records=new Map();
+    const referenced=attachmentIds(restored.notes);
+    for (const item of Array.isArray(files)?files:[]) {
+      if (!referenced.has(item.id)) continue;
+      if (manifest.has(item.id)) throw new Error('Il backup contiene un allegato duplicato.');
+      manifest.set(item.id,item);
+    }
+    for (const id of referenced) {
+      const item=manifest.get(id);
+      const note=restored.notes.find(note=>note.attachmentId===id);
+      const name=String(item?.name||note.fileName||note.title||'Appunti');
+      const blob=item && await readAttachment(item);
+      if (!blob) throw new Error('Nel backup manca il file «'+name+'».');
+      if (typeof item.size==='number' && item.size!==blob.size) {
+        throw new Error('Il file «'+name+'» nel backup ha una dimensione diversa da quella indicata.');
+      }
+      records.set(id,{id:uid(),name,type:blob.type||'application/octet-stream',size:blob.size,blob});
+    }
+    for (const note of restored.notes) {
+      const record=records.get(note.attachmentId);
+      if (record) {
+        note.attachmentId=record.id;
+        note.fileSize=record.size;
+      }
+      if (typeof note.status!=='string' || !Object.hasOwn(STATUS_LABEL,note.status)) note.status='';
+    }
+    return {restored,records:[...records.values()]};
+  }
+
+  async function stageBackupAttachments(records) {
+    if (!records.length) return;
+    const db=await openFileDb();
+    await new Promise((resolve,reject)=>{
+      const tx=db.transaction('attachments','readwrite',{durability:'strict'});
+      tx.oncomplete=()=>resolve();
+      tx.onabort=()=>reject(tx.error||new Error('Salvataggio degli allegati interrotto.'));
+      try {
+        const store=tx.objectStore('attachments');
+        for (const record of records) store.add(record);
+      } catch (error) {
+        tx.abort();
+        reject(error);
+      }
+    });
+  }
+
+  async function restoreBackup(restored, records, previous) {
+    const oldNotes=readArchive(previous).notes;
+    const obsolete=attachmentIds(Array.isArray(oldNotes)?oldNotes:[]);
+    recordActivity('Backup importato',restored.notes.length+' appunti','',restored);
+    const serialized=JSON.stringify(restored);
+
+    // Publish the new archive only after every new attachment has committed.
+    // Fresh attachment IDs keep the current archive readable until that point.
+    await stageBackupAttachments(records);
+    try {
+      if (localStorage.getItem(KEY)!==previous) {
+        throw new Error('L’archivio è cambiato durante l’importazione. Riprova.');
+      }
+      localStorage.setItem(KEY,serialized);
+    } catch(error) {
+      await removeUnusedAttachments(records.map(record=>record.id)).catch(()=>{});
+      throw error;
+    }
+    data=restored;
+    textIndex.clear();
+    indexState.failed.clear();
+    activeFolderId=null;
+    showArchive=false;
+    render();
+    renderWelcome();
+    showToast('Backup importato.');
+    runIndexer();
+    removeUnusedAttachments(obsolete).catch(()=>{}).finally(updateStorageStatus);
+  }
+
   $('importBtn').addEventListener('click',()=>$('importFile').click());
   $('importFile').addEventListener('change',async event=>{
-    const file=event.target.files?.[0];event.target.value='';if(!file)return;
-    try{
-      let imported,loadFile;
-      if(/\.zip$/i.test(file.name)||file.type==='application/zip'){
-        const entries=await zipList(file),manifest=entries.get('dati.json');if(!manifest)throw new Error('Questo ZIP non è un backup di Appunti.');
-        imported=JSON.parse(await (await zipEntryBlob(file,manifest)).text());
-        loadFile=async item=>{const entry=entries.get(item.path);return entry?new Blob([await zipEntryBlob(file,entry)],{type:item.type||'application/octet-stream'}):null;};
-      }else{imported=JSON.parse(await file.text());loadFile=async item=>item.data?base64Blob(item.data,item.type):null;}
-      if(!Array.isArray(imported.subjects)||!Array.isArray(imported.notes))throw new Error('Formato non valido');
+    const input=event.target,file=input.files?.[0],button=$('importBtn');
+    input.value='';
+    if(!file || button.disabled)return;
+    button.disabled=true;
+    try {
+      const previous=localStorage.getItem(KEY);
+      const {imported,readAttachment}=await openBackup(file);
+      validateBackup(imported);
       if(!confirm('Importare questo backup? Gli appunti presenti verranno sostituiti.'))return;
-      showToast('Importo il backup…');
-      for(const item of Array.isArray(imported.files)?imported.files:[]){if(!item.id)continue;const blob=await loadFile(item);if(blob)await putAttachmentRecord({id:item.id,name:item.name||'appunti',type:item.type||'application/octet-stream',size:item.size||blob.size,blob});}
-      const {files,backupCreatedAt,format,...rest}=imported;
-      data=normalizeData({...rest,activeSubject:'all'});
-      for(const item of await listTexts().catch(()=>[]))await deleteText(item.id).catch(()=>{});textIndex.clear();indexState.failed.clear();
-      recordActivity('Backup importato',data.notes.length+' appunti');activeFolderId=null;showArchive=false;save();await cleanupAttachments();render();renderWelcome();showToast('Backup importato.');runIndexer();updateStorageStatus();
-    }catch(error){showToast(error?.message&&error.message!=='Formato non valido'?error.message:'File non valido o impossibile da importare.');}
+      showToast('Verifico il backup…');
+      const {restored,records}=await prepareBackupRestore(imported,readAttachment);
+      await restoreBackup(restored,records,previous);
+    } catch(error) {
+      showToast(error?.name==='QuotaExceededError'?'Spazio insufficiente per ripristinare il backup.':error?.message||'File non valido o impossibile da importare.');
+    } finally {
+      button.disabled=false;
+    }
   });
 
   /* ===== Backup automatico in una cartella (File System Access API) ===== */
@@ -3954,19 +4173,43 @@ function adjustFridayTheory2026(){
   const abGet=async()=>{const db=await abDb();return new Promise((res,rej)=>{const r=db.transaction('kv').objectStore('kv').get('dir');r.onsuccess=()=>res(r.result||null);r.onerror=()=>rej(r.error);});};
   const abPut=async handle=>{const db=await abDb();return new Promise((res,rej)=>{const tx=db.transaction('kv','readwrite');handle?tx.objectStore('kv').put(handle,'dir'):tx.objectStore('kv').delete('dir');tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);});};
   const abPermission=async(handle,ask)=>{try{const opts={mode:'readwrite'};if(await handle.queryPermission(opts)==='granted')return true;if(ask&&await handle.requestPermission(opts)==='granted')return true;}catch{}return false;};
+  let abWriting=false;
   async function abWrite(handle){
-    data.lastBackupAt=Date.now();const zip=await buildBackupZip(),name='backup-appunti-auto-'+dayKey()+'.zip';
-    const file=await handle.getFileHandle(name,{create:true}),w=await file.createWritable();await w.write(zip);await w.close();
-    const cfg=abLoad(),names=[];for await(const entry of handle.values())if(entry.kind==='file'&&AB_RE.test(entry.name))names.push(entry.name);
-    names.sort();for(const old of names.slice(0,Math.max(0,names.length-cfg.keep)))await handle.removeEntry(old).catch(()=>{});
-    cfg.lastAt=Date.now();abSave(cfg);data.lastBackupAt=cfg.lastAt;recordActivity('Backup automatico',name);save();
-    return {name,size:zip.size};
+    if (abWriting) throw new Error('Backup automatico già in corso.');
+    abWriting=true;
+    const archive=data;
+    try {
+      const zip=await buildBackupZip(archive),name='backup-appunti-auto-'+dayKey()+'.zip';
+      const file=await handle.getFileHandle(name,{create:true}),writer=await file.createWritable();
+      try {
+        await writer.write(zip);
+        await writer.close();
+      } catch(error) {
+        await writer.abort().catch(()=>{});
+        throw error;
+      }
+      const cfg=abLoad();
+      cfg.lastAt=Date.now();
+      abSave(cfg);
+      const saved=markBackup(archive,'Backup automatico',name);
+      try {
+        const names=[];
+        for await(const entry of handle.values())if(entry.kind==='file'&&AB_RE.test(entry.name))names.push(entry.name);
+        names.sort();
+        for(const old of names.slice(0,Math.max(0,names.length-cfg.keep)))await handle.removeEntry(old).catch(()=>{});
+      } catch(error) {
+        console.warn('Pulizia dei vecchi backup non riuscita.',error);
+      }
+      return {name,size:zip.size,saved};
+    } finally {
+      abWriting=false;
+    }
   }
   async function abRun(ask){
     const cfg=abLoad();if(!cfg.on||!abSupported())return false;
     const handle=await abGet().catch(()=>null);if(!handle)return false;
     if(!(await abPermission(handle,ask)))return 'permission';
-    try{const r=await abWrite(handle);showToast('Backup automatico salvato in “'+cfg.folder+'” ('+formatSize(r.size)+').');renderActivity();renderBackupBanner();return true;}
+    try{const r=await abWrite(handle);showToast('Backup automatico salvato in “'+cfg.folder+'” ('+formatSize(r.size)+').'+(r.saved?'':' Data dell’ultimo backup non aggiornata.'));return true;}
     catch(error){showToast('Backup automatico non riuscito: '+(error?.message||'errore'));return false;}
   }
   const abDue=()=>{const cfg=abLoad();return cfg.on&&data.notes.length>0&&(!cfg.lastAt||Date.now()-cfg.lastAt>=cfg.freq*86400000-3600000);};
@@ -3993,7 +4236,7 @@ function adjustFridayTheory2026(){
       if(!(await abPermission(handle,true))){msg.textContent='Permesso negato: senza non posso salvare nella cartella.';return;}
       await abPut(handle);const c=abLoad();c.on=true;c.folder=handle.name;c.freq=Number($('abFreq').value)||3;c.keep=Number($('abKeep').value)||5;abSave(c);
       msg.textContent='Salvo il primo backup…';const r=await abWrite(handle);
-      msg.textContent='Fatto: creato '+r.name+' ('+formatSize(r.size)+').';renderActivity();renderBackupBanner();abRender();
+      msg.textContent='Fatto: creato '+r.name+' ('+formatSize(r.size)+').'+(r.saved?'':' Data dell’ultimo backup non aggiornata.');abRender();
     }catch(error){if(error?.name!=='AbortError')msg.textContent='Non riesco a usare questa cartella: '+(error?.message||'errore')+' (prova una cartella normale, es. Documenti).';}
   });
   $('abNowBtn').addEventListener('click',async()=>{const msg=$('abMsg');msg.textContent='Salvo…';const r=await abRun(true);msg.textContent=r===true?'Backup salvato.':r==='permission'?'Permesso non concesso.':'Non riuscito.';abRender();});
@@ -4282,7 +4525,7 @@ function adjustFridayTheory2026(){
   $('installBtn').addEventListener('click',async()=>{if(!installPrompt)return;installPrompt.prompt();try{await installPrompt.userChoice;}catch{}installPrompt=null;$('installBtn').classList.add('hidden');});
   if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
     navigator.serviceWorker.register('service-worker.js',{updateViaCache:'none'}).then(reg=>{
-      const VERSION='jarvis-hud-64';
+      const VERSION='jarvis-hud-65';
       // Only reload a controlled page when the service worker has been replaced.
       // Prevent loops across navigation and subsequent controllerchange events.
       const refresh=()=>{
